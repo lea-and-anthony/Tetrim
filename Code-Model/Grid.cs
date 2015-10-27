@@ -157,7 +157,7 @@ namespace Tetris
 			return true;
 		}
 
-		public void addBlock(int x, int y, Color color)
+		public void addBlock(int x, int y, TetrisColor color)
 		{
 			m_map[x,y] = new Block(x, y, color);
 		}
@@ -221,7 +221,7 @@ namespace Tetris
 					if(m_map[x, y] != null)
 						bytesMessage[begin + Constants.GridSizeX*y + x] = (byte) m_map[x, y].m_color;
 					else
-						bytesMessage[begin + Constants.GridSizeX*y + x] = (byte) Color.ColorMax;
+						bytesMessage[begin + Constants.GridSizeX*y + x] = (byte) TetrisColor.ColorMax;
 				}
 			}
 
@@ -235,12 +235,12 @@ namespace Tetris
 			{
 				for (int x = 0; x < Constants.GridSizeX; x++)
 				{
-					if(bytesMessage[begin + Constants.GridSizeX*y + x] == (byte) Color.ColorMax)
+					if(bytesMessage[begin + Constants.GridSizeX*y + x] == (byte) TetrisColor.ColorMax)
 						m_map[x, y] = null;
 					else if(m_map[x, y] != null)
-						m_map[x, y].m_color = (Color) bytesMessage[begin + Constants.GridSizeX*y + x];
+						m_map[x, y].m_color = (TetrisColor) bytesMessage[begin + Constants.GridSizeX*y + x];
 					else 
-						m_map[x, y] = new Block(x, y, (Color) bytesMessage[begin + Constants.GridSizeX*y + x]);
+						m_map[x, y] = new Block(x, y, (TetrisColor) bytesMessage[begin + Constants.GridSizeX*y + x]);
 				}
 			}
 		}

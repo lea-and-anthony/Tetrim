@@ -4,30 +4,25 @@ namespace Tetris
 {
 	public static class Utils
 	{
-		public static int StrokeWidth = 5;
-		public static int StrokeWidthHightlight = 10;
-		public static Android.Graphics.Color BorderColor = Android.Graphics.Color.Gainsboro;
-		public static Android.Graphics.Color HightlightBorderColor = Android.Graphics.Color.White;
-		public static Android.Graphics.Color BackgroundColor = Android.Graphics.Color.Rgb(25, 20, 35);
-
-		public static Android.Graphics.Color getAndroidColor(Color color)
+		// Turn a color name into an Android Color
+		public static Android.Graphics.Color getAndroidColor(TetrisColor color)
 		{
 			switch (color)
 			{
-			case Color.Red:
+			case TetrisColor.Red:
 				return Android.Graphics.Color.Red;
-			case Color.Orange:
+			case TetrisColor.Orange:
 				return Android.Graphics.Color.Orange;
-			case Color.Yellow:
+			case TetrisColor.Yellow:
 				return Android.Graphics.Color.Yellow;
-			case Color.Green:
+			case TetrisColor.Green:
 				return Android.Graphics.Color.Green;
-			case Color.Cyan:
+			case TetrisColor.Cyan:
 				return Android.Graphics.Color.Cyan;
-			case Color.Blue:
+			case TetrisColor.Blue:
 				return Android.Graphics.Color.Blue;
-			case Color.Pink:
-				return Android.Graphics.Color.Pink;
+			case TetrisColor.Pink:
+				return Android.Graphics.Color.Magenta;
 			}
 			return Android.Graphics.Color.Black;
 		}

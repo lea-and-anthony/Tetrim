@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+
 using Android.Content;
 using Android.Views;
 using Android.Graphics;
@@ -8,87 +10,149 @@ namespace Tetris
 {
 	public class ViewProposedPiece : View
 	{
-		private Player m_player = null;
-		PieceView[] m_piece = new PieceView[Constants.NbProposedPiece];
-		private int m_blockSize = 0;
-		private uint m_pieceHilite = Constants.NbProposedPiece;
-		BluetoothManager m_bluetooth = null;
+		//--------------------------------------------------------------
+		// ATTRIBUTES
+		//--------------------------------------------------------------
+		private Player _player; // Instance of the player to whom the pieces are proposed
+		private PieceView[] _proposedPieces = new PieceView[Constants.NbProposedPiece]; // Array of the views of the proposed pieces
+		private int _selectedPiece = 0; // Selected piece by the player
 
+		private int _blockSize = 0; // Size of the blocks in pixels according to the screen resolution
+		private Dictionary<TetrisColor, Bitmap> _blockImages = new Dictionary<TetrisColor, Bitmap>(); // Images of the blocks
+
+		private BluetoothManager _bluetoothManager; // Needed for the bluetooth connectio for now
+
+		//--------------------------------------------------------------
+		// CONSTRUCTORS
+		//--------------------------------------------------------------
 		public ViewProposedPiece(Context context, IAttributeSet attrs) : base(context, attrs)
 		{
-			for(int i = 0; i < Constants.NbProposedPiece; i++)
-			{
-				m_piece[i] = null;
-			}
+			selectPiece(0);
 		}
 
+		//--------------------------------------------------------------
+		// PUBLIC METHODES
+		//--------------------------------------------------------------
 		public void SetBluetooth(BluetoothManager bluetooth)
 		{
-			m_bluetooth = bluetooth;
+			// Associate the new instance
+			_bluetoothManager = bluetooth;
 		}
 
-		public void SetPiece(Player player)
+		public void SetPlayer(Player player)
 		{
-			m_player = player;
+			// Associate the new instance
+			_player = player;
+
+			// Recreate the proposed pieces
 			for(int i = 0; i < Constants.NbProposedPiece; i++)
 			{
-				if(i < player.m_proposedPieces.Length)
-					m_piece[i] = new PieceView(player.m_proposedPieces[i], false);
-				else
-					m_piece[i] = null;
+				_proposedPieces[i] = (i < player.m_proposedPieces.Length) ? new PieceView(player.m_proposedPieces[i], false) : null;
 			}
 		}
 
-		public void ChangePieceHilite()
+		public void ChangeProposedPiece()
 		{
-			if(m_pieceHilite < Constants.NbProposedPiece)
+			if(_selectedPiece < Constants.NbProposedPiece)
 			{
-				m_player.ChangeProposedPiece((int) m_pieceHilite);
-				m_piece[m_pieceHilite] = new PieceView(m_player.m_proposedPieces[m_pieceHilite], false);
-				m_pieceHilite = Constants.NbProposedPiece;
+				// Change it in the model
+				_player.ChangeProposedPiece(_selectedPiece);
+
+				// Change it in the view
+				_proposedPieces[_selectedPiece] = new PieceView(_player.m_proposedPieces[_selectedPiece], false);
+
+				// Select a new piece in the same place
+				selectPiece(_selectedPiece);
+
+				Invalidate();
 			}
 		}
 
+		//--------------------------------------------------------------
+		// PRIVATE METHODES
+		//--------------------------------------------------------------
+		private void selectPiece(int piece)
+		{
+			if(_bluetoothManager != null)
+			{
+				// Notify the other player of the newly selected piece
+				_bluetoothManager.Write(_player.GetMessageSendNewPiece(piece));
+
+				// Select the piece on our side
+				_selectedPiece = piece;
+			}
+		}
+
+		//--------------------------------------------------------------
+		// EVENT METHODES
+		//--------------------------------------------------------------
 		protected override void OnDraw(Canvas canvas)
 		{
 			base.OnDraw(canvas);
 
-			if(m_blockSize == 0)
+			// If it is the first draw, calculate the size of the block according to the size of the canvas
+			if(_blockSize == 0)
 			{
-				// on considere qu'il faut un espace de 5 blocks pour chaque piece (sauf pour la derniere)
-				m_blockSize = Math.Min(Math.Abs(canvas.ClipBounds.Right - canvas.ClipBounds.Left)/((Constants.NbProposedPiece/Constants.NbLinePropPiece)*5 - 1),
-										Math.Abs(canvas.ClipBounds.Top - canvas.ClipBounds.Bottom)/(Constants.NbLinePropPiece*5 - 1));
+				// Calculate the size of the block, Space for each piece set to 5 blocks (except for the last one)
+				_blockSize = Math.Min(Math.Abs(canvas.ClipBounds.Right - canvas.ClipBounds.Left)/((Constants.NbProposedPiece/Constants.NbLinePropPiece)*5 - 1),
+					Math.Abs(canvas.ClipBounds.Top - canvas.ClipBounds.Bottom)/(Constants.NbLinePropPiece*5 - 1));
+
+				// Create the blocks images with the right size
+				foreach(TetrisColor color in Enum.GetValues(typeof(TetrisColor)))
+				{
+					_blockImages.Add(color, BlockView.CreateImage(_blockSize, color));
+				}
 			}
+
+			// Draw the pieces and highlight the selected one
 			for(int i = 0; i < Constants.NbProposedPiece; i++)
 			{
-				if(m_piece[i] != null)
-					m_piece[i].Draw(canvas, m_blockSize, i==m_pieceHilite);
+				if(_proposedPieces[i] != null)
+				{
+					// Show the selected piece
+					// TODO : change the way we highlight a piece
+					if(i==_selectedPiece)
+					{
+						RectF rect = new RectF(i * _blockSize * 5, 0, (i + 1) * _blockSize * 5, _blockSize * 4);
+						Paint paint = new Paint {AntiAlias = true, Color = Color.AntiqueWhite};
+						canvas.DrawRoundRect(rect, 10, 10, paint);
+					}
+
+					// Draw each piece
+					_proposedPieces[i].Draw(canvas, _blockSize, _blockImages);
+				}
 			}
 		}
 
 		public override bool OnTouchEvent(MotionEvent e)
 		{
-			bool retour = base.OnTouchEvent(e);
+			bool returnValue = base.OnTouchEvent(e);
 
-			if(m_bluetooth != null)
+			if(_bluetoothManager != null)
 			{
-				int x = ((int) e.GetX())/(m_blockSize*5);
-				int y = ((int) e.GetY())/(m_blockSize*5);
+				// Get the touch position
+				int x = ((int) e.GetX())/(_blockSize*5);
+				int y = ((int) e.GetY())/(_blockSize*5);
 
-				// We low the value if it is too high
+				// Lower the value if it is too high
 				if(x >= Constants.NbProposedPiece/Constants.NbLinePropPiece)
+				{
 					x = Constants.NbProposedPiece/Constants.NbLinePropPiece - 1;
+				}
 				if(y >= Constants.NbLinePropPiece)
+				{
 					y = Constants.NbLinePropPiece - 1;
+				}
 
+				// Get the piece number
 				int i = x + y*(Constants.NbProposedPiece/Constants.NbLinePropPiece);
 
-				m_bluetooth.Write(m_player.GetMessageSendNewPiece(i));
-				m_pieceHilite = (uint) i;
+				// Select the piece
+				selectPiece(i);
 			}
 
 			Invalidate();
-			return retour;
+			return returnValue;
 		}
 	}
 }

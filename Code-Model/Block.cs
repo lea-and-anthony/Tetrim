@@ -9,12 +9,12 @@ namespace Tetris
 		//--------------------------------------------------------------
 		public int m_x { get; set; }
 		public int m_y { get; set; }
-		public Color m_color { get; set; }
+		public TetrisColor m_color { get; set; }
 
 		//--------------------------------------------------------------
 		// CONSTRUCTORS
 		//--------------------------------------------------------------
-		public Block (int x, int y, Color color)
+		public Block (int x, int y, TetrisColor color)
 		{
 			m_x = x;
 			m_y = y;

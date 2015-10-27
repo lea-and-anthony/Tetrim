@@ -133,21 +133,29 @@
             android:layout_gravity="center_vertical"
             android:layout_marginRight="0.0dp">
             <Button
-                android:text="Turn Left"
                 android:id="@+id/buttonTurnLeft"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center" />
+                android:layout_gravity="center"
+                android:background="@drawable/turn_left"
+                android:minWidth="40dp"
+                android:minHeight="40dp" />
             <Button
-                android:text="Move Left"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/buttonMoveLeft" />
+                android:id="@+id/buttonMoveLeft"
+                android:background="@drawable/move_left"
+                android:layout_gravity="center"
+                android:minWidth="40dp"
+                android:minHeight="40dp" />
             <Button
-                android:text="Move Down"
-                android:layout_width="63.2dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/buttonMoveDown" />
+                android:id="@+id/buttonMoveDown"
+                android:layout_gravity="center"
+                android:background="@drawable/move_down"
+                android:minWidth="40dp"
+                android:minHeight="40dp" />
         </LinearLayout>
         <Tetris.MyView
             android:id="@+id/PlayerGridView"
@@ -160,20 +168,29 @@
             android:id="@+id/layoutButtonsRight"
             android:layout_gravity="center">
             <Button
-                android:text="Turn Right"
                 android:id="@+id/buttonTurnRight"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@drawable/turn_right"
+                android:minWidth="40dp"
+                android:minHeight="40dp" />
             <Button
-                android:text="Move Right"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/buttonMoveRight" />
+                android:id="@+id/buttonMoveRight"
+                android:background="@drawable/move_right"
+                android:layout_gravity="center"
+                android:minWidth="40dp"
+                android:minHeight="40dp" />
             <Button
-                android:text="Move Foot"
                 android:id="@+id/buttonMoveFoot"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@drawable/move_bottom"
+                android:minWidth="40dp"
+                android:minHeight="40dp" />
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

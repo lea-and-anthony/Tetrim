@@ -252,15 +252,15 @@ namespace Tetris
 			// Creation of the view
 			m_gameView = new GameView(m_game);
 			MyView view = FindViewById<MyView>(Resource.Id.PlayerGridView);
-			view.m_gridView = m_gameView.m_player1View.m_gridView;
+			view.m_gridView = m_gameView.m_player1View._gridView;
 			// If it is a 2 player game
 			if(bluetooth != null && bluetooth.GetState() == BluetoothManager.State.CONNECTED)
 			{
 				MyView view2 = FindViewById<MyView>(Resource.Id.OpponentGridView);
-				view2.m_gridView = m_gameView.m_player2View.m_gridView;
+				view2.m_gridView = m_gameView.m_player2View._gridView;
 
 				ViewProposedPiece viewProposed = FindViewById<ViewProposedPiece>(Resource.Id.ProposedPiecesView);
-				viewProposed.SetPiece(m_game.m_player1);
+				viewProposed.SetPlayer(m_game.m_player1);
 				viewProposed.SetBluetooth(bluetooth);
 			}
 
@@ -378,7 +378,7 @@ namespace Tetris
 
 				// We actualise the proposed piece if the opponent used the selected one
 				if(message[0] == Constants.IdMessagePiecePut && message[Constants.SizeMessagePiecePut - 1] == 1)
-					FindViewById<ViewProposedPiece>(Resource.Id.ProposedPiecesView).ChangePieceHilite();
+					FindViewById<ViewProposedPiece>(Resource.Id.ProposedPiecesView).ChangeProposedPiece();
 			}
 			// If it is the message of the next piece for us
 			else if(message[0] == Constants.IdMessageNextPiece)

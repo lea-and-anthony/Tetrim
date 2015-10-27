@@ -19,7 +19,7 @@ namespace Tetris
 		public const string LevelPrint = "Level : ";
 		public const string RowsPrint = "Rows cleared : ";
 		public const int ShapeMax = (int) Shape.ShapeMax;
-		public const int ColorMax = (int) Color.ColorMax;
+		public const int ColorMax = (int) TetrisColor.ColorMax;
 
 		public const int MaxLevel = 30;
 		public static uint Score1Row = 100;
@@ -55,7 +55,7 @@ namespace Tetris
 		I, J, L, O,	S, T, Z, ShapeMax
 	};
 
-	public enum Color
+	public enum TetrisColor
 	{
 		Red,
 		Orange,
