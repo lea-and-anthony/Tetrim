@@ -9,7 +9,7 @@ namespace Tetris
 		// ATTRIBUTES
 		//--------------------------------------------------------------
 		public Shape m_shape { get; private set; }
-		public Color m_color { get; private set; }
+		public TetrisColor m_color { get; private set; }
 		public uint m_angle { get; private set; }
 		public Block[] m_blocks { get; private set; }
 
@@ -62,26 +62,26 @@ namespace Tetris
 			return (Shape) Constants.Rand.Next(Constants.ShapeMax);
 		}
 
-		private static Color pickColor (Shape shape)
+		private static TetrisColor pickColor (Shape shape)
 		{
 			switch (shape)
 			{
 			case Shape.I:
-				return Color.Cyan;
+				return TetrisColor.Cyan;
 			case Shape.J:
-				return Color.Blue;
+				return TetrisColor.Blue;
 			case Shape.L:
-				return Color.Orange;
+				return TetrisColor.Orange;
 			case Shape.O:
-				return Color.Yellow;
+				return TetrisColor.Yellow;
 			case Shape.S:
-				return Color.Green;
+				return TetrisColor.Green;
 			case Shape.T:
-				return Color.Pink;
+				return TetrisColor.Pink;
 			case Shape.Z:
-				return Color.Red;
+				return TetrisColor.Red;
 			}
-			return Color.Red;
+			return TetrisColor.Red;
 		}
 
 		private static uint pickAngle ()

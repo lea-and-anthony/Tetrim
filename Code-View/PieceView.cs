@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 using Android.Graphics;
 
@@ -9,30 +10,49 @@ namespace Tetris
 		//--------------------------------------------------------------
 		// ATTRIBUTES
 		//--------------------------------------------------------------
-		public Piece m_piece { get; private set; }
-		public BlockView[] m_blocksView { get; private set; }
+		private Piece _piece; // Instance of the piece to display
+		private bool _isShadow; // true if the piece is a shadow at the bottom of the grid
+		private BlockView[] _blocksView; // Array of the BlockViews constituting the piece
 
 		//--------------------------------------------------------------
 		// CONSTRUCTORS
 		//--------------------------------------------------------------
 		public PieceView (Piece piece, bool isShadow)
 		{
-			m_piece = piece;
-			m_blocksView = new BlockView[Constants.BlockPerPiece];
-			for (uint i = 0 ; i < m_piece.m_blocks.GetLength(0) ; i++)
+			// Associate the instances
+			_piece = piece;
+			_isShadow = isShadow;
+
+			// Create the associated BlockViews
+			_blocksView = new BlockView[Constants.BlockPerPiece];
+			for (uint i = 0 ; i < _piece.m_blocks.GetLength(0) ; i++)
 			{
-				m_blocksView[i] = new BlockView(m_piece.m_blocks[i],isShadow);
+				_blocksView[i] = new BlockView(_piece.m_blocks[i], isShadow);
 			}
 		}
 
 		//--------------------------------------------------------------
-		// METHODES
+		// PUBLIC METHODES
 		//--------------------------------------------------------------
-		public void Draw (Canvas canvas, float blockSize, bool isHighlight = false)
+		public void Draw (Canvas canvas, float blockSize, Dictionary<TetrisColor, Bitmap> blockImages)
 		{
-			for (uint i = 0 ; i < m_piece.m_blocks.GetLength(0) ; i++)
+			// Draw each block of the piece
+			for (uint i = 0 ; i < _piece.m_blocks.GetLength(0) ; i++)
 			{
-				m_blocksView[i].Draw(canvas, blockSize, isHighlight);
+				_blocksView[i].Draw(canvas, blockSize, blockImages);
+			}
+		}
+
+		public void Update(Piece piece, bool isShadow)
+		{
+			// Associate the new instances
+			_piece = piece;
+			_isShadow = isShadow;
+
+			// Update the BlockViews
+			for (uint i = 0 ; i < _piece.m_blocks.GetLength(0) ; i++)
+			{
+				_blocksView[i].Update(_piece.m_blocks[i], isShadow);
 			}
 		}
 	}

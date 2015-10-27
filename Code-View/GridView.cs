@@ -1,114 +1,161 @@
 ﻿using System;
+using System.Collections.Generic;
 
 using Android.Graphics;
-using Android.Util;
 
 namespace Tetris
 {
 	public class GridView
 	{
 		//--------------------------------------------------------------
+		// CONSTANTS
+		//--------------------------------------------------------------
+		// Width of the line around the grid
+		private const float StrokeWidthBorder = 5;
+
+		// Transparency of the quartering o f the grid, between 0 and 255
+		private const int QuarteringAlpha = 50;
+
+		// Colors used for the paints of the grid
+		private static Color BorderColor = Color.Gainsboro;
+		private static Color HightlightBorderColor = Color.White;
+		private static Color BackgroundColor = Color.Rgb(25, 20, 35);
+
+		// Paints used to draw the grid
+		private static Paint BackgroundPaint = createPaintWithStyle(
+			new Paint {AntiAlias = true, Color = BackgroundColor},
+			Paint.Style.Fill);
+		private static Paint BorderPaint = createPaintWithStyle(
+			new Paint {AntiAlias = true, Color = BorderColor, StrokeWidth = StrokeWidthBorder},
+			Paint.Style.Stroke);
+		private static Paint GridPaint = createPaintWithStyle(
+			new Paint {AntiAlias = true, Color = BorderColor, StrokeWidth = StrokeWidthBorder, Alpha = QuarteringAlpha},
+			Paint.Style.Stroke);
+
+		//--------------------------------------------------------------
 		// ATTRIBUTES
 		//--------------------------------------------------------------
-		public Grid m_grid { get; private set; }
-		public BlockView[,] m_mapView { get; private set; }
-		public PieceView m_fallingPieceView { get; private set; }
-		public PieceView m_shadowPieceView { get; private set; }
-		public int m_blockSize { get; private set; }
-		public Paint m_backgroundColor { get; private set; }
-		public Paint m_borderColor { get; private set; }
+		private Grid _grid; // Instance of the grid to display
+		private BlockView[,] _mapView; // Array of the BlockViews constituting the grid
+
+		private PieceView _fallingPieceView; // View of the piece falling from the top of the grid
+		private PieceView _shadowPieceView; // View of the shadow of the piece falling from the top of the grid
+
+		private int _blockSize = 0; // Size of the blocks in pixels according to the screen resolution
+		private Dictionary<TetrisColor, Bitmap> _blockImages = new Dictionary<TetrisColor, Bitmap>(); // Images of the blocks
 
 		//--------------------------------------------------------------
 		// CONSTRUCTORS
 		//--------------------------------------------------------------
 		public GridView (Grid grid)
 		{
-			m_blockSize = 0;
-			m_grid = grid;
-			m_fallingPieceView = new PieceView(m_grid.m_fallingPiece, false);
-			m_shadowPieceView = new PieceView(m_grid.m_shadowPiece, true);
-			m_mapView = new BlockView[Constants.GridSizeX, Constants.GridSizeY];
-			for (uint i = 0 ; i < m_grid.m_map.GetLength(0) ; i++)
+			// Associate the instance
+			_grid = grid;
+
+			// Create the associated PieceViews
+			_fallingPieceView = new PieceView(_grid.m_fallingPiece, false);
+			_shadowPieceView = new PieceView(_grid.m_shadowPiece, true);
+
+			// Create the associated BlockViews
+			_mapView = new BlockView[Constants.GridSizeX, Constants.GridSizeY];
+			for (uint i = 0 ; i < _grid.m_map.GetLength(0) ; i++)
 			{
-				for (uint j = 0 ; j < m_grid.m_map.GetLength(1) ; j++)
+				for (uint j = 0 ; j < _grid.m_map.GetLength(1) ; j++)
 				{
-					m_mapView[i,j] = new BlockView(m_grid.m_map[i,j], false);
+					_mapView[i,j] = new BlockView(_grid.m_map[i,j], false);
 				}
 			}
-
-			m_backgroundColor = new Paint {
-				AntiAlias = true,
-				Color = Utils.BackgroundColor,
-			};
-			m_backgroundColor.SetStyle(Paint.Style.Fill);
-
-			m_borderColor = new Paint {
-				AntiAlias = true,
-				Color = Utils.BorderColor,
-			};
-			m_borderColor.SetStyle(Paint.Style.Stroke);
-			m_borderColor.StrokeWidth = Utils.StrokeWidth;
 		}
 
 		//--------------------------------------------------------------
-		// METHODES
+		// STATIC METHODES
+		//--------------------------------------------------------------
+		private static Paint createPaintWithStyle(Paint paint, Paint.Style style)
+		{
+			paint.SetStyle(style);
+			return paint;
+		}
+
+		//--------------------------------------------------------------
+		// PUBLIC METHODES
 		//--------------------------------------------------------------
 		public void Draw (Canvas canvas)
 		{
-			// If it is the first draw,
-			// calculate the size of the block according to the size of the canvas
-			if (m_blockSize == 0)
+			// If it is the first draw, calculate the size of the block according to the size of the canvas
+			if (_blockSize == 0)
 			{
-				m_blockSize = calculateBlockSize(canvas);
-			}
+				// Calculate the size of the block
+				_blockSize = calculateBlockSize(canvas);
 
-			// Draw the background
-			canvas.DrawRect(m_blockSize*Constants.GridSizeXmin,
-							Math.Abs(canvas.ClipBounds.Top - canvas.ClipBounds.Bottom)-m_blockSize*Constants.GridSizeYmin,
-							m_blockSize*(Constants.GridSizeXmax+1),
-							Math.Abs(canvas.ClipBounds.Top - canvas.ClipBounds.Bottom)-m_blockSize*(Constants.GridSizeYmax+1),
-							m_backgroundColor);
-
-			// Draw the border
-			canvas.DrawRect(m_blockSize * Constants.GridSizeXmin,
-							Math.Abs (canvas.ClipBounds.Top - canvas.ClipBounds.Bottom) - m_blockSize * Constants.GridSizeYmin,
-							m_blockSize*(Constants.GridSizeXmax+1),
-							Math.Abs (canvas.ClipBounds.Top - canvas.ClipBounds.Bottom) - m_blockSize * (Constants.GridSizeYmax+1),
-							m_borderColor);
-
-			// Draw the piece
-			m_shadowPieceView.Draw(canvas, m_blockSize);
-			m_fallingPieceView.Draw(canvas, m_blockSize);
-
-			// Draw the blocks
-			for (uint i = 0 ; i < m_grid.m_map.GetLength(0) ; i++)
-			{
-				for (uint j = 0 ; j < m_grid.m_map.GetLength(1) ; j++)
+				// Create the blocks images with the right size
+				foreach(TetrisColor color in Enum.GetValues(typeof(TetrisColor)))
 				{
-					m_mapView[i,j].Draw(canvas, m_blockSize);
+					_blockImages.Add(color, BlockView.CreateImage(_blockSize, color));
 				}
 			}
-		}
 
-		public int calculateBlockSize(Canvas canvas)
-		{
-			return Math.Min(Math.Abs(canvas.ClipBounds.Right-canvas.ClipBounds.Left)/Constants.GridSizeX,
-							Math.Abs(canvas.ClipBounds.Top - canvas.ClipBounds.Bottom)/Constants.GridSizeY);
+			// Calculate the boundaries of the grid
+			float left = _blockSize*Constants.GridSizeXmin;
+			float top = Math.Abs(canvas.ClipBounds.Top - canvas.ClipBounds.Bottom)-_blockSize*Constants.GridSizeYmin;
+			float right = _blockSize*(Constants.GridSizeXmax+1);
+			float bottom = Math.Abs (canvas.ClipBounds.Top - canvas.ClipBounds.Bottom) - _blockSize * (Constants.GridSizeYmax+1);
+
+			// Draw the background
+			canvas.DrawRect(left, top, right, bottom, BackgroundPaint);
+
+			// Draw the border
+			canvas.DrawRect(left + StrokeWidthBorder/2, top, right, bottom - StrokeWidthBorder/2, BorderPaint);
+
+			// Draw the vertical quartering
+			for(float x = left ; x < right ; x += _blockSize)
+			{
+				canvas.DrawLine(x, top, x, bottom, GridPaint);
+			}
+
+			// Draw the horizontal quartering
+			for(float y = bottom ; y < top ; y += _blockSize)
+			{
+				canvas.DrawLine(left, y, right, y, GridPaint);
+			}
+
+			// Draw the pieces
+			_shadowPieceView.Draw(canvas, _blockSize, _blockImages);
+			_fallingPieceView.Draw(canvas, _blockSize, _blockImages);
+
+			// Draw the blocks
+			for (uint i = 0 ; i < _grid.m_map.GetLength(0) ; i++)
+			{
+				for (uint j = 0 ; j < _grid.m_map.GetLength(1) ; j++)
+				{
+					_mapView[i,j].Draw(canvas, _blockSize, _blockImages);
+				}
+			}
 		}
 
 		public void Update()
 		{
-			m_shadowPieceView = new PieceView(m_grid.m_shadowPiece, true);
-			m_fallingPieceView = new PieceView(m_grid.m_fallingPiece, false);
-			for (uint i = 0 ; i < m_grid.m_map.GetLength(0) ; i++)
+			// Update the pieces
+			_shadowPieceView.Update(_grid.m_shadowPiece, true);
+			_fallingPieceView.Update(_grid.m_fallingPiece, false);
+
+			// Update the blocks of the grid
+			for (uint i = 0 ; i < _grid.m_map.GetLength(0) ; i++)
 			{
-				for (uint j = 0 ; j < m_grid.m_map.GetLength(1) ; j++)
+				for (uint j = 0 ; j < _grid.m_map.GetLength(1) ; j++)
 				{
-					m_mapView [i, j].Update (m_grid.m_map[i,j], false);
+					_mapView [i, j].Update(_grid.m_map[i,j], false);
 				}
 			}
 		}
-
+			
+		//--------------------------------------------------------------
+		// PRIVATE METHODES
+		//--------------------------------------------------------------
+		private int calculateBlockSize(Canvas canvas)
+		{
+			return Math.Min(Math.Abs(canvas.ClipBounds.Right-canvas.ClipBounds.Left)/Constants.GridSizeX,
+				Math.Abs(canvas.ClipBounds.Top - canvas.ClipBounds.Bottom)/Constants.GridSizeY);
+		}
 	}
 }
 
