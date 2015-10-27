@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string name="hello">Hello World, Click Me!</string>
+	<string name="checkboxText">Test checkbox et truc!</string>
+	<string name="connexionBluetooth">Se connecter à un autre périphérique</string>
+	<string name="BTNotAvailableTitle">Bluetooth non disponible</string>
+	<string name="BTNotAvailable">Bluetooth non disponible</string>
+	<string name="BTNotEnabledTitle">Bluetooth non activé</string>
+	<string name="BTNotEnabled">Bluetooth non activé</string>
+	<string name="ConnectionLostTitle">Connexion interrompue</string>
+	<string name="ConnectionLost">La connexion au périphérique a été interrompue</string>
+	<string name="ConnectionImpossibleTitle">Connexion impossible</string>
+	<string name="ConnectionImpossible">La connexion au périphérique a échoué</string>
+	<string name="not_connected_title">Non connecté</string>
+    <string name="not_connected">Attention, vous n\'êtes pas connecté à un autre périphérique, vous aller commencer une partie solo?</string>
+	<string name="app_name">Tetris</string>
+	<string name="game_over">Game over :-(</string>
+
+
+    <!--  DeviceListActivity -->
+    <string name="scanning">Recherche en cours...</string>
+    <string name="select_device">Choisir le périphérique auquel se connecter</string>
+    <string name="none_paired">Aucun périphérique n\'a été appairé</string>
+    <string name="none_found">Aucun périphérique trouvé</string>
+    <string name="title_paired_devices">Périphérique appairé</string>
+    <string name="title_other_devices">Autres périphériques disponibles</string>
+    <string name="button_scan">Rechercher des périphériques</string>
+
+</resources>
