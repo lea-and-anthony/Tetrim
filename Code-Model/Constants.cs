@@ -41,6 +41,8 @@ namespace Tetris
 		public const uint SizeMessagePiecePut = 2*SizeMessagePiece + 1 - 1;
 		public const uint SizeMessageGrid = GridSizeX*GridSizeY+SizeMessagePiece;
 		public const uint SizeMessageNextPiece = 1 + 1;
+		public const uint SizeMessagePause = 1;
+		public const uint SizeMessageResume = 1;
 		public const uint SizeMaxBluetoothMessage = 512;
 
 		public const byte NumVersion1 = 1;

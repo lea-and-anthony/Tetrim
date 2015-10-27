@@ -3,163 +3,88 @@ using System.Timers;
 
 using Android.App;
 using Android.Content;
-using Android.Runtime;
-using Android.Views;
 using Android.Widget;
 using Android.OS;
-using Android.Graphics;
 using Android.Util;
 using Android.Bluetooth;
 
 namespace Tetris
 {
-	public class MyView : View
-	{
-		public GridView m_gridView;
-
-		public MyView(Context context, IAttributeSet attrs) : base(context, attrs)
-		{
-			m_gridView = null;
-		}
-
-		protected override void OnDraw(Canvas canvas)
-		{
-			base.OnDraw(canvas);
-
-			if(m_gridView != null)
-				m_gridView.Draw(canvas);
-		}
-	}
-
-
-	[Activity(Label = "Tetris", MainLauncher = true, Icon = "@drawable/icon", Theme = "@android:style/Theme.NoTitleBar.Fullscreen")]
+	[Activity(Label = "Tetris", Icon = "@drawable/icon", Theme = "@android:style/Theme.NoTitleBar.Fullscreen")]
 	public class MainActivity : Activity
 	{
-		// Name of the connected device
-		public string connectedDeviceName = null;
+		//--------------------------------------------------------------
+		// CONSTANTS
+		//--------------------------------------------------------------
+		private const string TAG = "Tetris-MainActivity";
 
-		private BluetoothManager bluetooth = null;
-		private const string TAG = "Tetris";
-		private const bool Debug = true;
-		private enum RequestCode
-		{
-			REQUEST_CONNECT_DEVICE = 1,
-			REQUEST_ENABLE_BT = 2
-		};
-
+		//--------------------------------------------------------------
+		// MEMBERS
+		//--------------------------------------------------------------
+		private Timer gameTimer = null;
+		private bool originPause = false; // Set to true if it's us who ask for the pause
 
 		public Game m_game { get; private set; }
 		public GameView m_gameView { get; private set; }
-		public bool buttonStartPressed = false;
-		public bool opponentReady = false;
 
-		/*------------------------------------ EVENT REPONDING METHODES ------------------------------------*/
+
+		//--------------------------------------------------------------
+		// EVENT REPONDING METHODES
+		//--------------------------------------------------------------
 		protected override void OnCreate(Bundle bundle)
 		{
 			base.OnCreate(bundle);
 
-			// Set our view from the "accueil" layout resource
-			SetContentView(Resource.Layout.Accueil);
+			// Set our view from the "main" layout resource
+			SetContentView(Resource.Layout.Main);
 
-			if(Debug)
-				Log.Debug(TAG, "onCreate()");
+			// Creation of the model
+			m_game = new Game();
 
-			Button button = FindViewById<Button>(Resource.Id.button1);
-
-			button.Click += delegate {
-				// Launch the DeviceListActivity to display the list of bluetooth device and select one
-				var serverIntent = new Intent(this, typeof(DeviceListActivity));
-				StartActivityForResult(serverIntent, (int) RequestCode.REQUEST_CONNECT_DEVICE);
-			};
-
-			Button button2 = FindViewById<Button>(Resource.Id.button2);
-
-			button2.Click += delegate {
-				enableBluetooth();
-			};
-
-			Button button3 = FindViewById<Button>(Resource.Id.button3);
-
-			button3.Click += delegate {
-				// Check that we're actually connected before trying anything
-				if(bluetooth == null || bluetooth.GetState() != BluetoothManager.State.CONNECTED)
-				{
-					AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
-					builder1.SetTitle(Resource.String.not_connected_title);
-					builder1.SetMessage(Resource.String.not_connected);
-					builder1.SetCancelable(true);
-					builder1.SetPositiveButton("Yes", delegate{bluetooth = null;startGame();});
-					builder1.SetNegativeButton("No", delegate{if(bluetooth == null) enableBluetooth();});
-					AlertDialog alert11 = builder1.Create();
-					alert11.Show();
-					//Toast.MakeText (this, Resource.String.not_connected, ToastLength.Short).Show ();
-				}
-				else
-				{
-					byte[] message = {Constants.IdMessageStart, Constants.NumVersion1, Constants.NumVersion2};
-					// We notify the opponent that we are ready
-					bluetooth.Write(message);
-
-					if(opponentReady)
-						startGame();// We launch the game (change view and everything)
-					else
-						buttonStartPressed = true;
-				}
-			};
-		}
-
-		protected override void OnActivityResult(int requestCode, Result resultCode, Intent data)
-		{
-			if(Debug)
-				Log.Debug(TAG, "onActivityResult " + resultCode);
-
-			switch(requestCode)
+			// Creation of the view
+			m_gameView = new GameView(m_game);
+			MyView view = FindViewById<MyView>(Resource.Id.PlayerGridView);
+			view.m_gridView = m_gameView.m_player1View.m_gridView;
+			// If it is a 2 player game
+			if(Network.Instance.Connected())
 			{
-			case (int) RequestCode.REQUEST_CONNECT_DEVICE:
-				// When DeviceListActivity returns with a device to connect
-				if(resultCode == Result.Ok && bluetooth != null)
-				{
-					// Get the device MAC address
-					var address = data.Extras.GetString(DeviceListActivity.EXTRA_DEVICE_ADDRESS);
-					// Get the BLuetoothDevice object
-					BluetoothDevice device = BluetoothAdapter.DefaultAdapter.GetRemoteDevice(address);
-					// Attempt to connect to the device
-					bluetooth.Connect(device);
-				}
-				break;
-			case (int) RequestCode.REQUEST_ENABLE_BT:
-				// When the request to enable Bluetooth returns
-				if(resultCode == Result.Ok)
-				{
-					// Bluetooth is now enabled
-					bluetooth = new BluetoothManager(this);
-					bluetooth.Start();
-				}
-				else
-				{
-					// User did not enable Bluetooth or an error occured
-					Log.Debug(TAG, "Bluetooth not enabled");
-					showAlert(Resource.String.BTNotEnabledTitle, Resource.String.BTNotEnabled);
-				}
-				break;
+				MyView view2 = FindViewById<MyView>(Resource.Id.OpponentGridView);
+				view2.m_gridView = m_gameView.m_player2View.m_gridView;
+
+				ViewProposedPiece viewProposed = FindViewById<ViewProposedPiece>(Resource.Id.ProposedPiecesView);
+				viewProposed.SetPiece(m_game.m_player1);
+				viewProposed.SetBluetooth(Network.Instance.CommunicationWay);
 			}
+
+			// Linkage of the button with the methods
+			associateButtonsEvent();
+
+			// Launch the main timer of the application
+			int time = getTimerLapse();
+			gameTimer = new Timer(time);
+			gameTimer.Elapsed += new ElapsedEventHandler(OnTimerElapsed);
+			gameTimer.Interval = time;
+			gameTimer.AutoReset = true;
+			gameTimer.Start();
+
+			// Hook on network event
+			Network.Instance.UsualGameMessage += UpdateOpponentView;
+			Network.Instance.PiecePutMessage += OpponentPiecePut;
+			Network.Instance.NextPieceMessage += m_game.m_player1.interpretMessage;
+			Network.Instance.PauseMessage += pauseGame;
+			Network.Instance.ResumeMessage += resumeGame;
 		}
 
-		protected override void OnResume ()
+		protected override void OnPause()
 		{
-			base.OnResume ();
+			base.OnPause();
 
-			// Performing this check in onResume() covers the case in which Bluetooth was
-			// not enabled when the button was hit, so we were paused to enable it...
-			// onResume() will be called when ACTION_REQUEST_ENABLE activity returns.
-			if (bluetooth != null)
+			if(gameTimer != null)
 			{
-				// Only if the state is STATE_NONE, do we know that we haven't started already
-				if (bluetooth.GetState() == BluetoothManager.State.NONE)
-				{
-					// Start the Bluetooth chat services
-					bluetooth.Start();
-				}
+				if(gameTimer.Enabled)
+					pauseGame(true);
+				else
+					resumeGame();
 			}
 		}
 
@@ -167,12 +92,16 @@ namespace Tetris
 		{
 			base.OnDestroy ();
 
-			// Stop the Bluetooth Manager
-			if (bluetooth != null)
-				bluetooth.Stop ();
+			// Stop the timer
+			if (gameTimer != null)
+			{
+				gameTimer.Stop();
+				gameTimer = null;
+    		}
 
-			if (Debug)
-				Log.Error (TAG, "--- ON DESTROY ---");
+			#if DEBUG
+			Log.Error (TAG, "--- ON DESTROY ---");
+			#endif
 		}
 
 		private void OnTimerElapsed(object source, ElapsedEventArgs e)
@@ -194,16 +123,16 @@ namespace Tetris
 			
 			if (m_game.m_player1.m_grid.isGameOver())
 			{
-				RunOnUiThread(() => showAlert (Resource.String.game_over, Resource.String.game_over));
+				RunOnUiThread(() => Utils.ShowAlert (Resource.String.game_over, Resource.String.game_over, this));
 			}
 
 			//  Network
 			// We send the message to the other player
-			if(bluetooth != null && bluetooth.GetState() == BluetoothManager.State.CONNECTED)
+			if(Network.Instance.Connected())
 			{
 				// If it is the same piece we only send the position of the piece
 				if(isSamePiece)
-					bluetooth.Write(m_game.m_player1.getMessagePiece());
+					Network.Instance.CommunicationWay.Write(m_game.m_player1.getMessagePiece());
 				// If it is a new piece, we send the old piece and the new one
 				else
 				{
@@ -221,58 +150,111 @@ namespace Tetris
 					else
 						message[Constants.SizeMessagePiecePut-1] = 0;
 
-					bluetooth.Write(message);
+					Network.Instance.CommunicationWay.Write(message);
 				}
 			}
 
 			// Display of the current model
 			FindViewById(Resource.Id.PlayerGridView).PostInvalidate();
-
-			// Launch of the next timer
-			Timer gameTimer = (Timer) source;
-			gameTimer.Interval = getTimerLapse();
-			gameTimer.Start();
 		}
 
-
-
-		/*------------------------------------ GENRALS METHODES ------------------------------------*/
-		protected void startGame()
+		public override void OnBackPressed()
 		{
-			KeyguardManager keyguardManager = (KeyguardManager)GetSystemService(Activity.KeyguardService);
-			KeyguardManager.KeyguardLock screenLock = keyguardManager.NewKeyguardLock(KeyguardService);
-			screenLock.DisableKeyguard();
-
-			// Set our view from the "main" layout resource
-			SetContentView(Resource.Layout.Main);
-
-			// Creation of the model
-			m_game = new Game();
-
-			// Creation of the view
-			m_gameView = new GameView(m_game);
-			MyView view = FindViewById<MyView>(Resource.Id.PlayerGridView);
-			view.m_gridView = m_gameView.m_player1View.m_gridView;
-			// If it is a 2 player game
-			if(bluetooth != null && bluetooth.GetState() == BluetoothManager.State.CONNECTED)
+			if(gameTimer != null)
 			{
-				MyView view2 = FindViewById<MyView>(Resource.Id.OpponentGridView);
-				view2.m_gridView = m_gameView.m_player2View.m_gridView;
+				if(gameTimer.Enabled)
+					pauseGame(true);
+				else
+					resumeGame(true);
+			}
+		}
 
-				ViewProposedPiece viewProposed = FindViewById<ViewProposedPiece>(Resource.Id.ProposedPiecesView);
-				viewProposed.SetPiece(m_game.m_player1);
-				viewProposed.SetBluetooth(bluetooth);
+		//--------------------------------------------------------------
+		// PUBLICS METHODES
+		//--------------------------------------------------------------
+		public int UpdateOpponentView(byte[] message)
+		{
+			// Interpret the message
+			m_game.m_player2.interpretMessage(message);
+
+			// Update of the opponent grid (the display will be done with the other grid)
+			m_gameView.m_player2View.Update();
+
+			// Display of the model of the opponent
+			FindViewById(Resource.Id.OpponentGridView).PostInvalidate();
+			TextView player2name = FindViewById<TextView> (Resource.Id.player2name);
+			TextView player2score = FindViewById<TextView> (Resource.Id.player2score);
+			TextView player2level = FindViewById<TextView> (Resource.Id.player2level);
+			TextView player2rows = FindViewById<TextView> (Resource.Id.player2rows);
+			m_gameView.m_player2View.Draw(player2name, player2score, player2level, player2rows);
+
+			return 0;
+		}
+
+		public int OpponentPiecePut(byte[] message)
+		{
+			UpdateOpponentView(message);
+			if(message[Constants.SizeMessagePiecePut - 1] == 1)
+			{
+				FindViewById<ViewProposedPiece>(Resource.Id.ProposedPiecesView).ChangePieceHilite();
 			}
 
-			// Launch the main timer of the application
-			int time = getTimerLapse();
-			Timer gameTimer = new Timer(time);
-			gameTimer.Elapsed += new ElapsedEventHandler(OnTimerElapsed);
-			gameTimer.Interval = time;
+			return 0;
+		}
+
+		//--------------------------------------------------------------
+		// PRIVATES METHODES
+		//--------------------------------------------------------------
+		//pause the game, display a pop-up and send a message to the remote device if asked
+		private int pauseGame(bool sendRequestToOverPlayer)
+		{
+			gameTimer.Stop();
+
+			//It is us who asked for a pause if we need to notify the other player
+			originPause = sendRequestToOverPlayer;
+
+			// If it is a 2 player game we need to pause the other game
+			if(sendRequestToOverPlayer && Network.Instance.Connected())
+			{
+				byte[] message = new byte[Constants.SizeMessagePause];
+				message[0] = Constants.IdMessagePause;
+				Network.Instance.CommunicationWay.Write(message);
+			}
+
+			Utils.PopUpEndEvent += resumeGame;
+			Utils.ShowAlert(Resource.String.Pause_title, Resource.String.Pause, this);
+
+			return 0;
+		}
+
+		//resume the game and send a message to the remote device
+		private void resumeGame()
+		{
+			Utils.PopUpEndEvent -= resumeGame;
+			if(originPause)
+			{
+				resumeGame(true);
+			}
+		}
+		private int resumeGame(bool sendRequestToOverPlayer)
+		{
+			// If it is a 2 player game we need to resume the other game
+			if(sendRequestToOverPlayer && Network.Instance.Connected())
+			{
+				byte[] message = new byte[Constants.SizeMessageResume];
+				message[0] = Constants.IdMessageResume;
+				Network.Instance.CommunicationWay.Write(message);
+			}
+
+			gameTimer.AutoReset = true;
+			gameTimer.Interval = getTimerLapse();
 			gameTimer.Start();
 
+			return 0;
+		}
 
-			// Linkage of the button with the methods
+		private void associateButtonsEvent()
+		{
 			FindViewById<Button>(Resource.Id.buttonMoveLeft).Click += delegate {
 				m_game.MoveLeft();
 				// Display of the current model
@@ -285,7 +267,6 @@ namespace Tetris
 				FindViewById(Resource.Id.PlayerGridView).PostInvalidate();
 			};
 
-			// Linkage of the button with the methods
 			FindViewById<Button>(Resource.Id.buttonTurnLeft).Click += delegate {
 				m_game.TurnLeft();
 				// Display of the current model
@@ -311,110 +292,9 @@ namespace Tetris
 			};
 		}
 
-		protected bool enableBluetooth()
-		{
-			if(Debug)
-				Log.Debug(TAG, "enableBluetooth()");
-
-			// If the bluetooth is already enable and set
-			if (bluetooth != null)
-				return true;
-
-			// Get local Bluetooth adapter
-			BluetoothAdapter bluetoothAdapter;
-			bluetoothAdapter = BluetoothAdapter.DefaultAdapter;
-
-			// If the adapter is null, then Bluetooth is not supported
-			if(bluetoothAdapter == null)
-			{
-				if(Debug)
-					Log.Debug(TAG, "display of the alert");
-
-				showAlert(Resource.String.BTNotAvailableTitle, Resource.String.BTNotAvailable);
-				return false;
-			}
-			else
-			{
-				// If the bluetooth is not enable, we try to activate it
-				if(!bluetoothAdapter.IsEnabled)
-				{
-					if(Debug)
-						Log.Debug(TAG, "intent to activate bluetooth");
-					Intent enableIntent = new Intent(BluetoothAdapter.ActionRequestEnable);
-					StartActivityForResult(enableIntent,(int) RequestCode.REQUEST_ENABLE_BT);
-				}
-				else
-				{
-					if(Debug)
-						Log.Debug(TAG, "creation of BluetoothManager");
-
-					bluetooth = new BluetoothManager(this);
-					bluetooth.Start();
-				}
-			}
-			return true;
-		}
-
-		public void InterpretMessage(byte[] message)
-		{
-			// If it is a message for the game, i.e. it is the position of the piece or the position of
-			// the piece we have to add to the grid or the grid of the opponent
-			if(message[0] == Constants.IdMessageGrid || message[0] == Constants.IdMessagePiece || 
-				message[0] == Constants.IdMessagePiecePut)
-			{
-				// Interpret the message
-				int retour = m_game.m_player2.interpretMessage(message);
-				// Update of the opponent grid (the display will be done with the other grid)
-				//if(retour == 2)
-				m_gameView.m_player2View.Update();
-				
-				// Display of the model of the opponent
-				FindViewById(Resource.Id.OpponentGridView).PostInvalidate();
-				TextView player2name = FindViewById<TextView> (Resource.Id.player2name);
-				TextView player2score = FindViewById<TextView> (Resource.Id.player2score);
-				TextView player2level = FindViewById<TextView> (Resource.Id.player2level);
-				TextView player2rows = FindViewById<TextView> (Resource.Id.player2rows);
-				m_gameView.m_player2View.Draw(player2name, player2score, player2level, player2rows);
-
-				// We actualise the proposed piece if the opponent used the selected one
-				if(message[0] == Constants.IdMessagePiecePut && message[Constants.SizeMessagePiecePut - 1] == 1)
-					FindViewById<ViewProposedPiece>(Resource.Id.ProposedPiecesView).ChangePieceHilite();
-			}
-			// If it is the message of the next piece for us
-			else if(message[0] == Constants.IdMessageNextPiece)
-			{
-				m_game.m_player1.interpretMessage(message);
-			}
-			// It is a message for the main activity
-			else if(message[0] == Constants.IdMessageStart)
-			{
-				// We have recieve a demand to start the game
-				// We verify that the two player have the same version of the application
-				if(message[1] == Constants.NumVersion1 && message[2] == Constants.NumVersion2)
-				{
-					// The 2 players have the same version, we can launch the game if we are ready
-					if(buttonStartPressed)
-						startGame();// We launch the game (change view and everything)
-					else
-						opponentReady = true;
-				}
-			}
-		}
-
-		public static int getTimerLapse()
+		private int getTimerLapse()
 		{
 			return 1000;
-		}
-
-		public void showAlert(int idTitle, int idMessage)
-		{
-			AlertDialog.Builder builder = new AlertDialog.Builder(this);
-			builder.SetTitle(idTitle);
-			builder.SetMessage(idMessage);
-			builder.SetCancelable(false);
-			builder.SetNeutralButton("OK", delegate {});
-			AlertDialog alert = builder.Create();
-			alert.Show();
 		}
 	}
 }

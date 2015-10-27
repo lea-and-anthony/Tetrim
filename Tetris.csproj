@@ -62,6 +62,10 @@
     <Compile Include="Code-View\GameView.cs" />
     <Compile Include="Code-View\PlayerView.cs" />
     <Compile Include="Code-View\ViewProposedPiece.cs" />
+    <Compile Include="Activities\MenuActivity.cs" />
+    <Compile Include="Code-View\MyView.cs" />
+    <Compile Include="Network\Network.cs" />
+    <Compile Include="Network\NetworkManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
@@ -85,5 +89,6 @@
     <Folder Include="Code-Model\" />
     <Folder Include="Code-View\" />
     <Folder Include="Network\" />
+    <Folder Include="Activities\" />
   </ItemGroup>
 </Project>

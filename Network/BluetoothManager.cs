@@ -17,12 +17,8 @@
 * limitations under the License.
 */
 
-using System;
 using System.IO;
-using Android.App;
 using Android.Bluetooth;
-using Android.Content;
-using Android.Views;
 using Android.Widget;
 using Android.OS;
 using Java.Lang;
@@ -41,7 +37,6 @@ namespace Tetris
 		protected Handler _handler;
 		private AcceptThread acceptThread;
 		protected State _state;
-		protected MainActivity _activity;
 
 		// Constants that indicate the current connection state
 		public enum State
@@ -73,14 +68,12 @@ namespace Tetris
 
 
 		// Debugging
-		private const string TAG = "Tetris";
-		private const bool Debug = true;
+		private const string TAG = "Tetris-Bluetooth";
 
 
-		public BluetoothManager(MainActivity activity)
+		public BluetoothManager()
 		{
-			_activity = activity;
-			_handler = new MyHandler (activity);
+			_handler = new MyHandler ();
 			bluetoothAdapter = BluetoothAdapter.DefaultAdapter;
 			_state = State.NONE;
 		}
@@ -96,8 +89,9 @@ namespace Tetris
 		[MethodImpl(MethodImplOptions.Synchronized)]
 		private void SetState(State state)
 		{
-			if(Debug)
+			#if DEBUG
 				Log.Debug(TAG, "setState() " + _state + " -> " + state);
+			#endif
 
 			_state = state;
 
@@ -109,9 +103,10 @@ namespace Tetris
 		// session in listening(server) mode. Called by the Activity onResume()
 		[MethodImpl(MethodImplOptions.Synchronized)]
 		public void Start()
-		{	
-			if(Debug)
+		{
+			#if DEBUG
 				Log.Debug(TAG, "start");
+			#endif
 
 			// Cancel any thread attempting to make a connection
 			if(connectThread != null)
@@ -141,8 +136,9 @@ namespace Tetris
 		[MethodImpl(MethodImplOptions.Synchronized)]
 		public void Connect(BluetoothDevice device)
 		{
-			if(Debug)
+			#if DEBUG
 				Log.Debug(TAG, "connect to: " + device);
+			#endif
 
 			// Cancel any thread attempting to make a connection
 			if(_state == State.CONNECTING)
@@ -172,8 +168,9 @@ namespace Tetris
 		[MethodImpl(MethodImplOptions.Synchronized)]
 		public void Connected(BluetoothSocket socket, BluetoothDevice device)
 		{
-			if(Debug)
+			#if DEBUG
 				Log.Debug(TAG, "connected");
+			#endif
 
 			// Cancel the thread that completed the connection
 			if(connectThread != null)
@@ -210,14 +207,13 @@ namespace Tetris
 			SetState(State.CONNECTED);
 		}
 
-		/// <summary>
 		/// Stop all threads.
-		/// </summary>
 		[MethodImpl(MethodImplOptions.Synchronized)]
 		public void Stop()
 		{
-			if(Debug)
+			#if DEBUG
 				Log.Debug(TAG, "stop");
+			#endif
 
 			if(connectThread != null)
 			{
@@ -468,7 +464,6 @@ namespace Tetris
 				try
 				{
 					tmp = _service.bluetoothAdapter.ListenUsingRfcommWithServiceRecord(NAME, MY_UUID);
-
 				}
 				catch(Java.IO.IOException e)
 				{
@@ -479,8 +474,9 @@ namespace Tetris
 
 			public override void Run()
 			{
-				if(Debug)
+				#if DEBUG
 					Log.Debug(TAG, "BEGIN mAcceptThread " + this.ToString());
+				#endif
 
 				Name = "AcceptThread";
 				BluetoothSocket socket = null;
@@ -529,14 +525,16 @@ namespace Tetris
 					}
 				}
 
-				if(Debug)
+				#if DEBUG
 					Log.Info(TAG, "END mAcceptThread");
+				#endif
 			}
 
 			public void Cancel()
 			{
-				if(Debug)
+				#if DEBUG
 					Log.Debug(TAG, "cancel " + this.ToString());
+				#endif
 
 				try
 				{
@@ -555,75 +553,42 @@ namespace Tetris
 		// The Handler that gets information back from the BluetoothChatService
 		private class MyHandler : Handler
 		{
-			MainActivity appBluetooth;
-
-			public MyHandler(MainActivity app)
-			{
-				appBluetooth = app;	
-			}
+			public MyHandler() {}
 
 			public override void HandleMessage (Message msg)
 			{
-				TextView textView1 = appBluetooth.FindViewById<TextView> (Resource.Id.textView1);
-				TextView textView2 = appBluetooth.FindViewById<TextView> (Resource.Id.textView2);
 				switch (msg.What)
 				{
 				case (int) MessageType.STATE_CHANGE:
-					if (Debug)
-						Log.Info (TAG, "STATE_CHANGE: " + msg.Arg1);
 					switch(msg.Arg1)
 					{
 					case (int) State.CONNECTED:
-						/*appBluetooth.title.SetText (Resource.String.title_connected_to);
-						appBluetooth.title.Append (bluetoothChat.connectedDeviceName);*/
-						if(textView1 != null)
-							textView1.SetText ("State = connected", TextView.BufferType.Normal);
+						Network.Instance.NotifyStateConnected();
 						break;
 					case (int) State.CONNECTING:
-						/*appBluetooth.title.SetText (Resource.String.title_connecting);*/
-						if(textView1 != null)
-							textView1.SetText ("State = connecting", TextView.BufferType.Normal);
+						Network.Instance.NotifyStateConnecting();
 						break;
 					case (int) State.LISTEN:
 					case (int) State.NONE:
-						if(textView1 != null)
-							textView1.SetText ("State = none", TextView.BufferType.Normal);
-						/*appBluetooth.title.SetText (Resource.String.title_not_connected);*/
+						Network.Instance.NotifyStateNone();
 						break;
 					}
 					break;
 				case (int) MessageType.WRITE:
-					// construct a string from the buffer
-					/*byte[] writeBuf = (byte[])msg.Obj;
-					var writeMessage = new Java.Lang.String (writeBuf);
-					appBluetooth.conversationArrayAdapter.Add ("Me: " + writeMessage);*/
-					if(textView1 != null)
-						textView1.SetText("MessageType = write", TextView.BufferType.Normal);
+					byte[] writeBuf = (byte[])msg.Obj;
+					Network.Instance.NotifyWriteMessage(writeBuf);
 					break;
 				case (int) MessageType.READ:
 					byte[] readBuf = (byte[])msg.Obj;
-					// construct a string from the valid bytes in the buffer
-					var readMessage = new Java.Lang.String (readBuf, 0, msg.Arg1);
-					//appBluetooth.conversationArrayAdapter.Add (bluetoothChat.connectedDeviceName + ":  " + readMessage);
-					if(textView1 != null)
-						textView1.SetText("MessageType = read", TextView.BufferType.Normal);
-					if(textView2 != null)
-						textView2.SetText(readMessage, TextView.BufferType.Normal);
-
-					// We notify the main activity of this message 
-					appBluetooth.InterpretMessage(readBuf);
+					Network.Instance.NotifyReadMessage(readBuf);
 					break;
 				case (int) MessageType.DEVICE_NAME:
-					appBluetooth.connectedDeviceName = msg.Data.GetString (DEVICE_NAME);
-					if(textView1 != null)
-						textView1.SetText("MessageType = read", TextView.BufferType.Normal);
-					if(textView2 != null)
-						textView2.SetText(appBluetooth.connectedDeviceName, TextView.BufferType.Normal);
-					//Toast.MakeText (Application.Context, "Connected to " + bluetoothChat.connectedDeviceName, ToastLength.Short).Show ();
+					string deviceName = msg.Data.GetString (DEVICE_NAME);
+					Network.Instance.NotifyDeviceName(deviceName);
 					break;
 				case (int) MessageType.ALERT:
 					// Display an error message
-					appBluetooth.showAlert(msg.Arg1, msg.Arg2);
+					Log.Warn(TAG, "MessageType.ALERT");
 					break;
 				}
 			}

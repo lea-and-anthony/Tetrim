@@ -221,29 +221,35 @@ namespace Tetris
 		public partial class String
 		{
 			
+			// aapt resource value: 0x7f040002
+			public const int BTNotAvailable = 2130968578;
+			
+			// aapt resource value: 0x7f040001
+			public const int BTNotAvailableTitle = 2130968577;
+			
 			// aapt resource value: 0x7f040004
-			public const int BTNotAvailable = 2130968580;
+			public const int BTNotEnabled = 2130968580;
 			
 			// aapt resource value: 0x7f040003
-			public const int BTNotAvailableTitle = 2130968579;
-			
-			// aapt resource value: 0x7f040006
-			public const int BTNotEnabled = 2130968582;
-			
-			// aapt resource value: 0x7f040005
-			public const int BTNotEnabledTitle = 2130968581;
-			
-			// aapt resource value: 0x7f04000a
-			public const int ConnectionImpossible = 2130968586;
-			
-			// aapt resource value: 0x7f040009
-			public const int ConnectionImpossibleTitle = 2130968585;
+			public const int BTNotEnabledTitle = 2130968579;
 			
 			// aapt resource value: 0x7f040008
-			public const int ConnectionLost = 2130968584;
+			public const int ConnectionImpossible = 2130968584;
 			
 			// aapt resource value: 0x7f040007
-			public const int ConnectionLostTitle = 2130968583;
+			public const int ConnectionImpossibleTitle = 2130968583;
+			
+			// aapt resource value: 0x7f040006
+			public const int ConnectionLost = 2130968582;
+			
+			// aapt resource value: 0x7f040005
+			public const int ConnectionLostTitle = 2130968581;
+			
+			// aapt resource value: 0x7f04000c
+			public const int Pause = 2130968588;
+			
+			// aapt resource value: 0x7f04000b
+			public const int Pause_title = 2130968587;
 			
 			// aapt resource value: 0x7f04000d
 			public const int app_name = 2130968589;
@@ -251,17 +257,11 @@ namespace Tetris
 			// aapt resource value: 0x7f040015
 			public const int button_scan = 2130968597;
 			
-			// aapt resource value: 0x7f040001
-			public const int checkboxText = 2130968577;
-			
-			// aapt resource value: 0x7f040002
-			public const int connexionBluetooth = 2130968578;
+			// aapt resource value: 0x7f040000
+			public const int connexionBluetooth = 2130968576;
 			
 			// aapt resource value: 0x7f04000e
 			public const int game_over = 2130968590;
-			
-			// aapt resource value: 0x7f040000
-			public const int hello = 2130968576;
 			
 			// aapt resource value: 0x7f040012
 			public const int none_found = 2130968594;
@@ -269,11 +269,11 @@ namespace Tetris
 			// aapt resource value: 0x7f040011
 			public const int none_paired = 2130968593;
 			
-			// aapt resource value: 0x7f04000c
-			public const int not_connected = 2130968588;
+			// aapt resource value: 0x7f04000a
+			public const int not_connected = 2130968586;
 			
-			// aapt resource value: 0x7f04000b
-			public const int not_connected_title = 2130968587;
+			// aapt resource value: 0x7f040009
+			public const int not_connected_title = 2130968585;
 			
 			// aapt resource value: 0x7f04000f
 			public const int scanning = 2130968591;

@@ -1,7 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<string name="hello">Hello World, Click Me!</string>
-	<string name="checkboxText">Test checkbox et truc!</string>
 	<string name="connexionBluetooth">Se connecter à un autre périphérique</string>
 	<string name="BTNotAvailableTitle">Bluetooth non disponible</string>
 	<string name="BTNotAvailable">Bluetooth non disponible</string>
@@ -13,6 +11,8 @@
 	<string name="ConnectionImpossible">La connexion au périphérique a échoué</string>
 	<string name="not_connected_title">Non connecté</string>
     <string name="not_connected">Attention, vous n\'êtes pas connecté à un autre périphérique, vous aller commencer une partie solo?</string>
+	<string name="Pause_title">Pause</string>
+    <string name="Pause">Voulez-vous reprendre ?</string>
 	<string name="app_name">Tetris</string>
 	<string name="game_over">Game over :-(</string>
 

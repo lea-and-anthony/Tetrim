@@ -1,9 +1,15 @@
 ﻿using System;
+using Android.App;
+using Android.Content;
 
 namespace Tetris
 {
 	public static class Utils
 	{
+		// Event triggered when the pop up (displayed by ShowAlert) is closed
+		public delegate void PopUpEndDelegate();
+		public static event PopUpEndDelegate PopUpEndEvent;
+
 		public static int StrokeWidth = 5;
 		public static int StrokeWidthHightlight = 10;
 		public static Android.Graphics.Color BorderColor = Android.Graphics.Color.Gainsboro;
@@ -30,6 +36,24 @@ namespace Tetris
 				return Android.Graphics.Color.Pink;
 			}
 			return Android.Graphics.Color.Black;
+		}
+
+		// Display a simple pop up with a title, a text and an "OK" button
+		// Trigger the PopUpEndEvent event when the OK button is pressed
+		public static void ShowAlert(int idTitle, int idMessage, Context context)
+		{
+			AlertDialog.Builder builder = new AlertDialog.Builder(context);
+			builder.SetTitle(idTitle);
+			builder.SetMessage(idMessage);
+			builder.SetCancelable(false);
+			builder.SetNeutralButton("OK", delegate {
+				if(PopUpEndEvent != null)
+				{
+					PopUpEndEvent.Invoke();
+				}
+			});
+			AlertDialog alert = builder.Create();
+			alert.Show();
 		}
 	}
 }

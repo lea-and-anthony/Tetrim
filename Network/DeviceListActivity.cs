@@ -39,7 +39,6 @@ namespace Tetris
 	{
 		// Debugging
 		private const string TAG = "DeviceListActivity";
-		private const bool Debug = true;
 	
 		// Return Intent extra
 		public const string EXTRA_DEVICE_ADDRESS = "device_address";
@@ -134,8 +133,9 @@ namespace Tetris
 		/// </summary>
 		private void DoDiscovery()
 		{
-			if(Debug)
+			#if DEBUG
 				Log.Debug(TAG, "doDiscovery()");
+			#endif
 			
 			// Indicate scanning in the title
 			SetProgressBarIndeterminateVisibility(true);
