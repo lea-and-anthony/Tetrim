@@ -5,12 +5,12 @@ using Android.App;
 // Information about this assembly is defined by the following attributes.
 // Change them to the values specific to your project.
 
-[assembly: AssemblyTitle ("Tetris")]
+[assembly: AssemblyTitle ("Tetrim")]
 [assembly: AssemblyDescription ("")]
 [assembly: AssemblyConfiguration ("")]
 [assembly: AssemblyCompany ("")]
 [assembly: AssemblyProduct ("")]
-[assembly: AssemblyCopyright ("Anthony")]
+[assembly: AssemblyCopyright ("Anthony & Lea")]
 [assembly: AssemblyTrademark ("")]
 [assembly: AssemblyCulture ("")]
 

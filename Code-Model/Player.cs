@@ -1,19 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Tetris
+namespace Tetrim
 {
 	public class Player
 	{
 		//--------------------------------------------------------------
 		// ATTRIBUTES
 		//--------------------------------------------------------------
-		public string m_name { get; private set; }
-		public uint m_score { get; private set; }
-		public uint m_level { get; private set; }
-		public int m_removedRows { get; private set; }
-		public Grid m_grid { get; private set; }
-		public Piece[] m_proposedPieces { get; private set; }
+		public string _name { get; private set; }
+		public uint _score { get; private set; }
+		public uint _level { get; private set; }
+		public int _removedRows { get; private set; }
+		public Grid _grid { get; private set; }
+		public Piece[] _proposedPieces { get; private set; }
 
 		//--------------------------------------------------------------
 		// CONSTRUCTORS
@@ -24,15 +24,15 @@ namespace Tetris
 
 		public Player (string name)
 		{
-			m_name = name;
-			m_score = 0;
-			m_level = 1;
-			m_removedRows = 0;
-			m_grid = new Grid();
-			m_proposedPieces = new Piece[Constants.NbProposedPiece];
+			_name = name;
+			_score = 0;
+			_level = 1;
+			_removedRows = 0;
+			_grid = new Grid();
+			_proposedPieces = new Piece[Constants.NbProposedPiece];
 			for(int i = 0; i < Constants.NbProposedPiece; i++)
 			{
-				m_proposedPieces[i] = new Piece((i % (Constants.NbProposedPiece/Constants.NbLinePropPiece))*5, 
+				_proposedPieces[i] = new Piece((i % (Constants.NbProposedPiece/Constants.NbLinePropPiece))*5, 
 													(i / (Constants.NbProposedPiece/Constants.NbLinePropPiece))*5);
 			}
 		}
@@ -42,63 +42,63 @@ namespace Tetris
 		//--------------------------------------------------------------
 		public void UpdatePlayerRemoveRow (int nbRemovedRows)
 		{
-			m_removedRows += nbRemovedRows;
+			_removedRows += nbRemovedRows;
 			updateLevel();
 			switch (nbRemovedRows)
 			{
 			case 1 :
-				m_score += Constants.Score1Row * m_level;
+				_score += Constants.Score1Row * _level;
 				break;
 			case 2 :
-				m_score += Constants.Score2Rows * m_level;
+				_score += Constants.Score2Rows * _level;
 				break;
 			case 3 :
-				m_score += Constants.Score3Rows * m_level;
+				_score += Constants.Score3Rows * _level;
 				break;
 			case 4 :
-				m_score += Constants.Score4Rows * m_level;
+				_score += Constants.Score4Rows * _level;
 				break;
 			}
 		}
 
 		private void updateLevel()
 		{
-			while (m_removedRows >= m_level * 10 && m_level < Constants.MaxLevel)
+			while (_removedRows >= _level * 10 && _level < Constants.MaxLevel)
 			{
-				m_level++;
+				_level++;
 			}
 		}
 
 		public void MoveLeft()
 		{
-			m_grid.MoveLeft();
+			_grid.MoveLeft();
 		}
 
 		public void MoveRight()
 		{
-			m_grid.MoveRight();
+			_grid.MoveRight();
 		}
 
 		public void MoveDown()
 		{
-			m_grid.MoveDown();
-			m_score += Constants.ScoreMoveDown * m_level;
+			_grid.MoveDown();
+			_score += Constants.ScoreMoveDown * _level;
 		}
 
 		public void MoveBottom()
 		{
-			int nbDown = m_grid.MoveBottom ();
-			m_score += (uint) (Constants.ScoreMoveBottom * nbDown) * m_level;
+			int nbDown = _grid.MoveBottom ();
+			_score += (uint) (Constants.ScoreMoveBottom * nbDown) * _level;
 		}
 
 		public void TurnLeft()
 		{
-			m_grid.TurnLeft();
+			_grid.TurnLeft();
 		}
 
 		public void TurnRight()
 		{
-			m_grid.TurnRight();
+			_grid.TurnRight();
 		}
 
 		// Network message to indicate the new position of the piece
@@ -106,7 +106,7 @@ namespace Tetris
 		{
 			byte[] bytesMessage = new byte[Constants.SizeMessagePiece];
 			bytesMessage [0] = Constants.IdMessagePiece;
-			bytesMessage = m_grid.getMessagePiece(bytesMessage, 1);
+			bytesMessage = _grid.getMessagePiece(bytesMessage, 1);
 			return bytesMessage;
 		}
 
@@ -116,7 +116,7 @@ namespace Tetris
 		{
 			byte[] bytesMessage = new byte[Constants.SizeMessageGrid];
 			bytesMessage [0] = Constants.IdMessageGrid;
-			bytesMessage = m_grid.getMessageGrid(bytesMessage, 1);
+			bytesMessage = _grid.getMessageGrid(bytesMessage, 1);
 			return bytesMessage;
 		}
 
@@ -130,8 +130,8 @@ namespace Tetris
 					return 0;
 
 				// The message contains the entire grid
-				m_grid.interpretGrid(message, 1);
-				m_grid.interpretPiece(message, Constants.GridSizeX*Constants.GridSizeY + 1);
+				_grid.interpretGrid(message, 1);
+				_grid.interpretPiece(message, Constants.GridSizeX*Constants.GridSizeY + 1);
 			}
 			else if(message[0] == Constants.IdMessagePiece)
 			{
@@ -139,7 +139,7 @@ namespace Tetris
 					return 0;
 
 				// The message contains only the position of the piece
-				m_grid.interpretPiece(message, 1);
+				_grid.interpretPiece(message, 1);
 			}
 			else if(message[0] == Constants.IdMessagePiecePut)
 			{
@@ -148,10 +148,10 @@ namespace Tetris
 
 				// The message contains the position of the piece
 				// we need to put in the grid and the new piece
-				m_grid.interpretPiece(message, 1);
-				m_grid.AddPieceToMap(this);
-				m_grid.interpretPiece(message, Constants.SizeMessagePiece);
-				m_grid.UpdateShadowPiece();
+				_grid.interpretPiece(message, 1);
+				_grid.AddPieceToMap(this);
+				_grid.interpretPiece(message, Constants.SizeMessagePiece);
+				_grid.UpdateShadowPiece();
 
 				return 2;
 			}
@@ -160,7 +160,7 @@ namespace Tetris
 				if(message.Length < Constants.SizeMessageNextPiece)
 					return 0;
 				
-				m_grid.interpretNextPiece(message, 1);
+				_grid.interpretNextPiece(message, 1);
 			}
 
 			return 1;
@@ -168,12 +168,12 @@ namespace Tetris
 
 		public byte[] GetMessageSendNewPiece(int i)
 		{
-			return m_proposedPieces[i].getMessageNextPiece();
+			return _proposedPieces[i].getMessageNextPiece();
 		}
 
 		public void ChangeProposedPiece(int i)
 		{
-			m_proposedPieces[i] = new Piece((i%(Constants.NbProposedPiece/Constants.NbLinePropPiece)) * 5, 
+			_proposedPieces[i] = new Piece((i%(Constants.NbProposedPiece/Constants.NbLinePropPiece)) * 5, 
 											(i/(Constants.NbProposedPiece/Constants.NbLinePropPiece)) * 5);
 		}
 	}

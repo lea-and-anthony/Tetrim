@@ -8,9 +8,9 @@ using Android.OS;
 using Android.Util;
 using Android.Bluetooth;
 
-namespace Tetris
+namespace Tetrim
 {
-	[Activity(Label = "Tetris", MainLauncher = true, Icon = "@drawable/icon", Theme = "@android:style/Theme.NoTitleBar.Fullscreen")]
+	[Activity(Label = "Tetrim", MainLauncher = true, Icon = "@drawable/icon", Theme = "@android:style/Theme.NoTitleBar.Fullscreen")]
 	public class MenuActivity : Activity
 	{
 		//--------------------------------------------------------------
@@ -32,8 +32,7 @@ namespace Tetris
 		//--------------------------------------------------------------
 		// CONSTANTS
 		//--------------------------------------------------------------
-		private const string TAG = "Tetris-MenuActivity";
-
+		private const string Tag = "Tetrim-MenuActivity";
 
 		//--------------------------------------------------------------
 		// ATTRIBUTES
@@ -46,17 +45,17 @@ namespace Tetris
 		private StartState _state = StartState.NONE;
 
 		//--------------------------------------------------------------
-		// EVENT REPONDING METHODES
+		// EVENT CATCHING METHODES
 		//--------------------------------------------------------------
 		protected override void OnCreate(Bundle bundle)
 		{
 			base.OnCreate(bundle);
 
-			// Set our view from the "accueil" layout resource
-			SetContentView(Resource.Layout.Accueil);
+			// Set our view from the home layout resource
+			SetContentView(Resource.Layout.Home);
 
 			#if DEBUG
-			Log.Debug(TAG, "onCreate()");
+			Log.Debug(Tag, "onCreate()");
 			#endif
 
 			// Display the list of the available bluetooth devices
@@ -138,7 +137,7 @@ namespace Tetris
 				Network.Instance.CommunicationWay.Stop ();
 
 			#if DEBUG
-			Log.Error (TAG, "--- ON DESTROY ---");
+			Log.Error (Tag, "--- ON DESTROY ---");
 			#endif
 		}
 
@@ -150,7 +149,7 @@ namespace Tetris
 		protected override void OnActivityResult(int requestCode, Result resultCode, Intent data)
 		{
 			#if DEBUG
-			Log.Debug(TAG, "onActivityResult " + resultCode);
+			Log.Debug(Tag, "onActivityResult " + resultCode);
 			#endif
 
 			switch(requestCode)
@@ -178,7 +177,7 @@ namespace Tetris
 				else
 				{
 					// User did not enable Bluetooth or an error occured
-					Log.Debug(TAG, "Bluetooth not enabled");
+					Log.Debug(Tag, "Bluetooth not enabled");
 					Utils.ShowAlert(Resource.String.BTNotEnabledTitle, Resource.String.BTNotEnabled, this);
 				}
 				break;
@@ -257,16 +256,14 @@ namespace Tetris
 			}
 			return 0;
 		}
-
-
-
+			
 		//--------------------------------------------------------------
 		// PRIVATES METHODES
 		//--------------------------------------------------------------
 		private bool enableBluetooth()
 		{
 			#if DEBUG
-			Log.Debug(TAG, "enableBluetooth()");
+			Log.Debug(Tag, "enableBluetooth()");
 			#endif
 
 			// If the bluetooth is already enable and set
@@ -281,7 +278,7 @@ namespace Tetris
 			if(bluetoothAdapter == null)
 			{
 				#if DEBUG
-				Log.Debug(TAG, "display of the alert");
+				Log.Debug(Tag, "display of the alert");
 				#endif
 
 				Utils.ShowAlert(Resource.String.BTNotAvailableTitle, Resource.String.BTNotAvailable, this);
@@ -293,7 +290,7 @@ namespace Tetris
 				if(!bluetoothAdapter.IsEnabled)
 				{
 					#if DEBUG
-					Log.Debug(TAG, "intent to activate bluetooth");
+					Log.Debug(Tag, "intent to activate bluetooth");
 					#endif
 
 					Intent enableIntent = new Intent(BluetoothAdapter.ActionRequestEnable);
@@ -302,7 +299,7 @@ namespace Tetris
 				else
 				{
 					#if DEBUG
-					Log.Debug(TAG, "creation of BluetoothManager");
+					Log.Debug(Tag, "creation of BluetoothManager");
 					#endif
 
 					Network.Instance.EnableBluetooth();

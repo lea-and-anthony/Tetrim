@@ -3,7 +3,7 @@ using Android.Graphics;
 using Android.Content;
 using Android.Util;
 
-namespace Tetris
+namespace Tetrim
 {
 	public class MyView : View
 	{

@@ -6,7 +6,7 @@ using Android.Views;
 using Android.Graphics;
 using Android.Util;
 
-namespace Tetris
+namespace Tetrim
 {
 	public class ViewProposedPiece : View
 	{
@@ -47,7 +47,7 @@ namespace Tetris
 			// Recreate the proposed pieces
 			for(int i = 0; i < Constants.NbProposedPiece; i++)
 			{
-				_proposedPieces[i] = (i < player.m_proposedPieces.Length) ? new PieceView(player.m_proposedPieces[i], false) : null;
+				_proposedPieces[i] = (i < player._proposedPieces.Length) ? new PieceView(player._proposedPieces[i], false) : null;
 			}
 		}
 
@@ -59,7 +59,7 @@ namespace Tetris
 				_player.ChangeProposedPiece(_selectedPiece);
 
 				// Change it in the view
-				_proposedPieces[_selectedPiece] = new PieceView(_player.m_proposedPieces[_selectedPiece], false);
+				_proposedPieces[_selectedPiece] = new PieceView(_player._proposedPieces[_selectedPiece], false);
 
 				// Select a new piece in the same place
 				selectPiece(_selectedPiece);

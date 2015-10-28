@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 using Android.Graphics;
 
-namespace Tetris
+namespace Tetrim
 {
 	public class GridView
 	{
@@ -53,16 +53,16 @@ namespace Tetris
 			_grid = grid;
 
 			// Create the associated PieceViews
-			_fallingPieceView = new PieceView(_grid.m_fallingPiece, false);
-			_shadowPieceView = new PieceView(_grid.m_shadowPiece, true);
+			_fallingPieceView = new PieceView(_grid._fallingPiece, false);
+			_shadowPieceView = new PieceView(_grid._shadowPiece, true);
 
 			// Create the associated BlockViews
 			_mapView = new BlockView[Constants.GridSizeX, Constants.GridSizeY];
-			for (uint i = 0 ; i < _grid.m_map.GetLength(0) ; i++)
+			for (uint i = 0 ; i < _grid._map.GetLength(0) ; i++)
 			{
-				for (uint j = 0 ; j < _grid.m_map.GetLength(1) ; j++)
+				for (uint j = 0 ; j < _grid._map.GetLength(1) ; j++)
 				{
-					_mapView[i,j] = new BlockView(_grid.m_map[i,j], false);
+					_mapView[i,j] = new BlockView(_grid._map[i,j], false);
 				}
 			}
 		}
@@ -123,9 +123,9 @@ namespace Tetris
 			_fallingPieceView.Draw(canvas, _blockSize, _blockImages);
 
 			// Draw the blocks
-			for (uint i = 0 ; i < _grid.m_map.GetLength(0) ; i++)
+			for (uint i = 0 ; i < _grid._map.GetLength(0) ; i++)
 			{
-				for (uint j = 0 ; j < _grid.m_map.GetLength(1) ; j++)
+				for (uint j = 0 ; j < _grid._map.GetLength(1) ; j++)
 				{
 					_mapView[i,j].Draw(canvas, _blockSize, _blockImages);
 				}
@@ -135,15 +135,15 @@ namespace Tetris
 		public void Update()
 		{
 			// Update the pieces
-			_shadowPieceView.Update(_grid.m_shadowPiece, true);
-			_fallingPieceView.Update(_grid.m_fallingPiece, false);
+			_shadowPieceView.Update(_grid._shadowPiece, true);
+			_fallingPieceView.Update(_grid._fallingPiece, false);
 
 			// Update the blocks of the grid
-			for (uint i = 0 ; i < _grid.m_map.GetLength(0) ; i++)
+			for (uint i = 0 ; i < _grid._map.GetLength(0) ; i++)
 			{
-				for (uint j = 0 ; j < _grid.m_map.GetLength(1) ; j++)
+				for (uint j = 0 ; j < _grid._map.GetLength(1) ; j++)
 				{
-					_mapView [i, j].Update(_grid.m_map[i,j], false);
+					_mapView [i, j].Update(_grid._map[i,j], false);
 				}
 			}
 		}

@@ -1,28 +1,28 @@
 ﻿using System;
 
-namespace Tetris
+namespace Tetrim
 {
 	public class Grid
 	{
 		//--------------------------------------------------------------
 		// ATTRIBUTES
 		//--------------------------------------------------------------
-		public Block[,] m_map { get; private set; }
-		public Piece m_fallingPiece { get; private set; }
-		public Piece m_shadowPiece { get; private set; }
-		public Piece m_nextPiece { get; private set; }
-		public bool m_isNextPieceModified { get; private set; }
+		public Block[,] _map { get; private set; }
+		public Piece _fallingPiece { get; private set; }
+		public Piece _shadowPiece { get; private set; }
+		public Piece _nextPiece { get; private set; }
+		public bool _isNextPieceModified { get; private set; }
 
 		//--------------------------------------------------------------
 		// CONSTRUCTORS
 		//--------------------------------------------------------------
 		public Grid ()
 		{
-			m_map = new Block[Constants.GridSizeX, Constants.GridSizeY];
-			m_fallingPiece = new Piece (this);
-			m_shadowPiece = new Piece (this, m_fallingPiece);
-			m_nextPiece = new Piece(0,0);
-			m_isNextPieceModified = false;
+			_map = new Block[Constants.GridSizeX, Constants.GridSizeY];
+			_fallingPiece = new Piece (this);
+			_shadowPiece = new Piece (this, _fallingPiece);
+			_nextPiece = new Piece(0,0);
+			_isNextPieceModified = false;
 			UpdateShadowPiece();
 		}
 
@@ -31,7 +31,7 @@ namespace Tetris
 		//--------------------------------------------------------------
 		public bool isBlock(int x, int y)
 		{
-			if (m_map[x,y] != null)
+			if (_map[x,y] != null)
 			{
 				return true;
 			}
@@ -56,7 +56,7 @@ namespace Tetris
 		{
 			for (int x = 0; x <= Constants.GridSizeXmax; x++)
 			{
-				if (m_map [x, yRow] == null)
+				if (_map [x, yRow] == null)
 				{
 					return false;
 				}
@@ -70,14 +70,14 @@ namespace Tetris
 			{
 				for (int x = 0 ; x <= Constants.GridSizeXmax; x++)
 				{
-					if(m_map[x, y] != null)
-						m_map[x, y].MoveDown();
-					m_map[x, y-1] = m_map[x, y];
+					if(_map[x, y] != null)
+						_map[x, y].MoveDown();
+					_map[x, y-1] = _map[x, y];
 				}
 			}
 			for (int x = 0 ; x <= Constants.GridSizeXmax ; x++)
 			{
-				m_map [x, Constants.GridSizeYmax] = null;
+				_map [x, Constants.GridSizeYmax] = null;
 			}
 		}
 
@@ -98,18 +98,18 @@ namespace Tetris
 
 		public void AddPieceToMap (Player player)
 		{
-			int minY = m_fallingPiece.m_blocks[0].m_y;
-			int maxY = m_fallingPiece.m_blocks[0].m_y;
+			int minY = _fallingPiece._blocks[0]._y;
+			int maxY = _fallingPiece._blocks[0]._y;
 			for (int i = 0; i < Constants.BlockPerPiece; i++)
 			{
-				m_map [m_fallingPiece.m_blocks[i].m_x, m_fallingPiece.m_blocks[i].m_y] = m_fallingPiece.m_blocks[i];
-				if (m_fallingPiece.m_blocks[i].m_y < minY)
+				_map [_fallingPiece._blocks[i]._x, _fallingPiece._blocks[i]._y] = _fallingPiece._blocks[i];
+				if (_fallingPiece._blocks[i]._y < minY)
 				{
-					minY = m_fallingPiece.m_blocks[i].m_y;
+					minY = _fallingPiece._blocks[i]._y;
 				}
-				else if (m_fallingPiece.m_blocks[i].m_y > maxY)
+				else if (_fallingPiece._blocks[i]._y > maxY)
 				{
-					maxY = m_fallingPiece.m_blocks[i].m_y;
+					maxY = _fallingPiece._blocks[i]._y;
 				}
 			}
 			int nbRemovedRows = RemoveFullRows(minY, maxY);
@@ -119,25 +119,25 @@ namespace Tetris
 			}
 
 			// We create next the new piece
-			m_fallingPiece = new Piece (this, m_nextPiece.m_shape);
-			m_shadowPiece = new Piece (this, m_fallingPiece);
-			m_nextPiece = new Piece (0, 0);
-			m_isNextPieceModified = false;
+			_fallingPiece = new Piece (this, _nextPiece._shape);
+			_shadowPiece = new Piece (this, _fallingPiece);
+			_nextPiece = new Piece (0, 0);
+			_isNextPieceModified = false;
 			UpdateShadowPiece();
 		}
 			
 
 		public void UpdateShadowPiece()
 		{
-			m_shadowPiece.UpdateShadowPiece(m_fallingPiece);
-			m_shadowPiece.MoveBottom(this);
+			_shadowPiece.UpdateShadowPiece(_fallingPiece);
+			_shadowPiece.MoveBottom(this);
 		}
 
 		public bool isGameOver ()
 		{
 			for (int i = Constants.GridSizeXmin ; i < Constants.GridSizeXmax ; i++)
 			{
-				if (m_map[i, Constants.GridSizeYmax] != null)
+				if (_map[i, Constants.GridSizeYmax] != null)
 				{
 					return true;
 				}
@@ -148,7 +148,7 @@ namespace Tetris
 		// Move the piece down and if it is at the bottom, create a new piece
 		public bool MovePieceDown (Player player)
 		{
-			if (!m_fallingPiece.MoveDown (this))
+			if (!_fallingPiece.MoveDown (this))
 			{
 				AddPieceToMap (player);
 
@@ -159,46 +159,46 @@ namespace Tetris
 
 		public void addBlock(int x, int y, TetrisColor color)
 		{
-			m_map[x,y] = new Block(x, y, color);
+			_map[x,y] = new Block(x, y, color);
 		}
 
 		public void addPiece(Shape shape, uint angle, Grid grid)
 		{
-			m_fallingPiece = new Piece(shape, angle, grid);
+			_fallingPiece = new Piece(shape, angle, grid);
 			UpdateShadowPiece();
 		}
 
 		public void MoveLeft()
 		{
-			m_fallingPiece.MoveLeft(this);
+			_fallingPiece.MoveLeft(this);
 			UpdateShadowPiece();
 		}
 
 		public void MoveRight()
 		{
-			m_fallingPiece.MoveRight(this);
+			_fallingPiece.MoveRight(this);
 			UpdateShadowPiece();
 		}
 
 		public void MoveDown()
 		{
-			m_fallingPiece.MoveDown(this);
+			_fallingPiece.MoveDown(this);
 		}
 
 		public int MoveBottom()
 		{
-			return m_fallingPiece.MoveBottom (this);
+			return _fallingPiece.MoveBottom (this);
 		}
 
 		public void TurnLeft()
 		{
-			m_fallingPiece.TurnLeft(this);
+			_fallingPiece.TurnLeft(this);
 			UpdateShadowPiece();
 		}
 
 		public void TurnRight()
 		{
-			m_fallingPiece.TurnRight(this);
+			_fallingPiece.TurnRight(this);
 			UpdateShadowPiece();
 		}
 
@@ -206,7 +206,7 @@ namespace Tetris
 		// and the shape (the color depends on the shape)
 		public byte[] getMessagePiece(byte[] bytes, uint begin)
 		{
-			return m_fallingPiece.getMessage(bytes, begin);
+			return _fallingPiece.getMessage(bytes, begin);
 		}
 
 		// Create an array of byte representing the actual grid and the piece
@@ -218,8 +218,8 @@ namespace Tetris
 			{
 				for (uint x = 0; x < Constants.GridSizeX; x++)
 				{
-					if(m_map[x, y] != null)
-						bytesMessage[begin + Constants.GridSizeX*y + x] = (byte) m_map[x, y].m_color;
+					if(_map[x, y] != null)
+						bytesMessage[begin + Constants.GridSizeX*y + x] = (byte) _map[x, y]._color;
 					else
 						bytesMessage[begin + Constants.GridSizeX*y + x] = (byte) TetrisColor.ColorMax;
 				}
@@ -236,11 +236,11 @@ namespace Tetris
 				for (int x = 0; x < Constants.GridSizeX; x++)
 				{
 					if(bytesMessage[begin + Constants.GridSizeX*y + x] == (byte) TetrisColor.ColorMax)
-						m_map[x, y] = null;
-					else if(m_map[x, y] != null)
-						m_map[x, y].m_color = (TetrisColor) bytesMessage[begin + Constants.GridSizeX*y + x];
+						_map[x, y] = null;
+					else if(_map[x, y] != null)
+						_map[x, y]._color = (TetrisColor) bytesMessage[begin + Constants.GridSizeX*y + x];
 					else 
-						m_map[x, y] = new Block(x, y, (TetrisColor) bytesMessage[begin + Constants.GridSizeX*y + x]);
+						_map[x, y] = new Block(x, y, (TetrisColor) bytesMessage[begin + Constants.GridSizeX*y + x]);
 				}
 			}
 		}
@@ -248,15 +248,15 @@ namespace Tetris
 		// Interpret the message to place the piece at the good position
 		public void interpretPiece(byte[] bytesMessage, uint begin)
 		{
-			m_fallingPiece.placePiece(bytesMessage, begin);
+			_fallingPiece.placePiece(bytesMessage, begin);
 			UpdateShadowPiece();
 		}
 
 		// Interpret the message of the next shape to use
 		public void interpretNextPiece(byte[] bytesMessage, uint begin)
 		{
-			m_nextPiece.ChangeShape((Shape) bytesMessage[begin], 0, 0);
-			m_isNextPieceModified = true;
+			_nextPiece.ChangeShape((Shape) bytesMessage[begin], 0, 0);
+			_isNextPieceModified = true;
 		}
 	}
 }

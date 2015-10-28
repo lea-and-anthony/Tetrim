@@ -9,9 +9,9 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-[assembly: global::Android.Runtime.ResourceDesignerAttribute("Tetris.Resource", IsApplication=true)]
+[assembly: global::Android.Runtime.ResourceDesignerAttribute("Tetrim.Resource", IsApplication=true)]
 
-namespace Tetris
+namespace Tetrim
 {
 	
 	
@@ -90,14 +90,14 @@ namespace Tetris
 			// aapt resource value: 0x7f05001d
 			public const int ProposedPiecesView = 2131034141;
 			
-			// aapt resource value: 0x7f050001
-			public const int button1 = 2131034113;
+			// aapt resource value: 0x7f050006
+			public const int button1 = 2131034118;
 			
-			// aapt resource value: 0x7f050000
-			public const int button2 = 2131034112;
+			// aapt resource value: 0x7f050005
+			public const int button2 = 2131034117;
 			
-			// aapt resource value: 0x7f050002
-			public const int button3 = 2131034114;
+			// aapt resource value: 0x7f050007
+			public const int button3 = 2131034119;
 			
 			// aapt resource value: 0x7f050023
 			public const int buttonMoveDown = 2131034147;
@@ -117,8 +117,8 @@ namespace Tetris
 			// aapt resource value: 0x7f050026
 			public const int buttonTurnRight = 2131034150;
 			
-			// aapt resource value: 0x7f050009
-			public const int button_scan = 2131034121;
+			// aapt resource value: 0x7f050004
+			public const int button_scan = 2131034116;
 			
 			// aapt resource value: 0x7f050020
 			public const int layoutButtonsLeft = 2131034144;
@@ -141,11 +141,11 @@ namespace Tetris
 			// aapt resource value: 0x7f05000a
 			public const int myLayout = 2131034122;
 			
-			// aapt resource value: 0x7f050008
-			public const int new_devices = 2131034120;
+			// aapt resource value: 0x7f050003
+			public const int new_devices = 2131034115;
 			
-			// aapt resource value: 0x7f050006
-			public const int paired_devices = 2131034118;
+			// aapt resource value: 0x7f050001
+			public const int paired_devices = 2131034113;
 			
 			// aapt resource value: 0x7f050016
 			public const int player1level = 2131034134;
@@ -183,11 +183,11 @@ namespace Tetris
 			// aapt resource value: 0x7f050011
 			public const int tableRow4 = 2131034129;
 			
-			// aapt resource value: 0x7f050003
-			public const int textView1 = 2131034115;
+			// aapt resource value: 0x7f050008
+			public const int textView1 = 2131034120;
 			
-			// aapt resource value: 0x7f050004
-			public const int textView2 = 2131034116;
+			// aapt resource value: 0x7f050009
+			public const int textView2 = 2131034121;
 			
 			// aapt resource value: 0x7f050013
 			public const int textView31 = 2131034131;
@@ -198,11 +198,11 @@ namespace Tetris
 			// aapt resource value: 0x7f05001b
 			public const int textView40 = 2131034139;
 			
-			// aapt resource value: 0x7f050007
-			public const int title_new_devices = 2131034119;
+			// aapt resource value: 0x7f050002
+			public const int title_new_devices = 2131034114;
 			
-			// aapt resource value: 0x7f050005
-			public const int title_paired_devices = 2131034117;
+			// aapt resource value: 0x7f050000
+			public const int title_paired_devices = 2131034112;
 			
 			static Id()
 			{
@@ -218,13 +218,13 @@ namespace Tetris
 		{
 			
 			// aapt resource value: 0x7f030000
-			public const int Accueil = 2130903040;
+			public const int device_list = 2130903040;
 			
 			// aapt resource value: 0x7f030001
-			public const int device_list = 2130903041;
+			public const int device_name = 2130903041;
 			
 			// aapt resource value: 0x7f030002
-			public const int device_name = 2130903042;
+			public const int Home = 2130903042;
 			
 			// aapt resource value: 0x7f030003
 			public const int Main = 2130903043;

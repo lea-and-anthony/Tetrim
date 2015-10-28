@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 using Android.Graphics;
 
-namespace Tetris
+namespace Tetrim
 {
 	public class PieceView
 	{
@@ -25,9 +25,9 @@ namespace Tetris
 
 			// Create the associated BlockViews
 			_blocksView = new BlockView[Constants.BlockPerPiece];
-			for (uint i = 0 ; i < _piece.m_blocks.GetLength(0) ; i++)
+			for (uint i = 0 ; i < _piece._blocks.GetLength(0) ; i++)
 			{
-				_blocksView[i] = new BlockView(_piece.m_blocks[i], isShadow);
+				_blocksView[i] = new BlockView(_piece._blocks[i], isShadow);
 			}
 		}
 
@@ -37,7 +37,7 @@ namespace Tetris
 		public void Draw (Canvas canvas, float blockSize, Dictionary<TetrisColor, Bitmap> blockImages)
 		{
 			// Draw each block of the piece
-			for (uint i = 0 ; i < _piece.m_blocks.GetLength(0) ; i++)
+			for (uint i = 0 ; i < _piece._blocks.GetLength(0) ; i++)
 			{
 				_blocksView[i].Draw(canvas, blockSize, blockImages);
 			}
@@ -50,9 +50,9 @@ namespace Tetris
 			_isShadow = isShadow;
 
 			// Update the BlockViews
-			for (uint i = 0 ; i < _piece.m_blocks.GetLength(0) ; i++)
+			for (uint i = 0 ; i < _piece._blocks.GetLength(0) ; i++)
 			{
-				_blocksView[i].Update(_piece.m_blocks[i], isShadow);
+				_blocksView[i].Update(_piece._blocks[i], isShadow);
 			}
 		}
 	}

@@ -2,7 +2,7 @@
 using Android.App;
 using Android.Content;
 
-namespace Tetris
+namespace Tetrim
 {
 	public static class Utils
 	{

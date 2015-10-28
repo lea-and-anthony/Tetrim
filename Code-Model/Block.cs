@@ -1,31 +1,31 @@
 ﻿using System;
 
-namespace Tetris
+namespace Tetrim
 {
 	public class Block
 	{
 		//--------------------------------------------------------------
 		// ATTRIBUTES
 		//--------------------------------------------------------------
-		public int m_x { get; set; }
-		public int m_y { get; set; }
-		public TetrisColor m_color { get; set; }
+		public int _x { get; set; }
+		public int _y { get; set; }
+		public TetrisColor _color { get; set; }
 
 		//--------------------------------------------------------------
 		// CONSTRUCTORS
 		//--------------------------------------------------------------
 		public Block (int x, int y, TetrisColor color)
 		{
-			m_x = x;
-			m_y = y;
-			m_color = color;
+			_x = x;
+			_y = y;
+			_color = color;
 		}
 
 		public Block (Block block)
 		{
-			m_x = block.m_x;
-			m_y = block.m_y;
-			m_color = block.m_color;
+			_x = block._x;
+			_y = block._y;
+			_color = block._color;
 		}
 
 		//--------------------------------------------------------------
@@ -33,7 +33,7 @@ namespace Tetris
 		//--------------------------------------------------------------
 		public void MoveDown ()
 		{
-			m_y --;
+			_y --;
 		}
 	}
 }

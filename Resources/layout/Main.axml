@@ -109,14 +109,14 @@
                         android:layout_width="match_parent" />
                 </TableRow>
             </TableLayout>
-            <Tetris.ViewProposedPiece
+            <Tetrim.ViewProposedPiece
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:id="@+id/ProposedPiecesView"
                 android:layout_marginRight="0.0dp"
                 android:layout_marginTop="7dp" />
         </LinearLayout>
-        <Tetris.MyView
+        <Tetrim.MyView
             android:layout_width="104.1dp"
             android:layout_height="match_parent"
             android:id="@+id/OpponentGridView" />
@@ -158,7 +158,7 @@
                 android:minWidth="40dp"
                 android:minHeight="40dp" />
         </LinearLayout>
-        <Tetris.MyView
+        <Tetrim.MyView
             android:id="@+id/PlayerGridView"
             android:layout_width="236.7dp"
             android:layout_height="match_parent" />

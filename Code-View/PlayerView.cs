@@ -1,7 +1,7 @@
 ﻿using System;
 using Android.Widget;
 
-namespace Tetris
+namespace Tetrim
 {
 	public class PlayerView
 	{
@@ -20,7 +20,7 @@ namespace Tetris
 			_player = player;
 
 			// Create the associated GridView
-			_gridView = new GridView(_player.m_grid);
+			_gridView = new GridView(_player._grid);
 		}
 
 		//--------------------------------------------------------------
@@ -29,10 +29,10 @@ namespace Tetris
 		public void Draw(TextView playerName, TextView playerScore, TextView playerLevel, TextView playerRows)
 		{
 			// Write the text
-			playerName.Text = _player.m_name;
-			playerScore.Text = _player.m_score.ToString();
-			playerLevel.Text = _player.m_level.ToString();
-			playerRows.Text = _player.m_removedRows.ToString();
+			playerName.Text = _player._name;
+			playerScore.Text = _player._score.ToString();
+			playerLevel.Text = _player._level.ToString();
+			playerRows.Text = _player._removedRows.ToString();
 		}
 
 		public void Update()

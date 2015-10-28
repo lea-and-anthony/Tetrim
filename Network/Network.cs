@@ -1,11 +1,11 @@
 ﻿using System;
 
-namespace Tetris
+namespace Tetrim
 {
 	public sealed class Network
 	{
 		//--------------------------------------------------------------
-		// EVENTS DEFINITIONS
+		// EVENTS
 		//--------------------------------------------------------------
 		public delegate int WriteEventDelegate(byte[] writeBuf);
 		public delegate int ReadEventDelegate(byte[] readBuf);
@@ -23,7 +23,7 @@ namespace Tetris
 
 
 		//--------------------------------------------------------------
-		// MEMBERS
+		// ATTRIBUTES
 		//--------------------------------------------------------------
 		private static readonly Network _instance = new Network();
 
@@ -87,12 +87,12 @@ namespace Tetris
 
 		public bool Connected()
 		{
-			return Enable() && _communicationWay.GetState() == BluetoothManager.State.CONNECTED;
+			return Enable() && _communicationWay.GetState() == BluetoothManager.State.Connected;
 		}
 
 		public bool WaitingForConnection()
 		{
-			return Enable() && _communicationWay.GetState() == BluetoothManager.State.NONE;
+			return Enable() && _communicationWay.GetState() == BluetoothManager.State.None;
 		}
 
 		public void InterpretMessage(byte[] message)

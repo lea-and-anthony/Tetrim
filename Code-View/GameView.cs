@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Tetris
+namespace Tetrim
 {
 	public class GameView
 	{
@@ -16,8 +16,8 @@ namespace Tetris
 		public GameView (Game game)
 		{
 			// Associate the instances
-			m_player1View = new PlayerView(game.m_player1);
-			m_player2View = new PlayerView(game.m_player2);
+			m_player1View = new PlayerView(game._player1);
+			m_player2View = new PlayerView(game._player2);
    		}
 	}
 }

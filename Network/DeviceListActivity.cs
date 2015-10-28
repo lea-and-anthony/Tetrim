@@ -23,32 +23,37 @@ using Android.Util;
 using Android.Views;
 using Android.Widget;
 
-namespace Tetris
+namespace Tetrim
 {
-	
-	/// <summary>
-	/// This Activity appears as a dialog. It lists any paired devices and
-	/// devices detected in the area after discovery. When a device is chosen
-	/// by the user, the MAC address of the device is sent back to the parent
-	/// Activity in the result Intent.
-	/// </summary>
+	// This Activity appears as a dialog. It lists any paired devices and
+	// devices detected in the area after discovery. When a device is chosen
+	// by the user, the MAC address of the device is sent back to the parent
+	// Activity in the result Intent.
 	[Activity(Label = "@string/select_device", 
 				Theme = "@android:style/Theme.Dialog", 
 				ConfigurationChanges=Android.Content.PM.ConfigChanges.KeyboardHidden | Android.Content.PM.ConfigChanges.Orientation)]			
 	public class DeviceListActivity : Activity
 	{
+		//--------------------------------------------------------------
+		// CONSTANTS
+		//--------------------------------------------------------------
 		// Debugging
 		private const string TAG = "DeviceListActivity";
 	
 		// Return Intent extra
 		public const string EXTRA_DEVICE_ADDRESS = "device_address";
-	
-		// Member fields
-		private BluetoothAdapter btAdapter;
-		private static ArrayAdapter<string> pairedDevicesArrayAdapter;
-		private static ArrayAdapter<string> newDevicesArrayAdapter;
-		private Receiver receiver;
-		
+
+		//--------------------------------------------------------------
+		// ATTRIBUTES
+		//--------------------------------------------------------------
+		private BluetoothAdapter _bluetoothAdapter;
+		private static ArrayAdapter<string> _pairedDevicesArrayAdapter;
+		private static ArrayAdapter<string> _newDevicesArrayAdapter;
+		private Receiver _receiver;
+
+		//--------------------------------------------------------------
+		// METHODES OVERRIDE
+		//--------------------------------------------------------------
 		protected override void OnCreate(Bundle bundle)
 		{
 			base.OnCreate(bundle);
@@ -69,33 +74,33 @@ namespace Tetris
 			
 			// Initialize array adapters. One for already paired devices and
 			// one for newly discovered devices
-			pairedDevicesArrayAdapter = new ArrayAdapter<string>(this, Resource.Layout.device_name);
-			newDevicesArrayAdapter = new ArrayAdapter<string>(this, Resource.Layout.device_name);
+			_pairedDevicesArrayAdapter = new ArrayAdapter<string>(this, Resource.Layout.device_name);
+			_newDevicesArrayAdapter = new ArrayAdapter<string>(this, Resource.Layout.device_name);
 			
 			// Find and set up the ListView for paired devices
 			var pairedListView = FindViewById<ListView>(Resource.Id.paired_devices);
-			pairedListView.Adapter = pairedDevicesArrayAdapter;
+			pairedListView.Adapter = _pairedDevicesArrayAdapter;
 			pairedListView.ItemClick += DeviceListClick;
 			
 			// Find and set up the ListView for newly discovered devices
 			var newDevicesListView = FindViewById<ListView>(Resource.Id.new_devices);
-			newDevicesListView.Adapter = newDevicesArrayAdapter;
+			newDevicesListView.Adapter = _newDevicesArrayAdapter;
 			newDevicesListView.ItemClick += DeviceListClick;
 			
 			// Register for broadcasts when a device is discovered
-			receiver = new Receiver(this);
+			_receiver = new Receiver(this);
 			var filter = new IntentFilter(BluetoothDevice.ActionFound);
-			RegisterReceiver(receiver, filter);
+			RegisterReceiver(_receiver, filter);
 			
 			// Register for broadcasts when discovery has finished
 			filter = new IntentFilter(BluetoothAdapter.ActionDiscoveryFinished);
-			RegisterReceiver(receiver, filter);
+			RegisterReceiver(_receiver, filter);
 			
 			// Get the local Bluetooth adapter
-			btAdapter = BluetoothAdapter.DefaultAdapter;
+			_bluetoothAdapter = BluetoothAdapter.DefaultAdapter;
 			
 			// Get a set of currently paired devices
-			var pairedDevices = btAdapter.BondedDevices;
+			var pairedDevices = _bluetoothAdapter.BondedDevices;
 			
 			// If there are paired devices, add each one to the ArrayAdapter
 			if(pairedDevices.Count > 0)
@@ -103,13 +108,13 @@ namespace Tetris
 				FindViewById<View>(Resource.Id.title_paired_devices).Visibility = ViewStates.Visible;
 				foreach(var device in pairedDevices)
 				{
-					pairedDevicesArrayAdapter.Add(device.Name + "\n" + device.Address);
+					_pairedDevicesArrayAdapter.Add(device.Name + "\n" + device.Address);
 				}
 			}
 			else
 			{
 				String noDevices = Resources.GetText(Resource.String.none_paired);
-				pairedDevicesArrayAdapter.Add(noDevices);	
+				_pairedDevicesArrayAdapter.Add(noDevices);	
 			}
 			
 		}
@@ -119,18 +124,19 @@ namespace Tetris
 			base.OnDestroy();
 			
 			// Make sure we're not doing discovery anymore
-			if(btAdapter != null)
+			if(_bluetoothAdapter != null)
 			{
-				btAdapter.CancelDiscovery();
+				_bluetoothAdapter.CancelDiscovery();
 			}
 	
 			// Unregister broadcast listeners
-			UnregisterReceiver(receiver);
+			UnregisterReceiver(_receiver);
 		}
-		
-		/// <summary>
-		/// Start device discover with the BluetoothAdapter
-		/// </summary>
+
+		//--------------------------------------------------------------
+		// PRIVATE METHODES
+		//--------------------------------------------------------------
+		// Start device discover with the BluetoothAdapter
 		private void DoDiscovery()
 		{
 			#if DEBUG
@@ -145,23 +151,20 @@ namespace Tetris
 			FindViewById<View>(Resource.Id.title_new_devices).Visibility = ViewStates.Visible;	
 
 			// If we're already discovering, stop it
-			if(btAdapter.IsDiscovering)
+			if(_bluetoothAdapter.IsDiscovering)
 			{
-				btAdapter.CancelDiscovery();
+				_bluetoothAdapter.CancelDiscovery();
 			}
 	
 			// Request discover from BluetoothAdapter
-			btAdapter.StartDiscovery();
+			_bluetoothAdapter.StartDiscovery();
 		}
-		
-	
-		/// <summary>
-		/// The on-click listener for all devices in the ListViews
-		/// </summary>
-		void DeviceListClick(object sender, AdapterView.ItemClickEventArgs e)
+
+		// The on-click listener for all devices in the ListViews
+		private void DeviceListClick(object sender, AdapterView.ItemClickEventArgs e)
 		{
 			// Cancel discovery because it's costly and we're about to connect
-			btAdapter.CancelDiscovery();
+			_bluetoothAdapter.CancelDiscovery();
 			
 			// Get the device MAC address, which is the last 17 chars in the View
 			var info =(e.View as TextView).Text.ToString();
@@ -175,16 +178,28 @@ namespace Tetris
 			SetResult(Result.Ok, intent);
 			Finish();
 		}
-		
+
+		//==============================================================
+		// CUSTOM CLASS
+		//==============================================================
 		public class Receiver : BroadcastReceiver
 		{ 
+			//--------------------------------------------------------------
+			// ATTRIBUTES
+			//--------------------------------------------------------------
 			Activity _chat;
 
+			//--------------------------------------------------------------
+			// CONSTRUCTORS
+			//--------------------------------------------------------------
 			public Receiver(Activity chat)
 			{
 				_chat = chat;
 			}
-			
+
+			//--------------------------------------------------------------
+			// METHODES OVERRIDE
+			//--------------------------------------------------------------
 			public override void OnReceive(Context context, Intent intent)
 			{ 
 				string action = intent.Action;
@@ -197,7 +212,7 @@ namespace Tetris
 					// If it's already paired, skip it, because it's been listed already
 					if(device.BondState != Bond.Bonded)
 					{
-						newDevicesArrayAdapter.Add(device.Name + "\n" + device.Address);
+						_newDevicesArrayAdapter.Add(device.Name + "\n" + device.Address);
 					}
 					// When discovery is finished, change the Activity title
 				}
@@ -205,10 +220,10 @@ namespace Tetris
 				{
 					_chat.SetProgressBarIndeterminateVisibility(false);
 					_chat.SetTitle(Resource.String.select_device);
-					if(newDevicesArrayAdapter.Count == 0)
+					if(_newDevicesArrayAdapter.Count == 0)
 					{
 						var noDevices = _chat.Resources.GetText(Resource.String.none_found).ToString();
-						newDevicesArrayAdapter.Add(noDevices);
+						_newDevicesArrayAdapter.Add(noDevices);
 					}
 				}
 			} 

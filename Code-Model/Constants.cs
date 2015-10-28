@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Tetris
+namespace Tetrim
 {
 	public static class Constants
 	{

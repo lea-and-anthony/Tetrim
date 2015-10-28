@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 using Android.Graphics;
 
-namespace Tetris
+namespace Tetrim
 {
 	public class BlockView
 	{
@@ -183,15 +183,15 @@ namespace Tetris
 			if (_block != null)
 			{
 				// Define the boundaries of the block
-				float left = blockSize*_block.m_x;
-				float top = Math.Abs(canvas.ClipBounds.Top - canvas.ClipBounds.Bottom)-blockSize*(_block.m_y+1);
-				float right = blockSize*(_block.m_x+1);
-				float bottom = Math.Abs(canvas.ClipBounds.Top - canvas.ClipBounds.Bottom)-blockSize*_block.m_y;
+				float left = blockSize*_block._x;
+				float top = Math.Abs(canvas.ClipBounds.Top - canvas.ClipBounds.Bottom)-blockSize*(_block._y+1);
+				float right = blockSize*(_block._x+1);
+				float bottom = Math.Abs(canvas.ClipBounds.Top - canvas.ClipBounds.Bottom)-blockSize*_block._y;
 
 				// Draw the image inside the block
 				Paint paint = new Paint();
 				paint.Alpha = _isShadow ? AlphaShadow : AlphaOpaque;
-				canvas.DrawBitmap(blockImages[_block.m_color], null, new RectF(left, top, right, bottom), paint);
+				canvas.DrawBitmap(blockImages[_block._color], null, new RectF(left, top, right, bottom), paint);
 			}
 		}
 			
