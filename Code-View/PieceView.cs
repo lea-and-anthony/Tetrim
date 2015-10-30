@@ -25,7 +25,7 @@ namespace Tetrim
 
 			// Create the associated BlockViews
 			_blocksView = new BlockView[Constants.BlockPerPiece];
-			for (uint i = 0 ; i < _piece._blocks.GetLength(0) ; i++)
+			for (uint i = 0 ; i < Constants.BlockPerPiece ; i++)
 			{
 				_blocksView[i] = new BlockView(_piece._blocks[i], isShadow);
 			}
@@ -36,10 +36,15 @@ namespace Tetrim
 		//--------------------------------------------------------------
 		public void Draw (Canvas canvas, float blockSize, Dictionary<TetrisColor, Bitmap> blockImages)
 		{
+			Draw (canvas, blockSize, blockImages, 0, 0);
+		}
+
+		public void Draw (Canvas canvas, float blockSize, Dictionary<TetrisColor, Bitmap> blockImages, float xOffset, float yOffset)
+		{
 			// Draw each block of the piece
-			for (uint i = 0 ; i < _piece._blocks.GetLength(0) ; i++)
+			for (uint i = 0 ; i < Constants.BlockPerPiece ; i++)
 			{
-				_blocksView[i].Draw(canvas, blockSize, blockImages);
+				_blocksView[i].Draw(canvas, blockSize, blockImages, xOffset, yOffset);
 			}
 		}
 
@@ -50,9 +55,27 @@ namespace Tetrim
 			_isShadow = isShadow;
 
 			// Update the BlockViews
-			for (uint i = 0 ; i < _piece._blocks.GetLength(0) ; i++)
+			for (uint i = 0; i < Constants.BlockPerPiece; i++)
 			{
 				_blocksView[i].Update(_piece._blocks[i], isShadow);
+			}
+		}
+
+		public void GetDrawnSize(float blockSize, ref float xSize, ref float ySize)
+		{
+			float currentXSize = 0;
+			float currentYSize = 0;
+			xSize = 0;
+			ySize = 0;
+			for (uint i = 0; i < Constants.BlockPerPiece; i++)
+			{
+				_blocksView[i].GetDrawnSize(blockSize, ref currentXSize, ref currentYSize);
+
+				if(currentXSize > xSize)
+					xSize = currentXSize;
+
+				if(currentYSize > ySize)
+					ySize = currentYSize;
 			}
 		}
 	}

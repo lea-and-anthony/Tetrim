@@ -34,11 +34,12 @@ namespace Tetrim
 			{
 				_proposedPieces[i] = new Piece((i % (Constants.NbProposedPiece/Constants.NbLinePropPiece))*5, 
 													(i / (Constants.NbProposedPiece/Constants.NbLinePropPiece))*5);
+				_proposedPieces[i].MoveToZero();
 			}
 		}
 
 		//--------------------------------------------------------------
-		// METHODES
+		// PUBLICS METHODES
 		//--------------------------------------------------------------
 		public void UpdatePlayerRemoveRow (int nbRemovedRows)
 		{
@@ -59,15 +60,7 @@ namespace Tetrim
 				_score += Constants.Score4Rows * _level;
 				break;
 			}
-		}
-
-		private void updateLevel()
-		{
-			while (_removedRows >= _level * 10 && _level < Constants.MaxLevel)
-			{
-				_level++;
-			}
-		}
+   		}
 
 		public void MoveLeft()
 		{
@@ -166,15 +159,73 @@ namespace Tetrim
 			return 1;
 		}
 
+		public bool InterpretScoreMessage(byte[] message)
+		{
+			if(message.Length < Constants.SizeMessageScore || message[0] != Constants.IdMessageScore)
+				return false;
+
+			_score = BitConverter.ToUInt32(message, 1);
+			_level = BitConverter.ToUInt32(message, 1 + sizeof(uint));
+			_removedRows = BitConverter.ToInt32(message, 1 + 2*sizeof(uint));
+			return true;
+		}
+
 		public byte[] GetMessageSendNewPiece(int i)
 		{
 			return _proposedPieces[i].getMessageNextPiece();
+		}
+
+		public byte[] GetScoreMessage()
+		{
+			byte[] message = new byte[Constants.SizeMessageScore];
+
+			message[0] = Constants.IdMessageScore;
+			completeScoreInMessage(ref message, 1);
+
+			return message;
+		}
+
+		public byte[] GetEndMessage()
+		{
+			byte[] message = new byte[Constants.SizeMessageEnd];
+
+			message[0] = Constants.IdMessageEnd;
+			completeScoreInMessage(ref message, 1);
+
+			return message;
 		}
 
 		public void ChangeProposedPiece(int i)
 		{
 			_proposedPieces[i] = new Piece((i%(Constants.NbProposedPiece/Constants.NbLinePropPiece)) * 5, 
 											(i/(Constants.NbProposedPiece/Constants.NbLinePropPiece)) * 5);
+			_proposedPieces[i].MoveToZero();
+		}
+
+		//--------------------------------------------------------------
+		// PRIVATES METHODES
+		//--------------------------------------------------------------
+		private void updateLevel()
+		{
+			while (_removedRows >= _level * 10 && _level < Constants.MaxLevel)
+			{
+				_level++;
+			}
+		}
+
+		private void completeScoreInMessage(ref byte[] message, int offset)
+		{
+			addByteArrayToOverArray(ref message, BitConverter.GetBytes(_score), offset);
+			addByteArrayToOverArray(ref message, BitConverter.GetBytes(_level), offset + sizeof(uint));
+			addByteArrayToOverArray(ref message, BitConverter.GetBytes(_removedRows), offset + 2*sizeof(uint));
+		}
+
+		private void addByteArrayToOverArray(ref byte[] message, byte[] over, int offset)
+		{
+			for(int i = 0; i < over.Length; i++)
+			{
+				message[offset + i] = over[i];
+			}
 		}
 	}
 }

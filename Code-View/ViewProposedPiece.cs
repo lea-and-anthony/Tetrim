@@ -20,25 +20,16 @@ namespace Tetrim
 		private int _blockSize = 0; // Size of the blocks in pixels according to the screen resolution
 		private Dictionary<TetrisColor, Bitmap> _blockImages = new Dictionary<TetrisColor, Bitmap>(); // Images of the blocks
 
-		private BluetoothManager _bluetoothManager; // Needed for the bluetooth connectio for now
-
 		//--------------------------------------------------------------
 		// CONSTRUCTORS
 		//--------------------------------------------------------------
 		public ViewProposedPiece(Context context, IAttributeSet attrs) : base(context, attrs)
 		{
-			selectPiece(0);
 		}
 
 		//--------------------------------------------------------------
 		// PUBLIC METHODES
 		//--------------------------------------------------------------
-		public void SetBluetooth(BluetoothManager bluetooth)
-		{
-			// Associate the new instance
-			_bluetoothManager = bluetooth;
-		}
-
 		public void SetPlayer(Player player)
 		{
 			// Associate the new instance
@@ -47,8 +38,11 @@ namespace Tetrim
 			// Recreate the proposed pieces
 			for(int i = 0; i < Constants.NbProposedPiece; i++)
 			{
-				_proposedPieces[i] = (i < player._proposedPieces.Length) ? new PieceView(player._proposedPieces[i], false) : null;
+				_proposedPieces[i] = new PieceView(player._proposedPieces[i], false);
 			}
+
+			// Now we can select one piece to send to the other player
+			selectPiece(0);
 		}
 
 		public void ChangeProposedPiece()
@@ -73,10 +67,10 @@ namespace Tetrim
 		//--------------------------------------------------------------
 		private void selectPiece(int piece)
 		{
-			if(_bluetoothManager != null)
+			if(Network.Instance.Connected() && _player != null)
 			{
 				// Notify the other player of the newly selected piece
-				_bluetoothManager.Write(_player.GetMessageSendNewPiece(piece));
+				Network.Instance.CommunicationWay.Write(_player.GetMessageSendNewPiece(piece));
 
 				// Select the piece on our side
 				_selectedPiece = piece;
@@ -94,8 +88,8 @@ namespace Tetrim
 			if(_blockSize == 0)
 			{
 				// Calculate the size of the block, Space for each piece set to 5 blocks (except for the last one)
-				_blockSize = Math.Min(Math.Abs(canvas.ClipBounds.Right - canvas.ClipBounds.Left)/((Constants.NbProposedPiece/Constants.NbLinePropPiece)*5 - 1),
-					Math.Abs(canvas.ClipBounds.Top - canvas.ClipBounds.Bottom)/(Constants.NbLinePropPiece*5 - 1));
+				_blockSize = Math.Min(Math.Abs(canvas.ClipBounds.Right - canvas.ClipBounds.Left)/((int)Math.Ceiling(Constants.NbProposedPiece*1.0/Constants.NbLinePropPiece)*5),
+					Math.Abs(canvas.ClipBounds.Top - canvas.ClipBounds.Bottom)/(Constants.NbLinePropPiece*4));
 
 				// Create the blocks images with the right size
 				foreach(TetrisColor color in Enum.GetValues(typeof(TetrisColor)))
@@ -104,6 +98,8 @@ namespace Tetrim
 				}
 			}
 
+			int nbPieceByLine = (int)Math.Ceiling(Constants.NbProposedPiece*1.0/Constants.NbLinePropPiece);
+
 			// Draw the pieces and highlight the selected one
 			for(int i = 0; i < Constants.NbProposedPiece; i++)
 			{
@@ -111,15 +107,20 @@ namespace Tetrim
 				{
 					// Show the selected piece
 					// TODO : change the way we highlight a piece
-					if(i==_selectedPiece)
+					if(i == _selectedPiece)
 					{
 						RectF rect = new RectF(i * _blockSize * 5, 0, (i + 1) * _blockSize * 5, _blockSize * 4);
 						Paint paint = new Paint {AntiAlias = true, Color = Color.AntiqueWhite};
 						canvas.DrawRoundRect(rect, 10, 10, paint);
 					}
+					float xSize = 0;
+					float ySize = 0;
+					_proposedPieces[i].GetDrawnSize(_blockSize, ref xSize, ref ySize);
 
 					// Draw each piece
-					_proposedPieces[i].Draw(canvas, _blockSize, _blockImages);
+					_proposedPieces[i].Draw(canvas, _blockSize, _blockImages, 
+											(i%nbPieceByLine)*_blockSize*5 + (_blockSize*5 - xSize) / 2, 
+											(i/nbPieceByLine)*_blockSize*4 + (_blockSize*4 - ySize) / 2);
 				}
 			}
 		}
@@ -128,28 +129,25 @@ namespace Tetrim
 		{
 			bool returnValue = base.OnTouchEvent(e);
 
-			if(_bluetoothManager != null)
+			// Get the touch position
+			int x = ((int) e.GetX())/(_blockSize*5);
+			int y = ((int) e.GetY())/(_blockSize*5);
+
+			// Lower the value if it is too high
+			if(x >= Constants.NbProposedPiece/Constants.NbLinePropPiece)
 			{
-				// Get the touch position
-				int x = ((int) e.GetX())/(_blockSize*5);
-				int y = ((int) e.GetY())/(_blockSize*5);
-
-				// Lower the value if it is too high
-				if(x >= Constants.NbProposedPiece/Constants.NbLinePropPiece)
-				{
-					x = Constants.NbProposedPiece/Constants.NbLinePropPiece - 1;
-				}
-				if(y >= Constants.NbLinePropPiece)
-				{
-					y = Constants.NbLinePropPiece - 1;
-				}
-
-				// Get the piece number
-				int i = x + y*(Constants.NbProposedPiece/Constants.NbLinePropPiece);
-
-				// Select the piece
-				selectPiece(i);
+				x = Constants.NbProposedPiece/Constants.NbLinePropPiece - 1;
 			}
+			if(y >= Constants.NbLinePropPiece)
+			{
+				y = Constants.NbLinePropPiece - 1;
+			}
+
+			// Get the piece number
+			int i = x + y*(Constants.NbProposedPiece/Constants.NbLinePropPiece);
+
+			// Select the piece
+			selectPiece(i);
 
 			Invalidate();
 			return returnValue;

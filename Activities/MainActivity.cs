@@ -10,7 +10,7 @@ using Android.Bluetooth;
 
 namespace Tetrim
 {
-	[Activity(Label = "Tetrim", Icon = "@drawable/icon", Theme = "@android:style/Theme.NoTitleBar.Fullscreen")]
+	[Activity(Label = "Tetrim", Icon = "@drawable/icon", Theme = "@android:style/Theme.NoTitleBar.Fullscreen", ScreenOrientation = Android.Content.PM.ScreenOrientation.Portrait)]
 	public class MainActivity : Activity
 	{
 		//--------------------------------------------------------------
@@ -53,11 +53,19 @@ namespace Tetrim
 
 				ViewProposedPiece viewProposed = FindViewById<ViewProposedPiece>(Resource.Id.ProposedPiecesView);
 				viewProposed.SetPlayer(_game._player1);
-				viewProposed.SetBluetooth(Network.Instance.CommunicationWay);
 			}
 
 			// Associate the buttons with the methods
 			associateButtonsEvent();
+
+			// Hook on network event
+			Network.Instance.UsualGameMessage += UpdateOpponentView;
+			Network.Instance.PiecePutMessage += OpponentPiecePut;
+			Network.Instance.NextPieceMessage += _game._player1.interpretMessage;
+			Network.Instance.PauseMessage += pauseGame;
+			Network.Instance.ResumeMessage += resumeGame;
+			Network.Instance.ScoreMessage += OnReceiveScoreMessage;
+			Network.Instance.EndMessage += OnReceiveEndMessage;
 
 			// Launch the main timer of the application
 			int time = getTimerLapse();
@@ -66,15 +74,10 @@ namespace Tetrim
 			_gameTimer.Interval = time;
 			_gameTimer.AutoReset = true;
 			_gameTimer.Start();
-
-			// Hook on network event
-			Network.Instance.UsualGameMessage += UpdateOpponentView;
-			Network.Instance.PiecePutMessage += OpponentPiecePut;
-			Network.Instance.NextPieceMessage += _game._player1.interpretMessage;
-			Network.Instance.PauseMessage += pauseGame;
-			Network.Instance.ResumeMessage += resumeGame;
 		}
 
+		// Called when an other application is displayed in front of this one
+		// So here we are going to enter the pause
 		protected override void OnPause()
 		{
 			base.OnPause();
@@ -125,7 +128,9 @@ namespace Tetrim
 			
 			if (_game._player1._grid.isGameOver())
 			{
-				RunOnUiThread(() => Utils.ShowAlert (Resource.String.game_over, Resource.String.game_over, this));
+				_gameTimer.Stop();
+				Utils.PopUpEndEvent += endGame;
+				RunOnUiThread(() => Utils.ShowAlert (Resource.String.game_over_loose_title, Resource.String.game_over_loose, this));
 			}
 
 			//  Network
@@ -154,6 +159,16 @@ namespace Tetrim
 
 					Network.Instance.CommunicationWay.Write(message);
 				}
+
+				if(!isSamePiece) // the piece was added on the map so the score changed
+				{
+					Network.Instance.CommunicationWay.Write(_game._player1.GetScoreMessage());
+				}
+
+				if (_game._player1._grid.isGameOver())
+				{
+					Network.Instance.CommunicationWay.Write(_game._player1.GetEndMessage());
+				}
 			}
 
 			// Display of the current model
@@ -171,10 +186,24 @@ namespace Tetrim
 			}
 		}
 
+		private int OnReceiveScoreMessage(byte[] message)
+		{
+			_game._player2.InterpretScoreMessage(message);
+			return 0;
+		}
+
+		private int OnReceiveEndMessage(byte[] message)
+		{
+			_gameTimer.Stop();
+			Utils.PopUpEndEvent += endGame;
+			RunOnUiThread(() => Utils.ShowAlert (Resource.String.game_over_win_title, Resource.String.game_over_win, this));
+			return 0;
+		}
+
 		//--------------------------------------------------------------
-		// PUBLICS METHODES
+		// PRIVATES METHODES
 		//--------------------------------------------------------------
-		public int UpdateOpponentView(byte[] message)
+		private int UpdateOpponentView(byte[] message)
 		{
 			// Interpret the message
 			_game._player2.interpretMessage(message);
@@ -193,7 +222,7 @@ namespace Tetrim
 			return 0;
 		}
 
-		public int OpponentPiecePut(byte[] message)
+		private int OpponentPiecePut(byte[] message)
 		{
 			UpdateOpponentView(message);
 			if(message[Constants.SizeMessagePiecePut - 1] == 1)
@@ -204,9 +233,6 @@ namespace Tetrim
 			return 0;
 		}
 
-		//--------------------------------------------------------------
-		// PRIVATES METHODES
-		//--------------------------------------------------------------
 		//pause the game, display a pop-up and send a message to the remote device if asked
 		private int pauseGame(bool sendRequestToOverPlayer)
 		{
@@ -253,6 +279,12 @@ namespace Tetrim
 			_gameTimer.Start();
 
 			return 0;
+		}
+
+		private void endGame()
+		{
+			Utils.PopUpEndEvent -= endGame;
+			Finish();
 		}
 
 		private void associateButtonsEvent()

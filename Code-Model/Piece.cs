@@ -57,6 +57,9 @@ namespace Tetrim
 			turnPieceAccordingToAngle(null);
 		}
 
+		//--------------------------------------------------------------
+		// STATICS METHODES
+		//--------------------------------------------------------------
 		public static Shape pickShape ()
 		{
 			return (Shape) Constants.Rand.Next(Constants.ShapeMax);
@@ -90,66 +93,8 @@ namespace Tetrim
 		}
 
 		//--------------------------------------------------------------
-		// METHODES
+		// PUBLICS METHODES
 		//--------------------------------------------------------------
-		private void placeBlockAccordingToShape(int x, int y)
-		{
-			switch (_shape)
-			{
-			case Shape.I:
-				_blocks [0] = new Block (x, y, _color);
-				_blocks [1] = new Block (x - 1, y, _color);
-				_blocks [2] = new Block (x + 1, y, _color);
-				_blocks [3] = new Block (x + 2, y, _color);
-				break;
-			case Shape.J:
-				_blocks [0] = new Block (x , y, _color);
-				_blocks [1] = new Block (x - 1, y, _color);
-				_blocks [2] = new Block (x + 1, y, _color);
-				_blocks [3] = new Block (x + 1, y - 1, _color);
-				break;
-			case Shape.L:
-				_blocks [0] = new Block (x , y, _color);
-				_blocks [1] = new Block (x - 1, y, _color);
-				_blocks [2] = new Block (x - 1, y - 1, _color);
-				_blocks [3] = new Block (x + 1, y, _color);
-				break;
-			case Shape.O:
-				_blocks [0] = new Block (x , y, _color);
-				_blocks [1] = new Block (x + 1, y, _color);
-				_blocks [2] = new Block (x, y - 1, _color);
-				_blocks [3] = new Block (x + 1, y - 1, _color);
-				break;
-			case Shape.S:
-				_blocks [0] = new Block (x , y, _color);
-				_blocks [1] = new Block (x + 1, y, _color);
-				_blocks [2] = new Block (x, y - 1, _color);
-				_blocks [3] = new Block (x - 1, y - 1, _color);
-				break;
-			case Shape.T:
-				_blocks [0] = new Block (x , y, _color);
-				_blocks [1] = new Block (x - 1, y, _color);
-				_blocks [2] = new Block (x + 1, y, _color);
-				_blocks [3] = new Block (x, y - 1, _color);
-				break;
-			case Shape.Z:
-				_blocks [0] = new Block (x , y, _color);
-				_blocks [1] = new Block (x - 1, y, _color);
-				_blocks [2] = new Block (x, y - 1, _color);
-				_blocks [3] = new Block (x + 1, y - 1, _color);
-				break;
-			}
-		}
-
-		private void turnPieceAccordingToAngle(Grid grid)
-		{
-			for (uint i = _angle ; i > 0; i--)
-			{
-				if(!TurnLeft(grid))
-					_angle--;
-			}
-		}
-
 		public bool TurnLeft(Grid grid)
 		{
 			bool canRotate = true;
@@ -317,6 +262,124 @@ namespace Tetrim
 			}
 		}
 
+		public void placePiece(byte[] bytesMessage, uint begin)
+		{
+			_shape = (Shape) bytesMessage[begin + 3];
+			_color = pickColor(_shape);
+			_angle = (uint) bytesMessage[begin + 2];
+			placeBlockAccordingToShape((int) bytesMessage[begin], (int) bytesMessage[begin + 1]);
+			turnPieceAccordingToAngle(null);
+		}
+
+		public void ChangeShape(Shape newShape, int x, int y)
+		{
+			_shape = newShape;
+			_color = pickColor(_shape);
+			placeBlockAccordingToShape(x+1, y+2);
+			_angle = 0;
+		}
+
+		public byte[] getMessage(byte[] bytes, uint begin)
+		{
+			// The position x and y will never be over 255 and less than 0 so we just have to cast the int to byte
+			bytes[begin] = (byte) _blocks[0]._x;
+			bytes[begin+1] = (byte) _blocks[0]._y;
+			bytes[begin+2] = (byte) _angle;
+			bytes[begin+3] = (byte) _shape;
+
+			return bytes;
+		}
+
+		public byte[] getMessageNextPiece()
+		{
+			byte[] bytes = new byte[Constants.SizeMessageNextPiece];
+			bytes[0] = Constants.IdMessageNextPiece;
+			bytes[1] = (byte) _shape;
+			return bytes;
+		}
+
+		// Will place the upper-left corner of the piece in 0,0
+		public void MoveToZero()
+		{
+			int minX = _blocks[0]._x;
+			int minY = _blocks[0]._y;
+			for(int i = 1; i < Constants.BlockPerPiece; i++)
+			{
+				if(_blocks[i]._x < minX)
+					minX = _blocks[i]._x;
+
+				if(_blocks[i]._y < minY)
+					minY = _blocks[i]._y;
+			}
+
+			for(int i = 0; i < Constants.BlockPerPiece; i++)
+			{
+				_blocks[i]._x -= minX;
+				_blocks[i]._y -= minY;
+			}
+		}
+
+		//--------------------------------------------------------------
+		// PRIVATE METHODES
+		//--------------------------------------------------------------
+		private void placeBlockAccordingToShape(int x, int y)
+		{
+			switch (_shape)
+			{
+			case Shape.I:
+				_blocks [0] = new Block (x, y, _color);
+				_blocks [1] = new Block (x - 1, y, _color);
+				_blocks [2] = new Block (x + 1, y, _color);
+				_blocks [3] = new Block (x + 2, y, _color);
+				break;
+			case Shape.J:
+				_blocks [0] = new Block (x , y, _color);
+				_blocks [1] = new Block (x - 1, y, _color);
+				_blocks [2] = new Block (x + 1, y, _color);
+				_blocks [3] = new Block (x + 1, y - 1, _color);
+				break;
+			case Shape.L:
+				_blocks [0] = new Block (x , y, _color);
+				_blocks [1] = new Block (x - 1, y, _color);
+				_blocks [2] = new Block (x - 1, y - 1, _color);
+				_blocks [3] = new Block (x + 1, y, _color);
+				break;
+			case Shape.O:
+				_blocks [0] = new Block (x , y, _color);
+				_blocks [1] = new Block (x + 1, y, _color);
+				_blocks [2] = new Block (x, y - 1, _color);
+				_blocks [3] = new Block (x + 1, y - 1, _color);
+				break;
+			case Shape.S:
+				_blocks [0] = new Block (x , y, _color);
+				_blocks [1] = new Block (x + 1, y, _color);
+				_blocks [2] = new Block (x, y - 1, _color);
+				_blocks [3] = new Block (x - 1, y - 1, _color);
+				break;
+			case Shape.T:
+				_blocks [0] = new Block (x , y, _color);
+				_blocks [1] = new Block (x - 1, y, _color);
+				_blocks [2] = new Block (x + 1, y, _color);
+				_blocks [3] = new Block (x, y - 1, _color);
+				break;
+			case Shape.Z:
+				_blocks [0] = new Block (x , y, _color);
+				_blocks [1] = new Block (x - 1, y, _color);
+				_blocks [2] = new Block (x, y - 1, _color);
+				_blocks [3] = new Block (x + 1, y - 1, _color);
+				break;
+			}
+		}
+
+		private void turnPieceAccordingToAngle(Grid grid)
+		{
+			for (uint i = _angle ; i > 0; i--)
+			{
+				if(!TurnLeft(grid))
+					_angle--;
+			}
+		}
+
 		private bool isOutOfGrid(int x, int y)
 		{
 			if(x < 0 || x > Constants.GridSizeXmax || y < 0 || y > Constants.GridSizeYmax)
@@ -333,16 +396,7 @@ namespace Tetrim
 				return true;
 			}
 			return false;
-		}
-
-		public void placePiece(byte[] bytesMessage, uint begin)
-		{
-			_shape = (Shape) bytesMessage[begin + 3];
-			_color = pickColor(_shape);
-			_angle = (uint) bytesMessage[begin + 2];
-			placeBlockAccordingToShape((int) bytesMessage[begin], (int) bytesMessage[begin + 1]);
-			turnPieceAccordingToAngle(null);
-		}
+   		}
 
 		private bool pieceCanMove(Grid grid, int[] newX, int[] newY)
 		{
@@ -384,34 +438,7 @@ namespace Tetrim
 				} while(!canRotate && iteration < 3);
 			}
 			return canRotate;
-		}
-
-		public void ChangeShape(Shape newShape, int x, int y)
-		{
-			_shape = newShape;
-			_color = pickColor(_shape);
-			placeBlockAccordingToShape(x+1, y+2);
-			_angle = 0;
-		}
-
-		public byte[] getMessage(byte[] bytes, uint begin)
-		{
-			// The position x and y will never be over 255 and less than 0 so we just have to cast the int to byte
-			bytes[begin] = (byte) _blocks[0]._x;
-			bytes[begin+1] = (byte) _blocks[0]._y;
-			bytes[begin+2] = (byte) _angle;
-			bytes[begin+3] = (byte) _shape;
-
-			return bytes;
-		}
-
-		public byte[] getMessageNextPiece()
-		{
-			byte[] bytes = new byte[Constants.SizeMessageNextPiece];
-			bytes[0] = Constants.IdMessageNextPiece;
-			bytes[1] = (byte) _shape;
-			return bytes;
-		}
+   		}
 	}
 }
 

@@ -36,6 +36,8 @@ namespace Tetrim
 		public const byte IdMessageResume = 5;
 		public const byte IdMessagePiecePut = 6;
 		public const byte IdMessageNextPiece = 7;
+		public const byte IdMessageEnd = 8;
+		public const byte IdMessageScore = 9;
 
 		public const uint SizeMessagePiece = 2+1+1 + 1;
 		public const uint SizeMessagePiecePut = 2*SizeMessagePiece + 1 - 1;
@@ -43,6 +45,8 @@ namespace Tetrim
 		public const uint SizeMessageNextPiece = 1 + 1;
 		public const uint SizeMessagePause = 1;
 		public const uint SizeMessageResume = 1;
+		public const uint SizeMessageEnd = 1 + sizeof(int) + 2*sizeof(uint); // score, level and nb removed row
+		public const uint SizeMessageScore = 1 + sizeof(int) + 2*sizeof(uint); // score, level and nb removed row
 		public const uint SizeMaxBluetoothMessage = 512;
 
 		public const byte NumVersion1 = 1;

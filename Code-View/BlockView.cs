@@ -179,14 +179,19 @@ namespace Tetrim
 		//--------------------------------------------------------------
 		public void Draw (Canvas canvas, float blockSize, Dictionary<TetrisColor, Bitmap> blockImages)
 		{
+			Draw (canvas, blockSize, blockImages, 0, 0);
+		}
+
+		public void Draw (Canvas canvas, float blockSize, Dictionary<TetrisColor, Bitmap> blockImages, float xOffset, float yOffset)
+		{
 			// TODO : handle lock and multi-threading to prevent the drawing of a destroyed block
 			if (_block != null)
 			{
 				// Define the boundaries of the block
-				float left = blockSize*_block._x;
-				float top = Math.Abs(canvas.ClipBounds.Top - canvas.ClipBounds.Bottom)-blockSize*(_block._y+1);
-				float right = blockSize*(_block._x+1);
-				float bottom = Math.Abs(canvas.ClipBounds.Top - canvas.ClipBounds.Bottom)-blockSize*_block._y;
+				float left = blockSize*_block._x + xOffset;
+				float top = Math.Abs(canvas.ClipBounds.Top - canvas.ClipBounds.Bottom)-blockSize*(_block._y+1) - yOffset;
+				float right = blockSize*(_block._x+1) + xOffset;
+				float bottom = Math.Abs(canvas.ClipBounds.Top - canvas.ClipBounds.Bottom)-blockSize*_block._y - yOffset;
 
 				// Draw the image inside the block
 				Paint paint = new Paint();
@@ -200,7 +205,14 @@ namespace Tetrim
 			// Associate the new instances
 			_block = block;
 			_isShadow = isShadow;
-   		}
+		}
+
+		// set xSize and ySize to the x and y size of the block (this function suppose that the block is in 0,0)
+		public void GetDrawnSize(float blockSize, ref float xSize, ref float ySize)
+		{
+			xSize = blockSize*(_block._x+1);
+			ySize = blockSize*(_block._y+1);
+		}
 	}
 }
 

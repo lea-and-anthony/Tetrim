@@ -14,7 +14,10 @@
 	<string name="Pause_title">Pause</string>
     <string name="Pause">Voulez-vous reprendre ?</string>
 	<string name="app_name">Tetrim</string>
-	<string name="game_over">Game over :-(</string>
+	<string name="game_over_loose_title">Game over</string>
+	<string name="game_over_loose">Game over :-(\nVous avez perdu.</string>
+	<string name="game_over_win_title">Game over</string>
+	<string name="game_over_win">Game over :-)\nVous avez gagné.</string>
 
 
     <!--  DeviceListActivity -->

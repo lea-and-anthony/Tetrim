@@ -18,6 +18,8 @@ namespace Tetrim
 		public delegate int PiecePutMessageDelegate(byte[] buffer);
 		public delegate int NextPieceMessageDelegate(byte[] buffer);
 		public delegate int StartMessageDelegate(byte[] buffer);
+		public delegate int EndMessageDelegate(byte[] buffer);
+		public delegate int ScoreMessageDelegate(byte[] buffer);
 		public delegate int PauseMessageDelegate(bool initiator);
 		public delegate int ResumeMessageDelegate(bool initiator);
 
@@ -40,6 +42,8 @@ namespace Tetrim
 		public event PiecePutMessageDelegate PiecePutMessage;
 		public event NextPieceMessageDelegate NextPieceMessage;
 		public event StartMessageDelegate StartMessage;
+		public event EndMessageDelegate EndMessage;
+		public event ScoreMessageDelegate ScoreMessage;
 		public event PauseMessageDelegate PauseMessage;
 		public event ResumeMessageDelegate ResumeMessage;
 
@@ -70,26 +74,35 @@ namespace Tetrim
 		//--------------------------------------------------------------
 		// METHODES
 		//--------------------------------------------------------------
+		/* Activate the bluetooth to allow connection with an other device*/
 		public void EnableBluetooth()
 		{
 			_communicationWay = new BluetoothManager();
 		}
 
+		/* Stop all buetooth activities */
 		public void DisableBluetooth()
 		{
+			if(_communicationWay != null)
+			{
+				_communicationWay.Stop();
+			}
 			_communicationWay = null;
 		}
 
+		/* Return true if the bluetooth is activated (but not necessarily connected) */
 		public bool Enable()
 		{
 			return _communicationWay != null;
 		}
 
+		/* Return true if the bluetooth is activated and connected to an other device */
 		public bool Connected()
 		{
 			return Enable() && _communicationWay.GetState() == BluetoothManager.State.Connected;
 		}
 
+		/* Return true if the bluetooth is activated and waiting for an other device to start a connection */
 		public bool WaitingForConnection()
 		{
 			return Enable() && _communicationWay.GetState() == BluetoothManager.State.None;
@@ -122,11 +135,25 @@ namespace Tetrim
 					NextPieceMessage.Invoke(message);
 				}
 				break;
-			// It is a message for the main activity asking to begin the game
+				// It is a message for the main activity asking to begin the game
 			case Constants.IdMessageStart:
 				if(StartMessage != null)
 				{
 					StartMessage.Invoke(message);
+				}
+				break;
+				// It is a message for the main activity telling that the opponent lost
+			case Constants.IdMessageEnd:
+				if(EndMessage != null)
+				{
+					EndMessage.Invoke(message);
+				}
+				break;
+				// It is a message for the main activity telling the opponent score
+			case Constants.IdMessageScore:
+				if(ScoreMessage != null)
+				{
+					ScoreMessage.Invoke(message);
 				}
 				break;
 			// It is a pause demand, so we are going to treat it if the game is running
