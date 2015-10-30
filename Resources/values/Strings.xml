@@ -20,13 +20,13 @@
 	<string name="game_over_win">Game over :-)\nVous avez gagné.</string>
 
 
-    <!--  DeviceListActivity -->
-    <string name="scanning">Recherche en cours...</string>
-    <string name="select_device">Choisir le périphérique auquel se connecter</string>
-    <string name="none_paired">Aucun périphérique n\'a été appairé</string>
-    <string name="none_found">Aucun périphérique trouvé</string>
-    <string name="title_paired_devices">Périphérique appairé</string>
-    <string name="title_other_devices">Autres périphériques disponibles</string>
-    <string name="button_scan">Rechercher des périphériques</string>
+    <!--  BluetoothConnectionActivity -->
+    <string name="scanning">Scanning...</string>
+    <string name="select_device">Select a device</string>
+    <string name="none_paired">No paired device</string>
+    <string name="none_found">No device found</string>
+    <string name="title_paired_devices">Paired devices</string>
+    <string name="title_other_devices">Other devices</string>
+    <string name="button_scan">Scan for other devices</string>
 
 </resources>

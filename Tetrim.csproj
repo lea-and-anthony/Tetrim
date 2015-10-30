@@ -52,7 +52,6 @@
     <Compile Include="Code-Model\Grid.cs" />
     <Compile Include="Code-Model\Piece.cs" />
     <Compile Include="Code-Model\Player.cs" />
-    <Compile Include="Network\DeviceListActivity.cs" />
     <Compile Include="Code-View\BlockView.cs" />
     <Compile Include="Code-View\GridView.cs" />
     <Compile Include="Code-View\PieceView.cs" />
@@ -69,6 +68,8 @@
     <Compile Include="Network\Bluetooth\ConnectedThread.cs" />
     <Compile Include="Network\Bluetooth\AcceptThread.cs" />
     <Compile Include="Network\Bluetooth\MyHandler.cs" />
+    <Compile Include="Activities\BluetoothConnectionActivity.cs" />
+    <Compile Include="Network\Bluetooth\Receiver.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
@@ -83,7 +84,6 @@
     <AndroidResource Include="Resources\drawable-xhdpi\Icon.png" />
     <AndroidResource Include="Resources\drawable-xxhdpi\Icon.png" />
     <AndroidResource Include="Resources\drawable-xxxhdpi\Icon.png" />
-    <AndroidResource Include="Resources\layout\device_list.axml" />
     <AndroidResource Include="Resources\layout\device_name.axml" />
     <AndroidResource Include="Resources\drawable-hdpi\move_bottom.png" />
     <AndroidResource Include="Resources\drawable-hdpi\move_down.png" />
@@ -121,6 +121,7 @@
     <AndroidResource Include="Resources\drawable-xxxhdpi\turn_left.png" />
     <AndroidResource Include="Resources\drawable-xxxhdpi\turn_right.png" />
     <AndroidResource Include="Resources\layout\Home.axml" />
+    <AndroidResource Include="Resources\layout\BluetoothConnection.axml" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Novell\Novell.MonoDroid.CSharp.targets" />
   <ItemGroup>
@@ -129,5 +130,9 @@
     <Folder Include="Network\" />
     <Folder Include="Activities\" />
     <Folder Include="Network\Bluetooth\" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\Blox.ttf" />
+    <AndroidAsset Include="Assets\Karmatic_Arcade.ttf" />
   </ItemGroup>
 </Project>

@@ -3,31 +3,31 @@
     android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent">
-    <Button
-        android:text="Creer le buetoothManager"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/button2" />
-    <Button
-        android:text="@string/connexionBluetooth"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/button1" />
-    <Button
-        android:text="Start game"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/button3" />
     <TextView
-        android:text="Medium Text"
-        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="TeTrIm"
+        android:textAppearance="?android:attr/textAppearanceLarge"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/textView1" />
-    <TextView
-        android:text="Medium Text"
-        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:id="@+id/textViewTitle"
+        android:textSize="50dp" />
+    <Button
+        android:text="1 player"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/textView2" />
+        android:id="@+id/singlePlayerButton" />
+    <Button
+        android:text="2 players"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/twoPlayersButton" />
+    <Button
+        android:text="settings"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/settingsButton" />
+    <Button
+        android:text="exit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/exitButton" />
 </LinearLayout>
