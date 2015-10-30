@@ -238,6 +238,7 @@ namespace Tetrim
 				resumeGame(true);
 			}
 		}
+
 		private int resumeGame(bool sendRequestToOverPlayer)
 		{
 			// If it is a 2 player game we need to resume the other game
@@ -257,37 +258,37 @@ namespace Tetrim
 
 		private void associateButtonsEvent()
 		{
-			FindViewById<Button>(Resource.Id.buttonMoveLeft).Click += delegate {
+			FindViewById<ImageButton>(Resource.Id.buttonMoveLeft).Click += delegate {
 				_game.MoveLeft();
 				// Display of the current model
 				FindViewById(Resource.Id.PlayerGridView).PostInvalidate();
 			};
 
-			FindViewById<Button>(Resource.Id.buttonMoveRight).Click += delegate {
+			FindViewById<ImageButton>(Resource.Id.buttonMoveRight).Click += delegate {
 				_game.MoveRight();
 				// Display of the current model
 				FindViewById(Resource.Id.PlayerGridView).PostInvalidate();
 			};
 
-			FindViewById<Button>(Resource.Id.buttonTurnLeft).Click += delegate {
+			FindViewById<ImageButton>(Resource.Id.buttonTurnLeft).Click += delegate {
 				_game.TurnLeft();
 				// Display of the current model
 				FindViewById(Resource.Id.PlayerGridView).PostInvalidate();
 			};
 
-			FindViewById<Button>(Resource.Id.buttonTurnRight).Click += delegate {
+			FindViewById<ImageButton>(Resource.Id.buttonTurnRight).Click += delegate {
 				_game.TurnRight();
 				// Display of the current model
 				FindViewById(Resource.Id.PlayerGridView).PostInvalidate();
 			};
 
-			FindViewById<Button>(Resource.Id.buttonMoveDown).Click += delegate {
+			FindViewById<ImageButton>(Resource.Id.buttonMoveDown).Click += delegate {
 				_game.MoveDown();
 				// Display of the current model
 				FindViewById(Resource.Id.PlayerGridView).PostInvalidate();
 			};
 
-			FindViewById<Button>(Resource.Id.buttonMoveFoot).Click += delegate {
+			FindViewById<ImageButton>(Resource.Id.buttonMoveFoot).Click += delegate {
 				_game.MoveBottom();
 				// Display of the current model
 				FindViewById(Resource.Id.PlayerGridView).PostInvalidate();

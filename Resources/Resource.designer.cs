@@ -90,15 +90,6 @@ namespace Tetrim
 			// aapt resource value: 0x7f05001d
 			public const int ProposedPiecesView = 2131034141;
 			
-			// aapt resource value: 0x7f050006
-			public const int button1 = 2131034118;
-			
-			// aapt resource value: 0x7f050005
-			public const int button2 = 2131034117;
-			
-			// aapt resource value: 0x7f050007
-			public const int button3 = 2131034119;
-			
 			// aapt resource value: 0x7f050023
 			public const int buttonMoveDown = 2131034147;
 			
@@ -119,6 +110,9 @@ namespace Tetrim
 			
 			// aapt resource value: 0x7f050004
 			public const int button_scan = 2131034116;
+			
+			// aapt resource value: 0x7f050009
+			public const int exitButton = 2131034121;
 			
 			// aapt resource value: 0x7f050020
 			public const int layoutButtonsLeft = 2131034144;
@@ -171,6 +165,12 @@ namespace Tetrim
 			// aapt resource value: 0x7f050014
 			public const int player2score = 2131034132;
 			
+			// aapt resource value: 0x7f050008
+			public const int settingsButton = 2131034120;
+			
+			// aapt resource value: 0x7f050006
+			public const int singlePlayerButton = 2131034118;
+			
 			// aapt resource value: 0x7f050010
 			public const int tableLayout1 = 2131034128;
 			
@@ -183,12 +183,6 @@ namespace Tetrim
 			// aapt resource value: 0x7f050011
 			public const int tableRow4 = 2131034129;
 			
-			// aapt resource value: 0x7f050008
-			public const int textView1 = 2131034120;
-			
-			// aapt resource value: 0x7f050009
-			public const int textView2 = 2131034121;
-			
 			// aapt resource value: 0x7f050013
 			public const int textView31 = 2131034131;
 			
@@ -198,11 +192,17 @@ namespace Tetrim
 			// aapt resource value: 0x7f05001b
 			public const int textView40 = 2131034139;
 			
+			// aapt resource value: 0x7f050005
+			public const int textViewTitle = 2131034117;
+			
 			// aapt resource value: 0x7f050002
 			public const int title_new_devices = 2131034114;
 			
 			// aapt resource value: 0x7f050000
 			public const int title_paired_devices = 2131034112;
+			
+			// aapt resource value: 0x7f050007
+			public const int twoPlayersButton = 2131034119;
 			
 			static Id()
 			{
@@ -218,7 +218,7 @@ namespace Tetrim
 		{
 			
 			// aapt resource value: 0x7f030000
-			public const int device_list = 2130903040;
+			public const int BluetoothConnection = 2130903040;
 			
 			// aapt resource value: 0x7f030001
 			public const int device_name = 2130903041;

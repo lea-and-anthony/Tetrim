@@ -131,32 +131,37 @@
             android:layout_width="64.2dp"
             android:layout_height="wrap_content"
             android:id="@+id/layoutButtonsLeft"
-            android:layout_gravity="center_vertical"
-            android:layout_marginRight="0.0dp">
-            <Button
+            android:layout_gravity="center">
+            <ImageButton
+                android:src="@drawable/turn_left"
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
                 android:id="@+id/buttonTurnLeft"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:background="@drawable/turn_left"
-                android:minWidth="40dp"
-                android:minHeight="40dp" />
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:adjustViewBounds="true"
+                android:scaleType="fitCenter"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp" />
+            <ImageButton
+                android:src="@drawable/move_left"
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
                 android:id="@+id/buttonMoveLeft"
-                android:background="@drawable/move_left"
-                android:layout_gravity="center"
-                android:minWidth="40dp"
-                android:minHeight="40dp" />
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:adjustViewBounds="true"
+                android:scaleType="fitCenter"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp" />
+            <ImageButton
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
                 android:id="@+id/buttonMoveDown"
-                android:layout_gravity="center"
-                android:background="@drawable/move_down"
-                android:minWidth="40dp"
-                android:minHeight="40dp" />
+                android:background="@android:color/transparent"
+                android:scaleType="fitCenter"
+                android:adjustViewBounds="true"
+                android:src="@drawable/move_down"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp" />
         </LinearLayout>
         <Tetrim.MyView
             android:id="@+id/PlayerGridView"
@@ -168,30 +173,36 @@
             android:layout_height="wrap_content"
             android:id="@+id/layoutButtonsRight"
             android:layout_gravity="center">
-            <Button
+            <ImageButton
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
                 android:id="@+id/buttonTurnRight"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:background="@drawable/turn_right"
-                android:minWidth="40dp"
-                android:minHeight="40dp" />
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:scaleType="fitCenter"
+                android:adjustViewBounds="true"
+                android:src="@drawable/turn_right"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp" />
+            <ImageButton
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
                 android:id="@+id/buttonMoveRight"
-                android:background="@drawable/move_right"
-                android:layout_gravity="center"
-                android:minWidth="40dp"
-                android:minHeight="40dp" />
-            <Button
+                android:background="@android:color/transparent"
+                android:scaleType="fitCenter"
+                android:adjustViewBounds="true"
+                android:src="@drawable/move_right"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp" />
+            <ImageButton
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
                 android:id="@+id/buttonMoveFoot"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:background="@drawable/move_bottom"
-                android:minWidth="40dp"
-                android:minHeight="40dp" />
+                android:background="@android:color/transparent"
+                android:scaleType="fitCenter"
+                android:adjustViewBounds="true"
+                android:src="@drawable/move_bottom"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp" />
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>
