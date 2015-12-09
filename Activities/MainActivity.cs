@@ -134,42 +134,7 @@ namespace Tetrim
 			}
 
 			//  Network
-			// We send the message to the other player
-			if(Network.Instance.Connected())
-			{
-				// If it is the same piece we only send the position of the piece
-				if(isSamePiece)
-					Network.Instance.CommunicationWay.Write(_game._player1.getMessagePiece());
-				// If it is a new piece, we send the old piece and the new one
-				else
-				{
-					byte[] message = new byte[Constants.SizeMessagePiecePut];
-					message[0] = Constants.IdMessagePiecePut;
-					for(int i = 0; i < Constants.SizeMessagePiece - 1; i++)
-					{
-						message[i+1] = messageBuffer[i];
-					}
-					message = _game._player1._grid.getMessagePiece(message, Constants.SizeMessagePiece);
-
-					// We say if we use the piece sent by the opponent or not (if he didn't send one)
-					if(newNextPiece)
-						message[Constants.SizeMessagePiecePut-1] = 1;
-					else
-						message[Constants.SizeMessagePiecePut-1] = 0;
-
-					Network.Instance.CommunicationWay.Write(message);
-				}
-
-				if(!isSamePiece) // the piece was added on the map so the score changed
-				{
-					Network.Instance.CommunicationWay.Write(_game._player1.GetScoreMessage());
-				}
-
-				if (_game._player1._grid.isGameOver())
-				{
-					Network.Instance.CommunicationWay.Write(_game._player1.GetEndMessage());
-				}
-			}
+			actualizeViewOtherPlayer(isSamePiece, messageBuffer, newNextPiece);
 
 			// Display of the current model
 			FindViewById(Resource.Id.PlayerGridView).PostInvalidate();
@@ -315,16 +280,71 @@ namespace Tetrim
 			};
 
 			FindViewById<ImageButton>(Resource.Id.buttonMoveDown).Click += delegate {
+				_gameTimer.Stop();
+
 				_game.MoveDown();
+				actualizeViewOtherPlayer(true, null, false);
 				// Display of the current model
 				FindViewById(Resource.Id.PlayerGridView).PostInvalidate();
+
+				_gameTimer.Start();
 			};
 
 			FindViewById<ImageButton>(Resource.Id.buttonMoveFoot).Click += delegate {
+				_gameTimer.Stop();
+
 				_game.MoveBottom();
+				actualizeViewOtherPlayer(true, null, false);
 				// Display of the current model
 				FindViewById(Resource.Id.PlayerGridView).PostInvalidate();
+
+				_gameTimer.Start();
 			};
+		}
+
+		// isSamePiece must be set to false if it is a new piece that is falling
+		// in this case messageBuffer must contains the message of the old piece before it was added to the map and
+		// newNextPiece must be set to true if we used a piece sent by our opponent, false otherwise
+		// if it is still the samePiece that is falling, isSamePiece must be set to true and messageBuffer and newNextPiece are ignored
+		private void actualizeViewOtherPlayer(bool isSamePiece, byte[] messageBuffer, bool newNextPiece)
+		{
+			// We send the message to the other player
+			if(Network.Instance.Connected())
+			{
+
+				// If it is the same piece we only send the position of the piece
+				if(isSamePiece)
+					Network.Instance.CommunicationWay.Write(_game._player1.getMessagePiece());
+				// If it is a new piece, we send the old piece and the new one
+				else
+				{
+					byte[] message = new byte[Constants.SizeMessagePiecePut];
+					message[0] = Constants.IdMessagePiecePut;
+					for(int i = 0; i < Constants.SizeMessagePiece - 1; i++)
+					{
+						message[i+1] = messageBuffer[i];
+					}
+					message = _game._player1._grid.getMessagePiece(message, Constants.SizeMessagePiece);
+
+					// We say if we used the piece sent by the opponent or not (if he didn't send one)
+					if(newNextPiece)
+						message[Constants.SizeMessagePiecePut-1] = 1;
+					else
+						message[Constants.SizeMessagePiecePut-1] = 0;
+
+					Network.Instance.CommunicationWay.Write(message);
+				}
+
+				if(!isSamePiece) // the piece was added on the map so the score changed
+				{
+					Network.Instance.CommunicationWay.Write(_game._player1.GetScoreMessage());
+				}
+
+				if (_game._player1._grid.isGameOver())
+				{
+					Network.Instance.CommunicationWay.Write(_game._player1.GetEndMessage());
+				}
+			}
 		}
 
 		private int getTimerLapse()

@@ -184,7 +184,7 @@ namespace Tetrim
 
 		public void Draw (Canvas canvas, float blockSize, Dictionary<TetrisColor, Bitmap> blockImages, float xOffset, float yOffset)
 		{
-			// TODO : handle lock and multi-threading to prevent the drawing of a destroyed block
+			// DONE : handle lock and multi-threading to prevent the drawing of a destroyed block
 			if (_block != null)
 			{
 				// Define the boundaries of the block

@@ -229,12 +229,16 @@ namespace Tetrim
 				if (grid.isOutOfGrid(_blocks[i]._x, newY[i]) || grid.isBlock(_blocks[i]._x, newY[i]))
 				{
 					canMove = false;
+					break;
 				}
 			}
 			// Rotate the piece if it can be rotated
-			for (uint i = 0 ; canMove && i < Constants.BlockPerPiece ; i++)
+			if(canMove)
 			{
-				_blocks[i]._y = newY[i];
+				for (uint i = 0 ; i < Constants.BlockPerPiece ; i++)
+				{
+					_blocks[i]._y = newY[i];
+				}
 			}
 			return canMove;
 		}

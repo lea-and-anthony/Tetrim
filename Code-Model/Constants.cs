@@ -39,8 +39,9 @@ namespace Tetrim
 		public const byte IdMessageEnd = 8;
 		public const byte IdMessageScore = 9;
 
+		// All the messages begin by the Id
 		public const uint SizeMessagePiece = 2+1+1 + 1;
-		public const uint SizeMessagePiecePut = 2*SizeMessagePiece + 1 - 1;
+		public const uint SizeMessagePiecePut = 2*SizeMessagePiece + 1 - 1; // Contains the old piece and the new piece + a boolean saying if we used the piece sent
 		public const uint SizeMessageGrid = GridSizeX*GridSizeY+SizeMessagePiece;
 		public const uint SizeMessageNextPiece = 1 + 1;
 		public const uint SizeMessagePause = 1;

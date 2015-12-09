@@ -31,20 +31,12 @@ namespace Tetrim
 		//--------------------------------------------------------------
 		public bool isBlock(int x, int y)
 		{
-			if (_map[x,y] != null)
-			{
-				return true;
-			}
-			return false;
+			return (_map[x,y] != null);
 		}
 
 		public bool isOutOfGrid(int x, int y)
 		{
-			if(x < 0 || x > Constants.GridSizeXmax || y < 0 || y > Constants.GridSizeYmax)
-			{
-				return true;
-			}
-			return false;
+			return (x < 0 || x > Constants.GridSizeXmax || y < 0 || y > Constants.GridSizeYmax);
 		}
 
 		public Piece generatePiece()

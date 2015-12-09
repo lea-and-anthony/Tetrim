@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using System.Collections.Generic;
 
 using Android.Graphics;
@@ -44,6 +45,8 @@ namespace Tetrim
 		private int _blockSize = 0; // Size of the blocks in pixels according to the screen resolution
 		private Dictionary<TetrisColor, Bitmap> _blockImages = new Dictionary<TetrisColor, Bitmap>(); // Images of the blocks
 
+		private Mutex _mutexView = null; // To Prevent the modification of the view while it is displayed
+
 		//--------------------------------------------------------------
 		// CONSTRUCTORS
 		//--------------------------------------------------------------
@@ -65,6 +68,8 @@ namespace Tetrim
 					_mapView[i,j] = new BlockView(_grid._map[i,j], false);
 				}
 			}
+
+			_mutexView = new Mutex(false);
 		}
 
 		//--------------------------------------------------------------
@@ -118,6 +123,9 @@ namespace Tetrim
 				canvas.DrawLine(left, y, right, y, GridPaint);
 			}
 
+			// Before drawing any block, we need to set the mutex so we don't change the view while it is displayed
+			_mutexView.WaitOne();
+
 			// Draw the pieces
 			_shadowPieceView.Draw(canvas, _blockSize, _blockImages);
 			_fallingPieceView.Draw(canvas, _blockSize, _blockImages);
@@ -130,10 +138,16 @@ namespace Tetrim
 					_mapView[i,j].Draw(canvas, _blockSize, _blockImages);
 				}
 			}
+
+			// Now we can change the view
+			_mutexView.ReleaseMutex();
 		}
 
 		public void Update()
 		{
+			// Before updating any block, we need to set the mutex so we don't display the view while it is updating
+			_mutexView.WaitOne();
+
 			// Update the pieces
 			_shadowPieceView.Update(_grid._shadowPiece, true);
 			_fallingPieceView.Update(_grid._fallingPiece, false);
@@ -146,6 +160,9 @@ namespace Tetrim
 					_mapView [i, j].Update(_grid._map[i,j], false);
 				}
 			}
+
+			// Now we can display the view
+			_mutexView.ReleaseMutex();
 		}
 			
 		//--------------------------------------------------------------
