@@ -1,5 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <!-- Font Arrows -->
+    <string name="right_arrow">a</string>
+    <string name="left_arrow">b</string>
+    <string name="down_arrow">c</string>
+    <string name="up_arrow">d</string>
+    <string name="bottom_arrow">e</string>
+    <string name="turn_right_arrow">f</string>
+    <string name="turn_left_arrow">g</string>
+
+
 	<string name="connexionBluetooth">Se connecter à un autre périphérique</string>
 	<string name="BTNotAvailableTitle">Bluetooth non disponible</string>
 	<string name="BTNotAvailable">Bluetooth non disponible</string>
