@@ -47,6 +47,10 @@ namespace Tetrim
 				string deviceName = message.Data.GetString (BluetoothManager.DeviceName);
 				Network.Instance.NotifyDeviceName(deviceName);
 				break;
+			case (int) BluetoothManager.MessageType.ConnectionLost:
+				// We transfer the problem to the UI Activity
+				Network.Instance.NotifyConnectionLost((byte[])message.Obj);
+				break;
 			case (int) BluetoothManager.MessageType.Alert:
 				// Display an error message
 				Log.Warn(BluetoothManager.Tag, "MessageType.ALERT");

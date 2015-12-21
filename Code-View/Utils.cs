@@ -6,6 +6,12 @@ namespace Tetrim
 {
 	public static class Utils
 	{
+		public enum RequestCode
+		{
+			RequestEnableBluetooth = 1,
+			RequestReconnect = 2
+		};
+
 		// Event triggered when the pop up (displayed by ShowAlert) is closed
 		public delegate void PopUpEndDelegate();
 		public static event PopUpEndDelegate PopUpEndEvent;
@@ -44,6 +50,7 @@ namespace Tetrim
 				if(PopUpEndEvent != null)
 				{
 					PopUpEndEvent.Invoke();
+					PopUpEndEvent = null; // Unset the event after invoking (we won't need it twice)
 				}
 			});
 			AlertDialog alert = builder.Create();

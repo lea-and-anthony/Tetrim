@@ -275,8 +275,11 @@ namespace Tetrim
 			// aapt resource value: 0x7f04000d
 			public const int app_name = 2130968589;
 			
-			// aapt resource value: 0x7f040018
-			public const int button_scan = 2130968600;
+			// aapt resource value: 0x7f040019
+			public const int button_scan = 2130968601;
+			
+			// aapt resource value: 0x7f040012
+			public const int connection_lost = 2130968594;
 			
 			// aapt resource value: 0x7f040000
 			public const int connexionBluetooth = 2130968576;
@@ -293,11 +296,11 @@ namespace Tetrim
 			// aapt resource value: 0x7f040010
 			public const int game_over_win_title = 2130968592;
 			
-			// aapt resource value: 0x7f040015
-			public const int none_found = 2130968597;
+			// aapt resource value: 0x7f040016
+			public const int none_found = 2130968598;
 			
-			// aapt resource value: 0x7f040014
-			public const int none_paired = 2130968596;
+			// aapt resource value: 0x7f040015
+			public const int none_paired = 2130968597;
 			
 			// aapt resource value: 0x7f04000a
 			public const int not_connected = 2130968586;
@@ -305,17 +308,20 @@ namespace Tetrim
 			// aapt resource value: 0x7f040009
 			public const int not_connected_title = 2130968585;
 			
-			// aapt resource value: 0x7f040012
-			public const int scanning = 2130968594;
+			// aapt resource value: 0x7f04001a
+			public const int reconnect_activity = 2130968602;
 			
-			// aapt resource value: 0x7f040013
-			public const int select_device = 2130968595;
+			// aapt resource value: 0x7f040014
+			public const int scanning = 2130968596;
+			
+			// aapt resource value: 0x7f040018
+			public const int title_other_devices = 2130968600;
 			
 			// aapt resource value: 0x7f040017
-			public const int title_other_devices = 2130968599;
+			public const int title_paired_devices = 2130968599;
 			
-			// aapt resource value: 0x7f040016
-			public const int title_paired_devices = 2130968598;
+			// aapt resource value: 0x7f040013
+			public const int waiting_for_opponent = 2130968595;
 			
 			static String()
 			{

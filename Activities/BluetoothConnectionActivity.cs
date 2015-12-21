@@ -30,7 +30,7 @@ namespace Tetrim
 	// by the user, the MAC address of the device is sent back to the parent
 	// Activity in the result Intent.
 	[Activity(Label = "Tetrim", Icon = "@drawable/icon", Theme = "@android:style/Theme.NoTitleBar.Fullscreen")]		
-	public class BluetoothConnectionActivity : Activity
+	public class BluetoothConnectionActivity : Activity, IDialogInterfaceOnCancelListener
 	{
 		//--------------------------------------------------------------
 		// CONSTANTS
@@ -40,11 +40,6 @@ namespace Tetrim
 
 		// Return Intent extra
 		public const string ExtraDeviceAddress = "device_address";
-
-		private enum RequestCode
-		{
-			RequestEnableBluetooth = 1
-		};
 
 		private enum StartState
 		{
@@ -62,7 +57,7 @@ namespace Tetrim
 		private Receiver _receiver;
 		private StartState _state = StartState.NONE;
 		private bool _isConnectionInitiator = false;
-		private String _connectedDeviceName = String.Empty;
+		private AlertDialog _waitingDialog = null;
 
 		//--------------------------------------------------------------
 		// METHODES OVERRIDE
@@ -108,30 +103,18 @@ namespace Tetrim
 			filter = new IntentFilter(BluetoothAdapter.ActionDiscoveryFinished);
 			RegisterReceiver(_receiver, filter);
 
-			// Get the local Bluetooth adapter
-			_bluetoothAdapter = BluetoothAdapter.DefaultAdapter;
-
-			// Get a set of currently paired devices
-			var pairedDevices = _bluetoothAdapter.BondedDevices;
-
-			// If there are paired devices, add each one to the ArrayAdapter
-			if(pairedDevices.Count > 0)
+			if(Network.Instance.TryEnablingBluetooth(this) == Network.ResultEnabling.Enabled)
 			{
-				FindViewById<View>(Resource.Id.title_paired_devices).Visibility = ViewStates.Visible;
-				foreach(var device in pairedDevices)
-				{
-					_pairedDevicesArrayAdapter.Add(device.Name + "\n" + device.Address);
-				}
+				actualizeView();
 			}
 			else
 			{
 				String noDevices = Resources.GetText(Resource.String.none_paired);
-				_pairedDevicesArrayAdapter.Add(noDevices);	
+				_pairedDevicesArrayAdapter.Add(noDevices);
 			}
 
-			enableBluetooth();
-
 			// Hook on the Network event
+			Network.Instance.EraseAllEvent();
 			Network.Instance.DeviceNameEvent += DeviceNameEventReceived;
 			Network.Instance.ReadEvent += ReadMessageEventReceived;
 			Network.Instance.StateConnectedEvent += StateConnectedEventReceived;
@@ -170,7 +153,7 @@ namespace Tetrim
 			UnregisterReceiver(_receiver);
 
 			// Stop the Bluetooth Manager
-			if (Network.Instance.Enable())
+			if (Network.Instance.Enabled())
 				Network.Instance.CommunicationWay.Stop ();
 
 			#if DEBUG
@@ -183,26 +166,20 @@ namespace Tetrim
 			#if DEBUG
 			Log.Debug(Tag, "onActivityResult " + resultCode);
 			#endif
-
-			switch(requestCode)
+			if(Network.Instance.ResultBluetoothActivation(requestCode, resultCode, this))
 			{
-			case (int) RequestCode.RequestEnableBluetooth:
-				// When the request to enable Bluetooth returns
-				if(resultCode == Result.Ok)
-				{
-					// Bluetooth is now enabled
-					Network.Instance.EnableBluetooth();
-					Network.Instance.CommunicationWay.Start();
-				}
-				else
-				{
-					// User did not enable Bluetooth or an error occured
-					#if DEBUG
-					Log.Debug(Tag, "Bluetooth not enabled");
-					#endif
-					Utils.ShowAlert(Resource.String.BTNotEnabledTitle, Resource.String.BTNotEnabled, this);
-				}
-				break;
+				actualizeView();
+			}
+		}
+
+		// Called when the user press the back button when the dialog is prompted
+		public void OnCancel(IDialogInterface dialog)
+		{
+			if(_waitingDialog != null)
+			{
+				_waitingDialog.Dismiss();
+				_waitingDialog = null;
+				Network.Instance.CommunicationWay.ResetConnectThread();
 			}
 		}
 
@@ -278,8 +255,6 @@ namespace Tetrim
 
 		public int DeviceNameEventReceived(string deviceName)
 		{
-			_connectedDeviceName = deviceName;
-
 			#if DEBUG
 			Log.Debug(Tag, "MessageType = read, " + deviceName);
 			#endif
@@ -295,7 +270,14 @@ namespace Tetrim
 			{
 				// The 2 players have the same version, we can launch the game if we are ready
 				if(_state == StartState.WAITING_FOR_OPPONENT)
+				{
+					if(_waitingDialog != null)
+					{
+						_waitingDialog.Dismiss();
+						_waitingDialog = null;
+					}
 					MenuActivity.startGame(this);// We launch the game (change view and everything)
+				}
 				else
 					_state = StartState.OPPONENT_READY;
 			}
@@ -309,9 +291,14 @@ namespace Tetrim
 			Network.Instance.CommunicationWay.Write(message);
 
 			if(_state == StartState.OPPONENT_READY)
+			{
 				MenuActivity.startGame(this);// We launch the game (change view and everything)
+			}
 			else
+			{
 				_state = StartState.WAITING_FOR_OPPONENT;
+				displayWaitingDialog();
+			}
 
 			return 0;
 		}
@@ -320,60 +307,46 @@ namespace Tetrim
 		{
 			// Indicate the end of discovery
 			var scanButton = FindViewById<Button>(Resource.Id.button_scan);
-			scanButton.Text = Resources.GetString(Resource.String.select_device);
+			scanButton.Text = Resources.GetString(Resource.String.button_scan);
 			scanButton.Clickable = true;
 		}
 
 		//--------------------------------------------------------------
 		// PRIVATE METHODES
 		//--------------------------------------------------------------
-		private bool enableBluetooth()
+		private void actualizeView()
 		{
-			#if DEBUG
-			Log.Debug(Tag, "enableBluetooth()");
-			#endif
+			// Get the local Bluetooth adapter
+			_bluetoothAdapter = BluetoothAdapter.DefaultAdapter;
 
-			// If the bluetooth is already enable and set
-			if (Network.Instance.Enable())
-				return true;
+			// Get a set of currently paired devices
+			var pairedDevices = _bluetoothAdapter.BondedDevices;
 
-			// Get local Bluetooth adapter
-			BluetoothAdapter bluetoothAdapter;
-			bluetoothAdapter = BluetoothAdapter.DefaultAdapter;
-
-			// If the adapter is null, then Bluetooth is not supported
-			if(bluetoothAdapter == null)
+			// If there are paired devices, add each one to the ArrayAdapter
+			if(pairedDevices.Count > 0)
 			{
-				#if DEBUG
-				Log.Debug(Tag, "display of the alert");
-				#endif
-
-				Utils.ShowAlert(Resource.String.BTNotAvailableTitle, Resource.String.BTNotAvailable, this);
-				return false;
-			}
-			else
-			{
-				// If the bluetooth is not enable, we try to activate it
-				if(!bluetoothAdapter.IsEnabled)
+				_pairedDevicesArrayAdapter.Clear();
+				FindViewById<View>(Resource.Id.title_paired_devices).Visibility = ViewStates.Visible;
+				foreach(var device in pairedDevices)
 				{
-					#if DEBUG
-					Log.Debug(Tag, "intent to activate bluetooth");
-					#endif
-
-					Intent enableIntent = new Intent(BluetoothAdapter.ActionRequestEnable);
-					StartActivityForResult(enableIntent,(int) RequestCode.RequestEnableBluetooth);
-				}
-				else
-				{
-					#if DEBUG
-					Log.Debug(Tag, "creation of BluetoothManager");
-					#endif
-
-					Network.Instance.EnableBluetooth();
-					Network.Instance.CommunicationWay.Start();
+					_pairedDevicesArrayAdapter.Add(device.Name + "\n" + device.Address);
 				}
 			}
-			return true;
+		}
+
+		private void displayWaitingDialog()
+		{
+			if(_waitingDialog != null)
+			{
+				_waitingDialog.Dismiss();
+				_waitingDialog = null;
+			}
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			builder.SetMessage(Resource.String.waiting_for_opponent);
+			builder.SetCancelable(false);
+			builder.SetOnCancelListener(this);
+			_waitingDialog = builder.Create();
+			_waitingDialog.Show();
 		}
 
 		// Start device discover with the BluetoothAdapter
@@ -404,14 +377,17 @@ namespace Tetrim
 		// The on-click listener for all devices in the ListViews
 		private void deviceListClick(object sender, AdapterView.ItemClickEventArgs e)
 		{
-			// Cancel discovery because it's costly and we're about to connect
-			_bluetoothAdapter.CancelDiscovery();
+			if(_bluetoothAdapter.IsDiscovering)
+			{
+				// Cancel discovery because it's costly and we're about to connect
+				_bluetoothAdapter.CancelDiscovery();
+			}
 
 			// Get the device MAC address, which is the last 17 chars in the View
 			var info =(e.View as TextView).Text.ToString();
 			var address = info.Substring(info.Length - 17);
 
-			if(Network.Instance.Enable())
+			if(Network.Instance.Enabled())
 			{
 				// Get the BLuetoothDevice object
 				BluetoothDevice device = BluetoothAdapter.DefaultAdapter.GetRemoteDevice(address);

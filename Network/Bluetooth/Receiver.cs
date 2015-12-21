@@ -47,7 +47,8 @@ namespace Tetrim
 			}
 			else if(action == BluetoothAdapter.ActionDiscoveryFinished)
 			{
-				if(_newDevicesArrayAdapter.Count == 0)
+				if(_newDevicesArrayAdapter.Count == 0 && 
+					_activity.FindViewById<View>(Resource.Id.title_new_devices).Visibility == ViewStates.Visible)
 				{
 					var noDevices = _activity.Resources.GetText(Resource.String.none_found).ToString();
 					_newDevicesArrayAdapter.Add(noDevices);

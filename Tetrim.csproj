@@ -70,6 +70,7 @@
     <Compile Include="Network\Bluetooth\MyHandler.cs" />
     <Compile Include="Activities\BluetoothConnectionActivity.cs" />
     <Compile Include="Network\Bluetooth\Receiver.cs" />
+    <Compile Include="Activities\ReconnectActivity.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
