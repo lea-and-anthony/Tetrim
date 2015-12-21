@@ -38,15 +38,25 @@ namespace Tetrim
 			#endif
 
 			// Retrieve the fonts
-			Typeface arcadeFont = Typeface.CreateFromAsset(Assets,"Karmatic_Arcade.ttf");
+			Typeface arcadeFont = Typeface.CreateFromAsset(Assets,"Foo.ttf");
 			Typeface bloxFont = Typeface.CreateFromAsset(Assets,"Blox.ttf");
 
 			// Set the title text view
-			TextView titleTextView = FindViewById<TextView> (Resource.Id.textViewTitle);
+			TextView titleTextView = FindViewById<TextView> (Resource.Id.titleT);
+			titleTextView.SetTypeface(bloxFont, TypefaceStyle.Normal);
+			titleTextView = FindViewById<TextView> (Resource.Id.titleE);
+			titleTextView.SetTypeface(bloxFont, TypefaceStyle.Normal);
+			titleTextView = FindViewById<TextView> (Resource.Id.titleT2);
+			titleTextView.SetTypeface(bloxFont, TypefaceStyle.Normal);
+			titleTextView = FindViewById<TextView> (Resource.Id.titleR);
+			titleTextView.SetTypeface(bloxFont, TypefaceStyle.Normal);
+			titleTextView = FindViewById<TextView> (Resource.Id.titleI);
+			titleTextView.SetTypeface(bloxFont, TypefaceStyle.Normal);
+			titleTextView = FindViewById<TextView> (Resource.Id.titleM);
 			titleTextView.SetTypeface(bloxFont, TypefaceStyle.Normal);
 
 			// Single player button
-			Button singlePlayerButton = FindViewById<Button>(Resource.Id.singlePlayerButton);
+			ButtonStroked singlePlayerButton = FindViewById<ButtonStroked>(Resource.Id.singlePlayerButton);
 			singlePlayerButton.SetTypeface(arcadeFont, TypefaceStyle.Normal);
 			singlePlayerButton.Click += delegate {
 				Network.Instance.DisableBluetooth();
@@ -54,7 +64,7 @@ namespace Tetrim
 			};
 
 			// Two players button
-			Button twoPlayersButton = FindViewById<Button>(Resource.Id.twoPlayersButton);
+			ButtonStroked twoPlayersButton = FindViewById<ButtonStroked>(Resource.Id.twoPlayersButton);
 			twoPlayersButton.SetTypeface(arcadeFont, TypefaceStyle.Normal);
 			twoPlayersButton.Click += delegate {
 				// Start the bluetooth connection
@@ -65,14 +75,14 @@ namespace Tetrim
 			};
 
 			// Settings button
-			Button settingsButton = FindViewById<Button>(Resource.Id.settingsButton);
+			ButtonStroked settingsButton = FindViewById<ButtonStroked>(Resource.Id.settingsButton);
 			settingsButton.SetTypeface(arcadeFont, TypefaceStyle.Normal);
 			settingsButton.Click += delegate {
 				// TODO : handle Settings
 			};
 
 			// Exit button
-			Button exitButton = FindViewById<Button>(Resource.Id.exitButton);
+			ButtonStroked exitButton = FindViewById<ButtonStroked>(Resource.Id.exitButton);
 			exitButton.SetTypeface(arcadeFont, TypefaceStyle.Normal);
 			exitButton.Click += delegate {
 				// TODO : handle Exit

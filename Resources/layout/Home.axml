@@ -2,32 +2,136 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent">
-    <TextView
-        android:text="TeTrIm"
-        android:textAppearance="?android:attr/textAppearanceLarge"
+    android:layout_height="fill_parent"
+    android:weightSum="100">
+    <LinearLayout
+        android:orientation="vertical"
+        android:minWidth="25px"
+        android:minHeight="25px"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/textViewTitle"
-        android:textSize="50dp" />
-    <Button
-        android:text="1 player"
+        android:layout_height="0dp"
+        android:id="@+id/linearLayout2"
+        android:layout_weight="50"
+        android:gravity="center">
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/titleLayout">
+            <TextView
+                android:text="t"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:id="@+id/titleT"
+                android:textSize="100dp"
+                android:gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:textColor="#ffd50000" />
+            <TextView
+                android:text="E"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:id="@+id/titleE"
+                android:textSize="100dp"
+                android:gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:textColor="#ffff6d00" />
+            <TextView
+                android:text="t"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:id="@+id/titleT2"
+                android:textSize="100dp"
+                android:gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:textColor="#ffffc400" />
+            <TextView
+                android:text="R"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:id="@+id/titleR"
+                android:textSize="100dp"
+                android:gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:textColor="#ff64dd17" />
+            <TextView
+                android:text="i"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:id="@+id/titleI"
+                android:textSize="100dp"
+                android:gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:textColor="#ff00e5ff" />
+            <TextView
+                android:text="M"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:id="@+id/titleM"
+                android:textSize="100dp"
+                android:gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:textColor="#ffd500f9" />
+        </LinearLayout>
+    </LinearLayout>
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/singlePlayerButton" />
-    <Button
-        android:text="2 players"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/twoPlayersButton" />
-    <Button
-        android:text="settings"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/settingsButton" />
-    <Button
-        android:text="exit"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/exitButton" />
+        android:layout_height="0dp"
+        android:id="@+id/linearLayout1"
+        android:layout_weight="50"
+        android:weightSum="100">
+        <Tetrim.ButtonStroked
+            android:text="1 player"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:id="@+id/singlePlayerButton"
+            android:textSize="30dp"
+            android:layout_weight="25"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginBottom="5dp"
+            android:background="#ffffff"
+            android:layout_marginLeft="5dp"
+            android:tag="1 player" />
+        <Tetrim.ButtonStroked
+            android:text="2 players"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:id="@+id/twoPlayersButton"
+            android:textSize="30dp"
+            android:layout_weight="25"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginBottom="5dp"
+            android:background="#ffffff"
+            android:tag="2 players" />
+        <Tetrim.ButtonStroked
+            android:text="settings"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:id="@+id/settingsButton"
+            android:textSize="30dp"
+            android:layout_weight="25"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginBottom="5dp"
+            android:background="#ffffff"
+            android:tag="settings" />
+        <Tetrim.ButtonStroked
+            android:text="exit"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:id="@+id/exitButton"
+            android:textSize="30dp"
+            android:layout_weight="25"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginBottom="5dp"
+            android:background="#ffffff"
+            android:tag="exit" />
+    </LinearLayout>
 </LinearLayout>

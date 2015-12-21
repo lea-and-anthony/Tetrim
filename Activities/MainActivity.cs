@@ -2,16 +2,18 @@
 using System.Timers;
 
 using Android.App;
+using Android.Graphics;
 using Android.Content;
 using Android.Widget;
 using Android.OS;
 using Android.Util;
 using Android.Bluetooth;
+using Android.Views;
 
 namespace Tetrim
 {
 	[Activity(Label = "Tetrim", Icon = "@drawable/icon", Theme = "@android:style/Theme.NoTitleBar.Fullscreen", ScreenOrientation = Android.Content.PM.ScreenOrientation.Portrait)]
-	public class MainActivity : Activity
+	public class MainActivity : Activity, ViewTreeObserver.IOnGlobalLayoutListener
 	{
 		//--------------------------------------------------------------
 		// CONSTANTS
@@ -35,10 +37,18 @@ namespace Tetrim
 			base.OnCreate(bundle);
 
 			// Set our view from the "main" layout resource
-			SetContentView(Resource.Layout.Main);
+			SetContentView(Resource.Layout.GameMulti);
 
 			// Creation of the model
 			_game = new Game();
+
+			LinearLayout gameLayout = FindViewById<LinearLayout>(Resource.Id.layoutGameMulti);
+
+			// Test if the view is created so we can resize the buttons
+			if(gameLayout.ViewTreeObserver.IsAlive)
+			{
+				gameLayout.ViewTreeObserver.AddOnGlobalLayoutListener(this);
+			}
 
 			// Creation of the view
 			_gameView = new GameView(_game);
@@ -76,6 +86,63 @@ namespace Tetrim
 			_gameTimer.Interval = time;
 			_gameTimer.AutoReset = true;
 			_gameTimer.Start();
+		}
+
+		public void OnGlobalLayout()
+		{
+			// The view is completely loaded now, so getMeasuredWidth() won't return 0
+			InitializeUI();
+
+			// Destroy the onGlobalLayout afterwards, otherwise it keeps changing
+			// the sizes non-stop, even though it's already done
+			LinearLayout gameLayout = FindViewById<LinearLayout>(Resource.Id.layoutGameMulti);
+			gameLayout.ViewTreeObserver.RemoveGlobalOnLayoutListener(this);
+		}
+
+		protected void InitializeUI()
+		{
+			// Set the text font
+			Typeface niceFont = Typeface.CreateFromAsset(Assets,"Foo.ttf");
+			SetText(niceFont, Resource.Id.player1name);
+			SetText(niceFont, Resource.Id.player2name);
+			SetText(niceFont, Resource.Id.player1score);
+			SetText(niceFont, Resource.Id.player2score);
+			SetText(niceFont, Resource.Id.player1rows);
+			SetText(niceFont, Resource.Id.player2rows);
+			SetText(niceFont, Resource.Id.player1level);
+			SetText(niceFont, Resource.Id.player2level);
+			SetText(niceFont, Resource.Id.score1);
+			SetText(niceFont, Resource.Id.score2);
+			SetText(niceFont, Resource.Id.rows1);
+			SetText(niceFont, Resource.Id.rows2);
+			SetText(niceFont, Resource.Id.level1);
+			SetText(niceFont, Resource.Id.level2);
+
+			// Set the buttons
+			Typeface arrowFont = Typeface.CreateFromAsset(Assets,"Arrows.otf");
+			SetButton(arrowFont, Resource.Id.buttonMoveLeft, Resource.String.left_arrow);
+			SetButton(arrowFont, Resource.Id.buttonMoveRight, Resource.String.right_arrow);
+			SetButton(arrowFont, Resource.Id.buttonTurnLeft, Resource.String.turn_left_arrow);
+			SetButton(arrowFont, Resource.Id.buttonTurnRight, Resource.String.turn_right_arrow);
+			SetButton(arrowFont, Resource.Id.buttonMoveDown, Resource.String.down_arrow);
+			SetButton(arrowFont, Resource.Id.buttonMoveFoot, Resource.String.bottom_arrow);
+		}
+
+		protected void SetButton(Typeface font, int idButton, int idText)
+		{
+			ButtonStroked button = FindViewById<ButtonStroked>(idButton);
+			button.IsSquared = true;
+			button.SetTypeface(font, TypefaceStyle.Normal);
+			button.Text = Resources.GetString(idText);
+			button.SetMaxHeight(button.MeasuredWidth);
+			button.SetMinimumHeight(button.MeasuredWidth);
+			button.SetTextSize(ComplexUnitType.Px, button.MeasuredWidth);
+		}
+
+		protected void SetText(Typeface font, int idText)
+		{
+			TextView textView = FindViewById<TextView> (idText);
+			textView.SetTypeface(font, TypefaceStyle.Normal);
 		}
 
 		// Called when an other application is displayed in front of this one
@@ -292,31 +359,31 @@ namespace Tetrim
 
 		private void associateButtonsEvent()
 		{
-			FindViewById<ImageButton>(Resource.Id.buttonMoveLeft).Click += delegate {
+			FindViewById<ButtonStroked>(Resource.Id.buttonMoveLeft).Click += delegate {
 				_game.MoveLeft();
 				// Display of the current model
 				FindViewById(Resource.Id.PlayerGridView).PostInvalidate();
 			};
 
-			FindViewById<ImageButton>(Resource.Id.buttonMoveRight).Click += delegate {
+			FindViewById<ButtonStroked>(Resource.Id.buttonMoveRight).Click += delegate {
 				_game.MoveRight();
 				// Display of the current model
 				FindViewById(Resource.Id.PlayerGridView).PostInvalidate();
 			};
 
-			FindViewById<ImageButton>(Resource.Id.buttonTurnLeft).Click += delegate {
+			FindViewById<ButtonStroked>(Resource.Id.buttonTurnLeft).Click += delegate {
 				_game.TurnLeft();
 				// Display of the current model
 				FindViewById(Resource.Id.PlayerGridView).PostInvalidate();
 			};
 
-			FindViewById<ImageButton>(Resource.Id.buttonTurnRight).Click += delegate {
+			FindViewById<ButtonStroked>(Resource.Id.buttonTurnRight).Click += delegate {
 				_game.TurnRight();
 				// Display of the current model
 				FindViewById(Resource.Id.PlayerGridView).PostInvalidate();
 			};
 
-			FindViewById<ImageButton>(Resource.Id.buttonMoveDown).Click += delegate {
+			FindViewById<ButtonStroked>(Resource.Id.buttonMoveDown).Click += delegate {
 				_gameTimer.Stop();
 
 				_game.MoveDown();
@@ -327,7 +394,7 @@ namespace Tetrim
 				_gameTimer.Start();
 			};
 
-			FindViewById<ImageButton>(Resource.Id.buttonMoveFoot).Click += delegate {
+			FindViewById<ButtonStroked>(Resource.Id.buttonMoveFoot).Click += delegate {
 				_gameTimer.Stop();
 
 				_game.MoveBottom();
