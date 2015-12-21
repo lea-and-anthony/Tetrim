@@ -70,6 +70,7 @@
     <Compile Include="Activities\BluetoothConnectionActivity.cs" />
     <Compile Include="Network\Bluetooth\Receiver.cs" />
     <Compile Include="Code-View\ButtonStroked.cs" />
+    <Compile Include="Code-View\TextViewStroked.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
@@ -123,6 +124,7 @@
     <AndroidResource Include="Resources\layout\BluetoothConnection.axml" />
     <AndroidResource Include="Resources\layout\GameMulti.axml" />
     <AndroidResource Include="Resources\layout\Main.axml" />
+    <AndroidResource Include="Resources\layout\BluetoothDevices.axml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Code-Model\" />
@@ -133,7 +135,6 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidAsset Include="Assets\Blox.ttf" />
-    <AndroidAsset Include="Assets\Karmatic_Arcade.ttf" />
     <AndroidAsset Include="Assets\Foo.ttf" />
     <AndroidAsset Include="Assets\Arrows.otf" />
   </ItemGroup>

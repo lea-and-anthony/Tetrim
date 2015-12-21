@@ -38,26 +38,20 @@ namespace Tetrim
 			#endif
 
 			// Retrieve the fonts
-			Typeface arcadeFont = Typeface.CreateFromAsset(Assets,"Foo.ttf");
+			Typeface funnyFont = Typeface.CreateFromAsset(Assets,"Foo.ttf");
 			Typeface bloxFont = Typeface.CreateFromAsset(Assets,"Blox.ttf");
 
 			// Set the title text view
-			TextView titleTextView = FindViewById<TextView> (Resource.Id.titleT);
-			titleTextView.SetTypeface(bloxFont, TypefaceStyle.Normal);
-			titleTextView = FindViewById<TextView> (Resource.Id.titleE);
-			titleTextView.SetTypeface(bloxFont, TypefaceStyle.Normal);
-			titleTextView = FindViewById<TextView> (Resource.Id.titleT2);
-			titleTextView.SetTypeface(bloxFont, TypefaceStyle.Normal);
-			titleTextView = FindViewById<TextView> (Resource.Id.titleR);
-			titleTextView.SetTypeface(bloxFont, TypefaceStyle.Normal);
-			titleTextView = FindViewById<TextView> (Resource.Id.titleI);
-			titleTextView.SetTypeface(bloxFont, TypefaceStyle.Normal);
-			titleTextView = FindViewById<TextView> (Resource.Id.titleM);
-			titleTextView.SetTypeface(bloxFont, TypefaceStyle.Normal);
+			SetTextView(bloxFont, Resource.Id.titleT, TetrisColor.Red);
+			SetTextView(bloxFont, Resource.Id.titleE, TetrisColor.Orange);
+			SetTextView(bloxFont, Resource.Id.titleT2, TetrisColor.Yellow);
+			SetTextView(bloxFont, Resource.Id.titleR, TetrisColor.Green);
+			SetTextView(bloxFont, Resource.Id.titleI, TetrisColor.Cyan);
+			SetTextView(bloxFont, Resource.Id.titleM, TetrisColor.Pink);
 
 			// Single player button
 			ButtonStroked singlePlayerButton = FindViewById<ButtonStroked>(Resource.Id.singlePlayerButton);
-			singlePlayerButton.SetTypeface(arcadeFont, TypefaceStyle.Normal);
+			SetButton(singlePlayerButton, funnyFont, TetrisColor.Red);
 			singlePlayerButton.Click += delegate {
 				Network.Instance.DisableBluetooth();
 				startGame(this);
@@ -65,7 +59,7 @@ namespace Tetrim
 
 			// Two players button
 			ButtonStroked twoPlayersButton = FindViewById<ButtonStroked>(Resource.Id.twoPlayersButton);
-			twoPlayersButton.SetTypeface(arcadeFont, TypefaceStyle.Normal);
+			SetButton(twoPlayersButton, funnyFont, TetrisColor.Cyan);
 			twoPlayersButton.Click += delegate {
 				// Start the bluetooth connection
 				var bluetoothConnectionActivity = new Intent(this, typeof(BluetoothConnectionActivity));
@@ -76,17 +70,35 @@ namespace Tetrim
 
 			// Settings button
 			ButtonStroked settingsButton = FindViewById<ButtonStroked>(Resource.Id.settingsButton);
-			settingsButton.SetTypeface(arcadeFont, TypefaceStyle.Normal);
+			SetButton(settingsButton, funnyFont, TetrisColor.Green);
 			settingsButton.Click += delegate {
 				// TODO : handle Settings
 			};
 
 			// Exit button
 			ButtonStroked exitButton = FindViewById<ButtonStroked>(Resource.Id.exitButton);
-			exitButton.SetTypeface(arcadeFont, TypefaceStyle.Normal);
+			SetButton(exitButton, funnyFont, TetrisColor.Yellow);
 			exitButton.Click += delegate {
 				// TODO : handle Exit
 			};
+		}
+
+		protected void SetTextView(Typeface font, int id, TetrisColor color)
+		{
+			TextView titleTextView = FindViewById<TextView> (id);
+			titleTextView.SetTypeface(font, TypefaceStyle.Normal);
+			titleTextView.SetTextColor(Utils.getAndroidColor(color));
+		}
+
+		protected void SetButton(ButtonStroked button, Typeface font, TetrisColor color)
+		{
+			button.SetTypeface(font, TypefaceStyle.Normal);
+			button.StrokeBorderWidth = 40;
+			button.StrokeTextWidth = 20;
+			button.RadiusIn = 30;
+			button.RadiusOut = 20;
+			button.DarkColor = Utils.getAndroidDarkColor(color);
+			button.LightColor = Utils.getAndroidColor(color);
 		}
 
 		//--------------------------------------------------------------
