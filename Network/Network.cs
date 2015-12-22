@@ -1,27 +1,35 @@
 ﻿using System;
+using Android.App;
+using Android.Bluetooth;
+using Android.Content;
+using Android.Util;
 
 namespace Tetrim
 {
 	public sealed class Network
 	{
 		//--------------------------------------------------------------
+		// CONSTANTS
+		//--------------------------------------------------------------
+		// Debugging
+		private const string Tag = "Network";
+
+		// Constants that indicate the current connection state
+		public enum ResultEnabling
+		{
+			Activation = 0,		// Start an activity to enable the bluetooth
+			NoMedium = 1,		// There is no bluetooth on the device
+			Enabled = 2			// Bluetooth activated
+		};
+
+		//--------------------------------------------------------------
 		// EVENTS
 		//--------------------------------------------------------------
-		public delegate int WriteEventDelegate(byte[] writeBuf);
-		public delegate int ReadEventDelegate(byte[] readBuf);
-		public delegate int StateConnectingEventDelegate();
-		public delegate int StateConnectedEventDelegate();
-		public delegate int StateNoneDelegate();
+		public delegate int BufferDelegate(byte[] buffer);
+		public delegate int StandardDelegate();
 		public delegate int DeviceNameDelegate(string deviceName);
-
-		public delegate int UsualGameMessageDelegate(byte[] buffer);
-		public delegate int PiecePutMessageDelegate(byte[] buffer);
-		public delegate int NextPieceMessageDelegate(byte[] buffer);
-		public delegate int StartMessageDelegate(byte[] buffer);
-		public delegate int EndMessageDelegate(byte[] buffer);
-		public delegate int ScoreMessageDelegate(byte[] buffer);
-		public delegate int PauseMessageDelegate(bool initiator);
-		public delegate int ResumeMessageDelegate(bool initiator);
+		public delegate int GameMessageDelegate(byte[] buffer);
+		public delegate int SimpleMessageDelegate(bool initiator);
 
 
 		//--------------------------------------------------------------
@@ -31,21 +39,22 @@ namespace Tetrim
 
 		public BluetoothManager _communicationWay = null;
 
-		public event WriteEventDelegate WriteEvent;
-		public event ReadEventDelegate ReadEvent;
-		public event StateConnectingEventDelegate StateConnectingEvent;
-		public event StateConnectedEventDelegate StateConnectedEvent;
-		public event StateNoneDelegate StateNoneEvent;
+		public event BufferDelegate WriteEvent;
+		public event BufferDelegate ReadEvent;
+		public event StandardDelegate StateConnectingEvent;
+		public event StandardDelegate StateConnectedEvent;
+		public event StandardDelegate StateNoneEvent;
 		public event DeviceNameDelegate DeviceNameEvent;
+		public event BufferDelegate ConnectionLostEvent;
 
-		public event UsualGameMessageDelegate UsualGameMessage;
-		public event PiecePutMessageDelegate PiecePutMessage;
-		public event NextPieceMessageDelegate NextPieceMessage;
-		public event StartMessageDelegate StartMessage;
-		public event EndMessageDelegate EndMessage;
-		public event ScoreMessageDelegate ScoreMessage;
-		public event PauseMessageDelegate PauseMessage;
-		public event ResumeMessageDelegate ResumeMessage;
+		public event GameMessageDelegate UsualGameMessage;
+		public event GameMessageDelegate PiecePutMessage;
+		public event GameMessageDelegate NextPieceMessage;
+		public event GameMessageDelegate StartMessage;
+		public event GameMessageDelegate EndMessage;
+		public event GameMessageDelegate ScoreMessage;
+		public event SimpleMessageDelegate PauseMessage;
+		public event SimpleMessageDelegate ResumeMessage;
 
 		//--------------------------------------------------------------
 		// CONSTRUCTORS
@@ -75,6 +84,73 @@ namespace Tetrim
 		// METHODES
 		//--------------------------------------------------------------
 		/* Activate the bluetooth to allow connection with an other device*/
+		public ResultEnabling TryEnablingBluetooth(Activity activity)
+		{
+			#if DEBUG
+			Log.Debug(Tag, "TryEnablingBluetooth()");
+			#endif
+
+			// Get local Bluetooth adapter
+			BluetoothAdapter bluetoothAdapter = BluetoothAdapter.DefaultAdapter;
+
+			// If the adapter is null, then Bluetooth is not supported
+			if(bluetoothAdapter == null)
+			{
+				#if DEBUG
+				Log.Debug(Tag, "display of the alert");
+				#endif
+
+				Utils.PopUpEndEvent += activity.Finish;
+				Utils.ShowAlert(Resource.String.BTNotAvailableTitle, Resource.String.BTNotAvailable, activity);
+				return ResultEnabling.NoMedium;
+			}
+
+			// If the bluetooth is not enable, we try to activate it
+			if(!bluetoothAdapter.IsEnabled)
+			{
+				#if DEBUG
+				Log.Debug(Tag, "intent to activate bluetooth");
+				#endif
+
+				Intent enableIntent = new Intent(BluetoothAdapter.ActionRequestEnable);
+				activity.StartActivityForResult(enableIntent,(int) Utils.RequestCode.RequestEnableBluetooth);
+				return ResultEnabling.Activation;
+			}
+
+			#if DEBUG
+			Log.Debug(Tag, "creation of BluetoothManager");
+			#endif
+
+			EnableBluetooth();
+			_communicationWay.Start();
+			return ResultEnabling.Enabled;
+		}
+
+		public bool ResultBluetoothActivation(int requestCode, Result resultCode, Activity activity)
+		{
+			if(requestCode == (int) Utils.RequestCode.RequestEnableBluetooth)
+			{
+				// When the request to enable Bluetooth returns
+				if(resultCode == Result.Ok)
+				{
+					// Bluetooth is now enabled
+					EnableBluetooth();
+					CommunicationWay.Start();
+					return Enabled();
+				}
+				else
+				{
+					// User did not enable Bluetooth or an error occured
+					#if DEBUG
+					Log.Debug(Tag, "Bluetooth not enabled");
+					#endif
+					Utils.ShowAlert(Resource.String.BTNotEnabledTitle, Resource.String.BTNotEnabled, activity);
+				}
+			}
+			return false;
+		}
+
+		/* Activate the bluetooth to allow connection with an other device*/
 		public void EnableBluetooth()
 		{
 			_communicationWay = new BluetoothManager();
@@ -91,7 +167,7 @@ namespace Tetrim
 		}
 
 		/* Return true if the bluetooth is activated (but not necessarily connected) */
-		public bool Enable()
+		public bool Enabled()
 		{
 			return _communicationWay != null;
 		}
@@ -99,13 +175,13 @@ namespace Tetrim
 		/* Return true if the bluetooth is activated and connected to an other device */
 		public bool Connected()
 		{
-			return Enable() && _communicationWay.GetState() == BluetoothManager.State.Connected;
+			return Enabled() && _communicationWay.GetState() == BluetoothManager.State.Connected;
 		}
 
 		/* Return true if the bluetooth is activated and waiting for an other device to start a connection */
 		public bool WaitingForConnection()
 		{
-			return Enable() && _communicationWay.GetState() == BluetoothManager.State.None;
+			return Enabled() && _communicationWay.GetState() == BluetoothManager.State.None;
 		}
 
 		public void InterpretMessage(byte[] message)
@@ -173,6 +249,25 @@ namespace Tetrim
 			}
 		}
 
+		public void EraseAllEvent()
+		{
+			WriteEvent = null;
+			ReadEvent = null;
+			StateConnectingEvent = null;
+			StateConnectedEvent = null;
+			StateNoneEvent = null;
+			DeviceNameEvent = null;
+			ConnectionLostEvent = null;
+			UsualGameMessage = null;
+			PiecePutMessage = null;
+			NextPieceMessage = null;
+			StartMessage = null;
+			EndMessage = null;
+			ScoreMessage = null;
+			PauseMessage = null;
+			ResumeMessage = null;
+		}
+
 		public void NotifyWriteMessage(byte[] writeBuf)
 		{
 			if(WriteEvent != null)
@@ -219,6 +314,14 @@ namespace Tetrim
 			if(DeviceNameEvent != null)
 			{
 				DeviceNameEvent.Invoke(deviceName);
+			}
+		}
+
+		public void NotifyConnectionLost(byte[] buffer)
+		{
+			if(ConnectionLostEvent != null)
+			{
+				ConnectionLostEvent.Invoke(buffer);
 			}
 		}
 	}

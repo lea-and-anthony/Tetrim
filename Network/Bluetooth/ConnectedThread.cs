@@ -69,8 +69,8 @@ namespace Tetrim
 				}
 				catch(Java.IO.IOException e)
 				{
-					Log.Error(BluetoothManager.Tag, "Disconnected", e);
-					_service.ConnectionLost();
+					Log.Error(BluetoothManager.Tag, "Disconnected because read didn't success", e);
+					_service.ConnectionLost(null);
 					break;
 				}
 			}
@@ -100,7 +100,8 @@ namespace Tetrim
 			}
 			catch(Java.IO.IOException e)
 			{
-				Log.Error(BluetoothManager.Tag, "Exception during write", e);
+				Log.Error(BluetoothManager.Tag, "Disconnected because write didn't success", e);
+				_service.ConnectionLost(buffer);
 			}
 		}
 	}

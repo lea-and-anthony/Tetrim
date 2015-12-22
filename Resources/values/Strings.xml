@@ -29,15 +29,17 @@
 	<string name="game_over_loose">Game over :-(\nVous avez perdu.</string>
 	<string name="game_over_win_title">Game over</string>
 	<string name="game_over_win">Game over :-)\nVous avez gagné.</string>
+	<string name="connection_lost">La connexion au second joueur a été interrompue. Reconnexion en cours...</string>
+	<string name="waiting_for_opponent">Attente de la réponse de l\'adversaire...</string>
 
 
     <!--  BluetoothConnectionActivity -->
     <string name="scanning">Scanning...</string>
-    <string name="select_device">Select a device</string>
     <string name="none_paired">No paired device</string>
     <string name="none_found">No device found</string>
     <string name="title_paired_devices">Paired devices</string>
     <string name="title_other_devices">Other devices</string>
     <string name="button_scan">Scan for other devices</string>
 
+    <string name="reconnect_activity">Reconnexion</string>
 </resources>

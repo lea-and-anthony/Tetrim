@@ -46,8 +46,9 @@ namespace Tetrim
 			Read = 2,
 			Write = 3,
 			DeviceName = 4,
-			Alert = 5
-    		};
+			ConnectionLost = 5,
+			Alert = 6
+    	};
 
 		// Key name for identification message
 		public const string DeviceName = "device_name";
@@ -60,6 +61,8 @@ namespace Tetrim
 
 		// Debugging
 		public const string Tag = "Tetrim-Bluetooth";
+
+		public BluetoothDevice _device { get; private set; }
 
 		//--------------------------------------------------------------
 		// ATTRIBUTES
@@ -88,6 +91,7 @@ namespace Tetrim
 		//--------------------------------------------------------------
 		public BluetoothManager()
 		{
+			_device = null;
 			_handler = new MyHandler ();
 			_bluetoothAdapter = BluetoothAdapter.DefaultAdapter;
 			_state = State.None;
@@ -130,6 +134,9 @@ namespace Tetrim
 				Log.Debug (Tag, "Connecting to : " + device);
 				#endif
 
+				// Set the wanted device so we can check later if it is the right device we are connected to
+				_device = device;
+
 				// Cancel any thread attempting to make a connection
 				if (_state == State.Connecting)
 				{
@@ -165,6 +172,20 @@ namespace Tetrim
 
 				// Cancel all the threads
 				stopThreads();
+
+				if(_device != null && !_device.Equals(device))
+				{
+					// We are not connected to the right device so we stop the current connection
+					try
+					{
+						socket.Close();
+					}
+					catch(Java.IO.IOException e2)
+					{
+						Log.Error(Tag, "Unable to Close() socket when trying to stop a connection", e2);
+					}
+				}
+				_device = device;
 
 				// Start the thread to manage the connection and perform transmissions
 				_connectedThread = new ConnectedThread (socket, this);
@@ -231,19 +252,18 @@ namespace Tetrim
 		}
 
 		/// Indicate that the connection was lost and notify the UI Activity.
-		public void ConnectionLost()
+		public void ConnectionLost(byte[] message)
 		{
-			setState(State.Listen);
+			setState(State.None);
 
-			// Send a message to display an error alert
-			_handler.ObtainMessage((int) MessageType.Alert, Resource.String.ConnectionLostTitle,
-				Resource.String.ConnectionLost, null).SendToTarget ();
+			// We notify thanks to the handler the UI Activity
+			_handler.ObtainMessage((int) MessageType.ConnectionLost, -1, -1, message).SendToTarget ();
 		}
 
 		/// Indicate that the connection attempt failed and notify the UI Activity.
 		public void ConnectionFailed()
 		{
-			setState(State.Listen);
+			setState(State.None);
 
 			// Send a message to display an error alert
 			_handler.ObtainMessage((int) MessageType.Alert, Resource.String.ConnectionImpossibleTitle,

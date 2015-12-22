@@ -14,6 +14,7 @@
     <MonoAndroidAssetsPrefix>Assets</MonoAndroidAssetsPrefix>
     <AndroidUseLatestPlatformSdk>False</AndroidUseLatestPlatformSdk>
     <AssemblyName>Tetrim</AssemblyName>
+    <TargetFrameworkVersion>v2.3</TargetFrameworkVersion>
     <AndroidManifest>Properties\AndroidManifest.xml</AndroidManifest>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -71,6 +72,7 @@
     <Compile Include="Network\Bluetooth\Receiver.cs" />
     <Compile Include="Code-View\ButtonStroked.cs" />
     <Compile Include="Code-View\TextViewStroked.cs" />
+    <Compile Include="Activities\ReconnectActivity.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
@@ -126,6 +128,7 @@
     <AndroidResource Include="Resources\layout\Main.axml" />
     <AndroidResource Include="Resources\layout\BluetoothDevices.axml" />
   </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Novell\Novell.MonoDroid.CSharp.targets" />
   <ItemGroup>
     <Folder Include="Code-Model\" />
     <Folder Include="Code-View\" />

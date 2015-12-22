@@ -10,8 +10,6 @@ using Android.Util;
 using Android.Bluetooth;
 using Android.Views;
 
-using Android.Util;
-
 namespace Tetrim
 {
 	[Activity(Label = "Tetrim", Icon = "@drawable/icon", Theme = "@android:style/Theme.NoTitleBar.Fullscreen", ScreenOrientation = Android.Content.PM.ScreenOrientation.Portrait)]
@@ -65,19 +63,21 @@ namespace Tetrim
 
 				ViewProposedPiece viewProposed = FindViewById<ViewProposedPiece>(Resource.Id.ProposedPiecesView);
 				viewProposed.SetPlayer(_game._player1);
+
+				// Hook on network event
+				Network.Instance.EraseAllEvent();
+				Network.Instance.UsualGameMessage += UpdateOpponentView;
+				Network.Instance.PiecePutMessage += OpponentPiecePut;
+				Network.Instance.NextPieceMessage += _game._player1.interpretMessage;
+				Network.Instance.PauseMessage += pauseGame;
+				Network.Instance.ResumeMessage += resumeGame;
+				Network.Instance.ScoreMessage += OnReceiveScoreMessage;
+				Network.Instance.EndMessage += OnReceiveEndMessage;
+				Network.Instance.ConnectionLostEvent += OnLostConnection;
 			}
 
 			// Associate the buttons with the methods
 			associateButtonsEvent();
-
-			// Hook on network event
-			Network.Instance.UsualGameMessage += UpdateOpponentView;
-			Network.Instance.PiecePutMessage += OpponentPiecePut;
-			Network.Instance.NextPieceMessage += _game._player1.interpretMessage;
-			Network.Instance.PauseMessage += pauseGame;
-			Network.Instance.ResumeMessage += resumeGame;
-			Network.Instance.ScoreMessage += OnReceiveScoreMessage;
-			Network.Instance.EndMessage += OnReceiveEndMessage;
 
 			// Launch the main timer of the application
 			int time = getTimerLapse();
@@ -216,6 +216,28 @@ namespace Tetrim
 			FindViewById(Resource.Id.PlayerGridView).PostInvalidate();
 		}
 
+		protected override void OnActivityResult (int requestCode, Result resultCode, Intent data)
+		{
+			#if DEBUG
+			Log.Debug(Tag, "onActivityResult " + resultCode);
+			#endif
+			if(requestCode == (int) Utils.RequestCode.RequestReconnect)
+			{
+				if(resultCode == Result.Ok)
+				{
+					// We can restart the game if the connection is working again
+					_gameTimer.Start();
+				}
+				else
+				{
+					// We didn't reconnect to the other device so we end the party
+					Finish();
+				}
+			}
+				
+
+		}
+
 		public override void OnBackPressed()
 		{
 			if(_gameTimer != null)
@@ -238,6 +260,21 @@ namespace Tetrim
 			_gameTimer.Stop();
 			Utils.PopUpEndEvent += endGame;
 			RunOnUiThread(() => Utils.ShowAlert (Resource.String.game_over_win_title, Resource.String.game_over_win, this));
+			return 0;
+		}
+
+		private int OnLostConnection(byte[] message)
+		{
+			#if DEBUG
+			Log.Debug(Tag, "OnLostConnection");
+			#endif
+
+			// If we lost the connection, we stop the game display a pop-up and try to reconnect
+			_gameTimer.Stop();
+
+			var serverIntent = new Intent(this, typeof(ReconnectActivity));
+			StartActivityForResult(serverIntent,(int) Utils.RequestCode.RequestReconnect);
+
 			return 0;
 		}
 
@@ -299,7 +336,6 @@ namespace Tetrim
 		//resume the game and send a message to the remote device
 		private void resumeGame()
 		{
-			Utils.PopUpEndEvent -= resumeGame;
 			if(_originPause)
 			{
 				resumeGame(true);
@@ -325,7 +361,6 @@ namespace Tetrim
 
 		private void endGame()
 		{
-			Utils.PopUpEndEvent -= endGame;
 			Finish();
 		}
 
