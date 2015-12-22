@@ -383,6 +383,12 @@ namespace Tetrim
 			// aapt resource value: 0x7f040017
 			public const int game_over_win_title = 2130968599;
 			
+			// aapt resource value: 0x7f040022
+			public const int game_request = 2130968610;
+			
+			// aapt resource value: 0x7f040021
+			public const int game_request_title = 2130968609;
+			
 			// aapt resource value: 0x7f040001
 			public const int left_arrow = 2130968577;
 			
@@ -398,8 +404,8 @@ namespace Tetrim
 			// aapt resource value: 0x7f040010
 			public const int not_connected_title = 2130968592;
 			
-			// aapt resource value: 0x7f040021
-			public const int reconnect_activity = 2130968609;
+			// aapt resource value: 0x7f040025
+			public const int reconnect_activity = 2130968613;
 			
 			// aapt resource value: 0x7f040000
 			public const int right_arrow = 2130968576;
@@ -424,6 +430,12 @@ namespace Tetrim
 			
 			// aapt resource value: 0x7f04001a
 			public const int waiting_for_opponent = 2130968602;
+			
+			// aapt resource value: 0x7f040024
+			public const int wrong_version = 2130968612;
+			
+			// aapt resource value: 0x7f040023
+			public const int wrong_version_title = 2130968611;
 			
 			static String()
 			{
