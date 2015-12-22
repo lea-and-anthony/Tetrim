@@ -40,6 +40,10 @@
     <string name="title_paired_devices">Paired devices</string>
     <string name="title_other_devices">Other devices</string>
     <string name="button_scan">Scan for other devices</string>
+    <string name="game_request_title">Game Request</string>
+    <string name="game_request">Do you want to play with %1$s ?</string>
+    <string name="wrong_version_title">Wrong Version Number</string>
+    <string name="wrong_version">Your opponent doesn\'t have the same version of the game than you.</string>
 
     <string name="reconnect_activity">Reconnexion</string>
 </resources>

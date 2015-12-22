@@ -30,7 +30,7 @@ namespace Tetrim
 	// by the user, the MAC address of the device is sent back to the parent
 	// Activity in the result Intent.
 	[Activity(Label = "Tetrim", Icon = "@drawable/icon", Theme = "@android:style/Theme.NoTitleBar.Fullscreen")]		
-	public class BluetoothConnectionActivity : Activity, IDialogInterfaceOnCancelListener
+	public class BluetoothConnectionActivity : Activity
 	{
 		//--------------------------------------------------------------
 		// CONSTANTS
@@ -115,7 +115,6 @@ namespace Tetrim
 
 			// Hook on the Network event
 			Network.Instance.EraseAllEvent();
-			Network.Instance.DeviceNameEvent += DeviceNameEventReceived;
 			Network.Instance.ReadEvent += ReadMessageEventReceived;
 			Network.Instance.StateConnectedEvent += StateConnectedEventReceived;
 			Network.Instance.StateConnectingEvent += StateConnectingEventReceived;
@@ -172,8 +171,7 @@ namespace Tetrim
 			}
 		}
 
-		// Called when the user press the back button when the dialog is prompted
-		public void OnCancel(IDialogInterface dialog)
+		public void CancelConnection()
 		{
 			if(_waitingDialog != null)
 			{
@@ -191,6 +189,12 @@ namespace Tetrim
 			#if DEBUG
 			Log.Debug(Tag, "MessageType = write");
 			#endif
+
+			if(writeBuf[0] == Constants.IdMessageStart && _state == StartState.OPPONENT_READY)
+			{
+				MenuActivity.startGame(this);// We launch the game (change view and everything)
+			}
+				
 
 			return 0;
 		}
@@ -229,16 +233,16 @@ namespace Tetrim
 			}
 			else
 			{
-				RunOnUiThread(() => {
-					AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
-					builder1.SetTitle("Game Request");
-					builder1.SetMessage("Do you want to play ?");
-					builder1.SetCancelable(false);
-					builder1.SetPositiveButton("Yes", delegate{SendStartGameMessage();});
-					builder1.SetNegativeButton("No", delegate{Network.Instance.CommunicationWay.Stop();});
-					AlertDialog alert11 = builder1.Create();
-					alert11.Show();
-				});
+				// Display a pop-up asking if we want to play now that we are connected
+				String message = String.Format(Resources.GetString(Resource.String.game_request), Network.Instance.CommunicationWay._device.Name);
+				AlertDialog.Builder builder = new AlertDialog.Builder(this);
+				builder.SetTitle(Resource.String.game_request_title);
+				builder.SetMessage(message);
+				builder.SetCancelable(false);
+				builder.SetPositiveButton(Android.Resource.String.Yes, delegate{SendStartGameMessage();});
+				builder.SetNegativeButton(Android.Resource.String.No, delegate{Network.Instance.CommunicationWay.Stop();});
+				AlertDialog alert11 = builder.Create();
+				alert11.Show();
 			}
 
 			return 0;
@@ -250,17 +254,15 @@ namespace Tetrim
 			Log.Debug(Tag, "State = none");
 			#endif
 
-			return 0;
-		}
-
-		public int DeviceNameEventReceived(string deviceName)
-		{
-			#if DEBUG
-			Log.Debug(Tag, "MessageType = read, " + deviceName);
-			#endif
+			if(_waitingDialog != null)
+			{
+				// if the connection fail we remove the pop-up
+				_waitingDialog.Dismiss();
+				_waitingDialog = null;
+			}
 
 			return 0;
-		}
+   		}
 
 		public int StartGameMessageReceived(byte[] message)
 		{
@@ -281,6 +283,11 @@ namespace Tetrim
 				else
 					_state = StartState.OPPONENT_READY;
 			}
+			else
+			{
+				Utils.ShowAlert(Resource.String.wrong_version_title, Resource.String.wrong_version, this);
+				Network.Instance.CommunicationWay.Start(); // We restart the connection
+			}
 			return 0;
 		}
 
@@ -290,14 +297,13 @@ namespace Tetrim
 			// We notify the opponent that we are ready
 			Network.Instance.CommunicationWay.Write(message);
 
-			if(_state == StartState.OPPONENT_READY)
-			{
-				MenuActivity.startGame(this);// We launch the game (change view and everything)
-			}
-			else
+			if(_state != StartState.OPPONENT_READY)
 			{
 				_state = StartState.WAITING_FOR_OPPONENT;
-				displayWaitingDialog();
+				if(_waitingDialog == null)
+					displayWaitingDialog();
+				
+				_waitingDialog.SetMessage(Resources.GetString(Resource.String.waiting_for_opponent));
 			}
 
 			return 0;
@@ -344,7 +350,7 @@ namespace Tetrim
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
 			builder.SetMessage(Resource.String.waiting_for_opponent);
 			builder.SetCancelable(false);
-			builder.SetOnCancelListener(this);
+			builder.SetNegativeButton(Android.Resource.String.Cancel, delegate{CancelConnection();});
 			_waitingDialog = builder.Create();
 			_waitingDialog.Show();
 		}
@@ -393,6 +399,8 @@ namespace Tetrim
 				BluetoothDevice device = BluetoothAdapter.DefaultAdapter.GetRemoteDevice(address);
 				// Attempt to connect to the device
 				Network.Instance.CommunicationWay.Connect(device);
+
+				displayWaitingDialog();
 			}
 		}
 	}
