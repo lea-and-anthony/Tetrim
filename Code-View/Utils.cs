@@ -81,12 +81,12 @@ namespace Tetrim
 
 		public static Android.Graphics.Color getAndroidLightColor(TetrisColor color)
 		{
-			Color androidColor = Utils.getAndroidColor(color);
+			/*Color androidColor = Utils.getAndroidColor(color);
 			androidColor.R *= 2;
 			androidColor.G *= 2;
 			androidColor.B *= 2;
-			return androidColor;
-			/*switch (color)
+			return androidColor;*/
+			switch (color)
 			{
 			case TetrisColor.Red:
 				return Android.Graphics.Color.Pink;
@@ -103,7 +103,7 @@ namespace Tetrim
 			case TetrisColor.Pink:
 				return Android.Graphics.Color.LightPink;
 			}
-			return Android.Graphics.Color.White;*/
+			return Android.Graphics.Color.White;
 		}
 
 		// Display a simple pop up with a title, a text and an "OK" button

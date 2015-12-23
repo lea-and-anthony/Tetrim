@@ -141,8 +141,8 @@ namespace Tetrim
 			button.StrokeTextWidth = 15;
 			button.RadiusIn = 20;
 			button.RadiusOut = 15;
-			button.DarkColor = Utils.getAndroidDarkColor(color);
-			button.LightColor = Utils.getAndroidColor(color);
+			button.StrokeColor = Utils.getAndroidDarkColor(color);
+			button.FillColor = Utils.getAndroidColor(color);
 			button.IsTextStroked = false;
 		}
 

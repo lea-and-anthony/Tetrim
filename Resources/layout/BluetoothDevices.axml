@@ -3,14 +3,14 @@
     p1:orientation="vertical"
     p1:layout_width="match_parent"
     p1:layout_height="match_parent"
-    p1:id="@+id/linearLayout1"
+    p1:id="@+id/root"
     p1:weightSum="100">
     <TextView
         p1:text="Select a device :"
         p1:textAppearance="?android:attr/textAppearanceLarge"
         p1:layout_width="match_parent"
         p1:layout_height="0dp"
-        p1:id="@+id/textView1"
+        p1:id="@+id/selectDeviceText"
         p1:gravity="center"
         p1:layout_weight="10" />
     <LinearLayout
@@ -24,10 +24,10 @@
             p1:text="Favorite"
             p1:layout_width="0dp"
             p1:layout_height="match_parent"
-            p1:id="@+id/favoriteDevices"
+            p1:id="@+id/friendsDevices"
             p1:autoText="true"
             p1:layout_weight="1"
-            p1:tag="Friends"
+            p1:tag="friends"
             p1:layout_marginLeft="5dp"
             p1:layout_marginRight="5dp" />
         <Tetrim.ButtonStroked
@@ -36,7 +36,7 @@
             p1:layout_height="match_parent"
             p1:id="@+id/pairedDevices"
             p1:layout_weight="1"
-            p1:tag="Paired"
+            p1:tag="paired"
             p1:layout_marginLeft="5dp"
             p1:layout_marginRight="5dp" />
         <Tetrim.ButtonStroked
@@ -45,16 +45,16 @@
             p1:layout_height="match_parent"
             p1:id="@+id/newDevices"
             p1:layout_weight="1"
-            p1:tag="New"
+            p1:tag="new"
             p1:layout_marginLeft="5dp"
             p1:layout_marginRight="5dp" />
     </LinearLayout>
-    <LinearLayout
-        p1:orientation="vertical"
+    <ScrollView
         p1:minWidth="25px"
         p1:minHeight="25px"
         p1:layout_width="match_parent"
         p1:layout_height="0dp"
-        p1:id="@+id/linearLayout3"
-        p1:layout_weight="80" />
+        p1:id="@+id/devicesLayout"
+        p1:layout_weight="80"
+        p1:scrollbars="none" />
 </LinearLayout>
