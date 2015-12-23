@@ -178,10 +178,16 @@ namespace Tetrim
 			return Enabled() && _communicationWay.GetState() == BluetoothManager.State.Connected;
 		}
 
+		/* Return true if the bluetooth is activated but no service is started */
+		public bool WaitingForStart()
+		{
+			return Enabled() && _communicationWay.GetState() == BluetoothManager.State.None;
+		}
+
 		/* Return true if the bluetooth is activated and waiting for an other device to start a connection */
 		public bool WaitingForConnection()
 		{
-			return Enabled() && _communicationWay.GetState() == BluetoothManager.State.None;
+			return Enabled() && _communicationWay.GetState() == BluetoothManager.State.Listen;
 		}
 
 		public void InterpretMessage(byte[] message)

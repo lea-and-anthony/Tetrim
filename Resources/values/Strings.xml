@@ -30,7 +30,8 @@
 	<string name="game_over_win_title">Game over</string>
 	<string name="game_over_win">Game over :-)\nVous avez gagné.</string>
 	<string name="connection_lost">La connexion au second joueur a été interrompue. Reconnexion en cours...</string>
-	<string name="waiting_for_opponent">Attente de la réponse de l\'adversaire...</string>
+    <string name="retry_connection_title">Echec reconnexion</string>
+    <string name="retry_connection">La reconnexion a échoué. Voulez-vous réessayer ?</string>
 
 
     <!--  BluetoothConnectionActivity -->
@@ -41,9 +42,10 @@
     <string name="title_other_devices">Other devices</string>
     <string name="button_scan">Scan for other devices</string>
     <string name="game_request_title">Game Request</string>
-    <string name="game_request">Do you want to play with %1$s ?</string>
+    <string name="game_request">Do you want to play with {0} ?</string>
     <string name="wrong_version_title">Wrong Version Number</string>
     <string name="wrong_version">Your opponent doesn\'t have the same version of the game than you.</string>
+	<string name="waiting_for_opponent">Attente de la réponse de l\'adversaire...</string>
 
     <string name="reconnect_activity">Reconnexion</string>
 </resources>

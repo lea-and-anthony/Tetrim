@@ -21,10 +21,15 @@ namespace Tetrim
 		//--------------------------------------------------------------
 		private const string Tag = "Tetrim-ReconnectActivity";
 
+		//--------------------------------------------------------------
+		// ATTRIBUTES
+		//--------------------------------------------------------------
 		public byte[] _messageFail { get; set; }
 		private BluetoothDevice _device = null;
 
-
+		//--------------------------------------------------------------
+		// EVENT CATCHING METHODES
+		//--------------------------------------------------------------
 		protected override void OnCreate (Bundle bundle)
 		{
 			base.OnCreate (bundle);
@@ -40,12 +45,9 @@ namespace Tetrim
 			// We retrieve the old device we were connected to so we can try to reconnect to it later
 			// (this value will be reinitialized during enabling)
 			_device = Network.Instance.CommunicationWay._device;
-			Network.Instance.DisableBluetooth();
 
 			// We restart the bluetooth manager and then we try to reconnect
-			Network.ResultEnabling result = Network.Instance.TryEnablingBluetooth(this); // This function terminates the activity if there isn't any bluetooth available
-			if(result == Network.ResultEnabling.Enabled)
-				tryConnection();
+			restartBluetooth();
 		}
 
 		protected override void OnDestroy()
@@ -87,22 +89,9 @@ namespace Tetrim
 			}
 		}
 
-		private void tryConnection()
-		{
-			Network.Instance.StateConnectedEvent += OnConnected;
-			Network.Instance.StateNoneEvent += OnFail;
-
-			if(Network.Instance.WaitingForConnection() && _device != null)
-			{
-				// Attempt to connect to the previous device
-				Network.Instance.CommunicationWay.Connect(_device);
-			}
-			else
-			{
-				OnFail();
-			}
-		}
-
+		//--------------------------------------------------------------
+		// PRIVATES METHODES
+		//--------------------------------------------------------------
 		private int OnConnected()
 		{
 			#if DEBUG
@@ -127,11 +116,45 @@ namespace Tetrim
 			Log.Debug(Tag, "Fail");
 			#endif
 
-			// Set result and finish this Activity
+			// Reset result and asking if we retry or finish this Activity
 			SetResult(Result.Canceled, null);
-			Finish();
+
+			String message = String.Format(Resources.GetString(Resource.String.game_request), Network.Instance.CommunicationWay._device.Name);
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			builder.SetTitle(Resource.String.retry_connection_title);
+			builder.SetMessage(Resource.String.retry_connection);
+			builder.SetCancelable(false);
+			builder.SetPositiveButton(Android.Resource.String.Yes, delegate{restartBluetooth();});
+			builder.SetNegativeButton(Android.Resource.String.No, delegate{Finish();});
+			AlertDialog alert = builder.Create();
+			alert.Show();
 
 			return 0;
+		}
+
+		private void restartBluetooth()
+		{
+			Network.Instance.DisableBluetooth();
+			// This function terminates the activity if there isn't any bluetooth available
+			Network.ResultEnabling result = Network.Instance.TryEnablingBluetooth(this);
+			if(result == Network.ResultEnabling.Enabled)
+				tryConnection();
+		}
+
+		private void tryConnection()
+		{
+			Network.Instance.StateConnectedEvent += OnConnected;
+			Network.Instance.StateNoneEvent += OnFail;
+
+			if(Network.Instance.WaitingForConnection() && _device != null)
+			{
+				// Attempt to connect to the previous device
+				Network.Instance.CommunicationWay.Connect(_device);
+			}
+			else
+			{
+				OnFail();
+			}
 		}
 	}
 }

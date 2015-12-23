@@ -131,7 +131,7 @@ namespace Tetrim
 			// not enabled when the button was hit, so we were paused to enable it...
 			// onResume() will be called when ACTION_REQUEST_ENABLE activity returns.
 			// Only if the state is STATE_NONE, do we know that we haven't started already
-			if (Network.Instance.WaitingForConnection())
+			if (Network.Instance.WaitingForStart())
 			{
 				// Start the Bluetooth for the game
 				Network.Instance.CommunicationWay.Start();
@@ -177,7 +177,7 @@ namespace Tetrim
 			{
 				_waitingDialog.Dismiss();
 				_waitingDialog = null;
-				Network.Instance.CommunicationWay.ResetConnectThread();
+				Network.Instance.CommunicationWay.Start();
 			}
 		}
 
@@ -240,7 +240,7 @@ namespace Tetrim
 				builder.SetMessage(message);
 				builder.SetCancelable(false);
 				builder.SetPositiveButton(Android.Resource.String.Yes, delegate{SendStartGameMessage();});
-				builder.SetNegativeButton(Android.Resource.String.No, delegate{Network.Instance.CommunicationWay.Stop();});
+				builder.SetNegativeButton(Android.Resource.String.No, delegate{Network.Instance.CommunicationWay.Start();});
 				AlertDialog alert11 = builder.Create();
 				alert11.Show();
 			}
@@ -260,6 +260,8 @@ namespace Tetrim
 				_waitingDialog.Dismiss();
 				_waitingDialog = null;
 			}
+
+			_state = StartState.NONE;
 
 			return 0;
    		}

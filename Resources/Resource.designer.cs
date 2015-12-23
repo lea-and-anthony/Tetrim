@@ -359,8 +359,8 @@ namespace Tetrim
 			// aapt resource value: 0x7f040004
 			public const int bottom_arrow = 2130968580;
 			
-			// aapt resource value: 0x7f040020
-			public const int button_scan = 2130968608;
+			// aapt resource value: 0x7f040021
+			public const int button_scan = 2130968609;
 			
 			// aapt resource value: 0x7f040019
 			public const int connection_lost = 2130968601;
@@ -383,20 +383,20 @@ namespace Tetrim
 			// aapt resource value: 0x7f040017
 			public const int game_over_win_title = 2130968599;
 			
-			// aapt resource value: 0x7f040022
-			public const int game_request = 2130968610;
+			// aapt resource value: 0x7f040023
+			public const int game_request = 2130968611;
 			
-			// aapt resource value: 0x7f040021
-			public const int game_request_title = 2130968609;
+			// aapt resource value: 0x7f040022
+			public const int game_request_title = 2130968610;
 			
 			// aapt resource value: 0x7f040001
 			public const int left_arrow = 2130968577;
 			
-			// aapt resource value: 0x7f04001d
-			public const int none_found = 2130968605;
+			// aapt resource value: 0x7f04001e
+			public const int none_found = 2130968606;
 			
-			// aapt resource value: 0x7f04001c
-			public const int none_paired = 2130968604;
+			// aapt resource value: 0x7f04001d
+			public const int none_paired = 2130968605;
 			
 			// aapt resource value: 0x7f040011
 			public const int not_connected = 2130968593;
@@ -404,20 +404,26 @@ namespace Tetrim
 			// aapt resource value: 0x7f040010
 			public const int not_connected_title = 2130968592;
 			
-			// aapt resource value: 0x7f040025
-			public const int reconnect_activity = 2130968613;
+			// aapt resource value: 0x7f040027
+			public const int reconnect_activity = 2130968615;
+			
+			// aapt resource value: 0x7f04001b
+			public const int retry_connection = 2130968603;
+			
+			// aapt resource value: 0x7f04001a
+			public const int retry_connection_title = 2130968602;
 			
 			// aapt resource value: 0x7f040000
 			public const int right_arrow = 2130968576;
 			
-			// aapt resource value: 0x7f04001b
-			public const int scanning = 2130968603;
+			// aapt resource value: 0x7f04001c
+			public const int scanning = 2130968604;
+			
+			// aapt resource value: 0x7f040020
+			public const int title_other_devices = 2130968608;
 			
 			// aapt resource value: 0x7f04001f
-			public const int title_other_devices = 2130968607;
-			
-			// aapt resource value: 0x7f04001e
-			public const int title_paired_devices = 2130968606;
+			public const int title_paired_devices = 2130968607;
 			
 			// aapt resource value: 0x7f040006
 			public const int turn_left_arrow = 2130968582;
@@ -428,14 +434,14 @@ namespace Tetrim
 			// aapt resource value: 0x7f040003
 			public const int up_arrow = 2130968579;
 			
-			// aapt resource value: 0x7f04001a
-			public const int waiting_for_opponent = 2130968602;
+			// aapt resource value: 0x7f040026
+			public const int waiting_for_opponent = 2130968614;
+			
+			// aapt resource value: 0x7f040025
+			public const int wrong_version = 2130968613;
 			
 			// aapt resource value: 0x7f040024
-			public const int wrong_version = 2130968612;
-			
-			// aapt resource value: 0x7f040023
-			public const int wrong_version_title = 2130968611;
+			public const int wrong_version_title = 2130968612;
 			
 			static String()
 			{
