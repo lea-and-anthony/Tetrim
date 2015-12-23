@@ -15,15 +15,13 @@ namespace Tetrim
 		// ATTRIBUTES
 		//--------------------------------------------------------------
 		private BluetoothConnectionActivity _activity;
-		private ArrayAdapter<string> _newDevicesArrayAdapter;
 
 		//--------------------------------------------------------------
 		// CONSTRUCTORS
 		//--------------------------------------------------------------
-		public Receiver(BluetoothConnectionActivity activity, ref ArrayAdapter<string> newDevicesArrayAdapter)
+		public Receiver(BluetoothConnectionActivity activity)
 		{
 			_activity = activity;
-			_newDevicesArrayAdapter = newDevicesArrayAdapter;
 		}
 
 		//--------------------------------------------------------------
@@ -41,18 +39,12 @@ namespace Tetrim
 				// If it's already paired, skip it, because it's been listed already
 				if(device.BondState != Bond.Bonded)
 				{
-					_newDevicesArrayAdapter.Add(device.Name + "\n" + device.Address);
+					_activity.AddNewDevice(device);
 				}
 				// When discovery is finished, change the Activity title
 			}
 			else if(action == BluetoothAdapter.ActionDiscoveryFinished)
 			{
-				if(_newDevicesArrayAdapter.Count == 0 && 
-					_activity.FindViewById<View>(Resource.Id.title_new_devices).Visibility == ViewStates.Visible)
-				{
-					var noDevices = _activity.Resources.GetText(Resource.String.none_found).ToString();
-					_newDevicesArrayAdapter.Add(noDevices);
-				}
 				_activity.FinishDiscovery();
 			}
 		} 

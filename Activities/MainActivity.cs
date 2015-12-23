@@ -128,15 +128,15 @@ namespace Tetrim
 
 			// Set the buttons
 			Typeface arrowFont = Typeface.CreateFromAsset(Assets,"Arrows.otf");
-			SetButton(arrowFont, Resource.Id.buttonMoveLeft, Resource.String.left_arrow);
-			SetButton(arrowFont, Resource.Id.buttonMoveRight, Resource.String.right_arrow);
-			SetButton(arrowFont, Resource.Id.buttonTurnLeft, Resource.String.turn_left_arrow);
-			SetButton(arrowFont, Resource.Id.buttonTurnRight, Resource.String.turn_right_arrow);
-			SetButton(arrowFont, Resource.Id.buttonMoveDown, Resource.String.down_arrow);
-			SetButton(arrowFont, Resource.Id.buttonMoveFoot, Resource.String.bottom_arrow);
+			SetButton(arrowFont, Resource.Id.buttonMoveLeft, Resource.String.left_arrow, TetrisColor.Green);
+			SetButton(arrowFont, Resource.Id.buttonMoveRight, Resource.String.right_arrow, TetrisColor.Green);
+			SetButton(arrowFont, Resource.Id.buttonTurnLeft, Resource.String.turn_left_arrow, TetrisColor.Cyan);
+			SetButton(arrowFont, Resource.Id.buttonTurnRight, Resource.String.turn_right_arrow, TetrisColor.Cyan);
+			SetButton(arrowFont, Resource.Id.buttonMoveDown, Resource.String.down_arrow, TetrisColor.Red);
+			SetButton(arrowFont, Resource.Id.buttonMoveFoot, Resource.String.bottom_arrow, TetrisColor.Red);
 		}
 
-		protected void SetButton(Typeface font, int idButton, int idText)
+		protected void SetButton(Typeface font, int idButton, int idText, TetrisColor color)
 		{
 			ButtonStroked button = FindViewById<ButtonStroked>(idButton);
 			button.IsSquared = true;
@@ -145,6 +145,13 @@ namespace Tetrim
 			button.SetMaxHeight(button.MeasuredWidth);
 			button.SetMinimumHeight(button.MeasuredWidth);
 			button.SetTextSize(ComplexUnitType.Px, button.MeasuredWidth);
+			button.StrokeBorderWidth = 20;
+			button.StrokeTextWidth = 15;
+			button.RadiusIn = 20;
+			button.RadiusOut = 15;
+			button.StrokeColor = Utils.getAndroidDarkColor(color);
+			button.FillColor = Utils.getAndroidColor(color);
+			button.IsTextStroked = false;
 		}
 
 		protected void SetText(Typeface font, int idText)

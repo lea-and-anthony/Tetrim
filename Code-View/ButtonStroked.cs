@@ -1,149 +1,246 @@
-﻿using System;
-
-using Android.Content;
+﻿using Android.Content;
 using Android.Graphics;
 using Android.Graphics.Drawables;
+using Android.Util;
 using Android.Views;
 using Android.Widget;
-using Android.Runtime;
-
-using Android.Util;
 
 namespace Tetrim
 {
 	public class ButtonStroked : ImageButton
 	{
-		Context context;
+		//--------------------------------------------------------------
+		// CONSTANTS
+		//--------------------------------------------------------------
+		public enum ButtonShape
+		{
+			RoundedRectangle,
+			Rectangle,
+			LeftRight,
+			BottomTop,
+		};
 
-		Color darkColor = new Color(100, 100, 100, 255);
-		Color lightColor = new Color(255, 255, 255, 255);
+		//--------------------------------------------------------------
+		// ATTRIBUTES
+		//--------------------------------------------------------------
+		Context _context;
+
+		public Color StrokeColor = new Color(100, 100, 100, 255);
+		public Color FillColor = new Color(255, 255, 255, 255);
+		public int StrokeBorderWidth = 40;
+		public int StrokeTextWidth = 20;
+		public int RadiusIn = 30;
+		public int RadiusOut = 20;
+		public bool IsTextStroked = true;
 
 		public int TextSize = 30;
 		public string Text = "";
 		public Typeface Typeface;
 		public bool IsSquared = false;
+		public GravityFlags Gravity = GravityFlags.Center;
+		public ButtonShape Shape = ButtonShape.RoundedRectangle;
 
-		Bitmap pressedImage = null;
-		Bitmap unpressedImage = null;
+		Bitmap _pressedImage = null;
+		Bitmap _unpressedImage = null;
 
-		public ButtonStroked (Context context, Android.Util.IAttributeSet set) : base(context, set)
+		//--------------------------------------------------------------
+		// CONSTRUCTORS
+		//--------------------------------------------------------------
+		public ButtonStroked (Context context, IAttributeSet set) : base(context, set)
 		{
-			this.context = context;
-			this.Typeface = Typeface.CreateFromAsset(context.Assets,"Blox.ttf");
-			this.Text = this.Tag == null ? this.Text : this.Tag.ToString();
-			this.TextSize = getPixelsFromDP(this.TextSize);
-			this.SetScaleType(ScaleType.FitCenter);
-			this.SetAdjustViewBounds(true);
+			_context = context;
+			Typeface = Typeface.CreateFromAsset(context.Assets,"Foo.ttf");
+			Text = Tag == null ? Text : Tag.ToString();
+			TextSize = Utils.GetPixelsFromDP(_context, TextSize);
+			SetScaleType(ScaleType.FitCenter);
+			SetAdjustViewBounds(true);
+		}
+
+		public ButtonStroked (Context context) : base(context)
+		{
+			_context = context;
+			Typeface = Typeface.CreateFromAsset(context.Assets,"Foo.ttf");
+			Text = Tag == null ? Text : Tag.ToString();
+			TextSize = Utils.GetPixelsFromDP(_context, TextSize);
+			SetScaleType(ScaleType.FitCenter);
+			SetAdjustViewBounds(true);
 		}
 
 		public void SetTypeface(Typeface typeface, TypefaceStyle style)
 		{
-			this.Typeface = typeface;
+			Typeface = typeface;
 		}
 
 		public void SetTextSize(ComplexUnitType unit, int size)
 		{
-			switch(unit)
-			{
-			case ComplexUnitType.Px:
-				TextSize = size;
-				break;
-			default:
-				TextSize = getPixelsFromDP(size);
-				break;
-			}
+			TextSize = Utils.ConvertTextSize(_context, unit, size);
 		}
 
 		protected override void OnSizeChanged (int w, int h, int oldw, int oldh)
 		{
 			base.OnSizeChanged (w, h, oldw, oldh);
-			if((w != 0 && h != 0 && this.unpressedImage == null) || (this.unpressedImage != null && w != this.unpressedImage.Width && h != this.unpressedImage.Height))
+			if((w != 0 && h != 0 && _unpressedImage == null) || (_unpressedImage != null && w != _unpressedImage.Width && h != _unpressedImage.Height))
 			{
 				InitializeImages();
 			}
 		}
 
-		int getPixelsFromDP(int dp) {
-			DisplayMetrics metrics = new DisplayMetrics();
-			IWindowManager windowManager = this.context.GetSystemService(Context.WindowService).JavaCast<IWindowManager>();
-			windowManager.DefaultDisplay.GetMetrics(metrics);
-			return (int)Math.Round(dp*metrics.Density);
-		}
-
-		int getDPFromPixels(int pixels) {
-			DisplayMetrics metrics = new DisplayMetrics();
-			IWindowManager windowManager = this.context.GetSystemService(Context.WindowService).JavaCast<IWindowManager>();
-			windowManager.DefaultDisplay.GetMetrics(metrics);
-			return (int)Math.Round(pixels/metrics.Density);
-		}
-
 		protected void InitializeImages()
 		{
-			this.unpressedImage = Bitmap.CreateBitmap(this.Width, this.IsSquared ? this.Width : this.Height, Bitmap.Config.Argb8888);
-			Canvas unpressedCanvas = new Canvas(this.unpressedImage);
+			_unpressedImage = Bitmap.CreateBitmap(Width, IsSquared ? Width : Height, Bitmap.Config.Argb8888);
+			_pressedImage = Bitmap.CreateBitmap(Width, IsSquared ? Width : Height, Bitmap.Config.Argb8888);
+			Canvas unpressedCanvas = new Canvas(_unpressedImage);
+			Canvas pressedCanvas = new Canvas(_pressedImage);
 
+			TextSize = TextSize == 0 ? Height / 2 : TextSize;
+
+			// Background fill paint
+			Paint fillBackPaint = new Paint();
+			fillBackPaint.Color = FillColor;
+			fillBackPaint.AntiAlias = true;
+
+			// Background stroke paint
 			Paint strokeBackPaint = new Paint();
-			strokeBackPaint.SetARGB(darkColor.A, darkColor.R, darkColor.G, darkColor.B);
-			strokeBackPaint.SetStyle(Android.Graphics.Paint.Style.Stroke);
-			strokeBackPaint.StrokeWidth = this.IsSquared ? 20 : 40;
+			strokeBackPaint.Color = StrokeColor;
+			strokeBackPaint.SetStyle(Paint.Style.Stroke);
+			strokeBackPaint.StrokeWidth = this.StrokeBorderWidth;
 			strokeBackPaint.AntiAlias = true;
 
-			Paint strokePaint = new Paint();
-			strokePaint.SetARGB(darkColor.A, darkColor.R, darkColor.G, darkColor.B);
-			strokePaint.TextAlign = Android.Graphics.Paint.Align.Center;
-			strokePaint.TextSize = this.TextSize;
-			strokePaint.SetTypeface(this.Typeface);
-			strokePaint.SetStyle(Android.Graphics.Paint.Style.Stroke);
-			strokePaint.StrokeWidth = this.IsSquared ? 15 : 20;
-			strokePaint.AntiAlias = true;
-
+			// Text paint
 			Paint textPaint = new Paint();
-			textPaint.SetARGB(lightColor.A, lightColor.R, lightColor.G, lightColor.B);
-			textPaint.TextAlign = Android.Graphics.Paint.Align.Center;
-			textPaint.TextSize = this.TextSize;
-			textPaint.SetTypeface(this.Typeface);
+			textPaint.Color = IsTextStroked ? FillColor : StrokeColor;
+			textPaint.TextAlign = Paint.Align.Center;
+			textPaint.TextSize = TextSize;
+			textPaint.SetTypeface(Typeface);
 			textPaint.AntiAlias = true;
 
+			// Text stroke paint
+			Paint strokePaint = new Paint();
+			strokePaint.Color = StrokeColor;
+			strokePaint.TextAlign = Paint.Align.Center;
+			strokePaint.TextSize = TextSize;
+			strokePaint.SetTypeface(Typeface);
+			strokePaint.SetStyle(Paint.Style.Stroke);
+			strokePaint.StrokeWidth = StrokeTextWidth;
+			strokePaint.AntiAlias = true;
+
+			// Background bounds
 			Rect local = new Rect();
 			this.GetLocalVisibleRect(local);
 			RectF bounds = new RectF(local);
-			bounds.Top += strokePaint.StrokeWidth;
-			bounds.Left += strokePaint.StrokeWidth;
-			bounds.Right -= strokePaint.StrokeWidth;
-			bounds.Bottom -= strokePaint.StrokeWidth;
+			bounds.Top += StrokeBorderWidth/2;
+			bounds.Left += StrokeBorderWidth/2;
+			bounds.Right -= StrokeBorderWidth/2;
+			bounds.Bottom -= StrokeBorderWidth/2;
 
-			unpressedCanvas.DrawRoundRect(bounds, this.IsSquared ? 15 :20, this.IsSquared ? 15 : 20, strokeBackPaint);
-			unpressedCanvas.DrawRoundRect(bounds, this.IsSquared ? 20 : 30, this.IsSquared ? 20 : 30, textPaint);
+			while(bounds.Top > Height)
+			{
+				bounds.Top -= Height;
+			}
+			while(bounds.Bottom > Height)
+			{
+				bounds.Bottom -= Height;
+			}
+			while(bounds.Left > Width)
+			{
+				bounds.Left -= Width;
+			}
+			while(bounds.Right > Width)
+			{
+				bounds.Right -= Width;
+			}
 
-			int cHeight = this.Height;
+			// Text location
 			Rect r = new Rect();
-			float x = this.Width/2;
+			strokePaint.GetTextBounds(Text, 0, Text.Length, r);
+			while(r.Width() > Width)
+			{
+				this.TextSize =(int)(TextSize/1.5);
+				textPaint.TextSize = TextSize;
+				strokePaint.TextSize = TextSize;
+				strokePaint.GetTextBounds(Text, 0, Text.Length, r);
+			}
 
-			strokePaint.GetTextBounds(this.Text, 0, this.Text.Length, r);
-			float y = cHeight / 2f + r.Height() / 2f - r.Bottom;
-			unpressedCanvas.DrawText(this.Text, x, y, strokePaint);
+			float x=0, y=0;
+			switch (Gravity)
+			{
+			case GravityFlags.Top:
+				y = PaddingTop + r.Height()/2;
+				break;
+			case GravityFlags.Bottom:
+				y = Height - r.Height()/2 - PaddingBottom;
+				break;
+			default:
+				y = Height / 2f + r.Height() / 2f - r.Bottom;
+				break;
+			}
+			switch (Gravity)
+			{
+			case GravityFlags.Left:
+				x = PaddingLeft + r.Width()/2;
+				break;
+			case GravityFlags.Right:
+				x = Width - r.Width()/2 - PaddingRight;
+				break;
+			default:
+				x = Width/2;
+				break;
+			}
 
-			textPaint.GetTextBounds(this.Text, 0, this.Text.Length, r);
-			y = cHeight / 2f + r.Height() / 2f - r.Bottom;
-			unpressedCanvas.DrawText(this.Text, x, y, textPaint);
+			// Draw unpressed
+			DrawBackground(unpressedCanvas, bounds, fillBackPaint, strokeBackPaint);
+			if(IsTextStroked)
+				unpressedCanvas.DrawText(Text, x, y, strokePaint);
+			unpressedCanvas.DrawText(Text, x, y, textPaint);
 
-			this.pressedImage = Bitmap.CreateBitmap(this.Width, this.Height, Bitmap.Config.Argb8888);
-			Canvas pressedCanvas = new Canvas(this.pressedImage);
+			// Change colors
+			fillBackPaint.Color = StrokeColor;
+			strokeBackPaint.Color = FillColor;
+			strokePaint.Color = FillColor;
+			textPaint.Color = IsTextStroked ? StrokeColor : FillColor;
 
-			strokeBackPaint.Color = lightColor;
-			strokePaint.Color = lightColor;
-			textPaint.Color = darkColor;
+			// Draw pressed
+			DrawBackground(pressedCanvas, bounds, fillBackPaint, strokeBackPaint);
+			if(IsTextStroked)
+				pressedCanvas.DrawText(Text, x, y, strokePaint);
+			pressedCanvas.DrawText(Text, x, y, textPaint);
 
-			pressedCanvas.DrawRoundRect(bounds, this.IsSquared ? 15 : 20, this.IsSquared ? 15 : 20, strokeBackPaint);
-			pressedCanvas.DrawRoundRect(bounds, this.IsSquared ? 20 : 30, this.IsSquared ? 20 : 30, textPaint);
-			pressedCanvas.DrawText(this.Text, x, y, strokePaint);
-			pressedCanvas.DrawText(this.Text, x, y, textPaint);
-
+			// Set images for states
 			StateListDrawable states = new StateListDrawable();
-			states.AddState(new int[] {Android.Resource.Attribute.StatePressed}, new BitmapDrawable(this.pressedImage));
-			states.AddState(new int[] {Android.Resource.Attribute.StateFocused}, new BitmapDrawable(this.pressedImage));
-			states.AddState(new int[] { }, new BitmapDrawable(this.unpressedImage));
-			this.SetBackgroundDrawable(states);
+			states.AddState(new int[] {Android.Resource.Attribute.StatePressed}, new BitmapDrawable(_pressedImage));
+			states.AddState(new int[] {Android.Resource.Attribute.StateFocused}, new BitmapDrawable(_pressedImage));
+			states.AddState(new int[] {Android.Resource.Attribute.StateSelected}, new BitmapDrawable(_pressedImage));
+			states.AddState(new int[] { }, new BitmapDrawable(_unpressedImage));
+			SetBackgroundDrawable(states);
+		}
+
+		private void DrawBackground(Canvas canvas, RectF bounds, Paint fillBackPaint, Paint strokeBackPaint)
+		{
+			switch(Shape)
+			{
+			case ButtonShape.BottomTop:
+				bounds.Left = 0;
+				bounds.Right = Width;
+				canvas.DrawRect(bounds, fillBackPaint);
+				canvas.DrawLine(bounds.Left, bounds.Top, bounds.Right, bounds.Top, strokeBackPaint);
+				canvas.DrawLine(bounds.Left, bounds.Bottom, bounds.Right, bounds.Bottom, strokeBackPaint);
+				break;
+			case ButtonShape.LeftRight:
+				bounds.Top = 0;
+				bounds.Bottom = Height;
+				canvas.DrawRect(bounds, fillBackPaint);
+				canvas.DrawLine(bounds.Left, bounds.Top, bounds.Left, bounds.Bottom, strokeBackPaint);
+				canvas.DrawLine(bounds.Right, bounds.Top, bounds.Right, bounds.Bottom, strokeBackPaint);
+				break;
+			case ButtonShape.Rectangle:
+				canvas.DrawRect(bounds, strokeBackPaint);
+				canvas.DrawRect(bounds, fillBackPaint);
+				break;
+			default:
+				canvas.DrawRoundRect(bounds, RadiusOut, RadiusOut, strokeBackPaint);
+				canvas.DrawRoundRect(bounds, RadiusIn, RadiusIn, fillBackPaint);
+				break;
+			}
 		}
 	}
 }

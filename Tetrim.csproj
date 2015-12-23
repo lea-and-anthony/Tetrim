@@ -71,6 +71,7 @@
     <Compile Include="Activities\BluetoothConnectionActivity.cs" />
     <Compile Include="Network\Bluetooth\Receiver.cs" />
     <Compile Include="Code-View\ButtonStroked.cs" />
+    <Compile Include="Code-View\TextViewStroked.cs" />
     <Compile Include="Activities\ReconnectActivity.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -125,6 +126,7 @@
     <AndroidResource Include="Resources\layout\BluetoothConnection.axml" />
     <AndroidResource Include="Resources\layout\GameMulti.axml" />
     <AndroidResource Include="Resources\layout\Main.axml" />
+    <AndroidResource Include="Resources\layout\BluetoothDevices.axml" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Novell\Novell.MonoDroid.CSharp.targets" />
   <ItemGroup>
