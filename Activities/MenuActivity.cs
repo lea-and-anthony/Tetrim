@@ -37,6 +37,30 @@ namespace Tetrim
 			Log.Debug(Tag, "onCreate()");
 			#endif
 
+			ISharedPreferences sharedPreferencesUser = ApplicationContext.GetSharedPreferences(User.UserFileNameKey, FileCreationMode.Private);
+			User.GiveContext(ref sharedPreferencesUser);
+
+			if(!User.Instance.IsUserStored)
+			{
+				// TODO : ask for user name
+				AlertDialog.Builder builder = new AlertDialog.Builder(this);
+				builder.SetTitle("What is your name ?");
+
+				// Set up the input
+				EditText input = new EditText(this);
+				// Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
+				//input.InputType = Android.Text.InputTypes.ClassText;
+				builder.SetView(input);
+
+				// Set up the buttons
+				builder.SetPositiveButton("OK", delegate {
+					User.Instance.SetName(input.Text);
+				});
+				builder.SetNegativeButton("Cancel", delegate {});
+
+				builder.Show();
+			}
+
 			// Retrieve the fonts
 			Typeface funnyFont = Typeface.CreateFromAsset(Assets,"Foo.ttf");
 			Typeface bloxFont = Typeface.CreateFromAsset(Assets,"Blox.ttf");
@@ -48,6 +72,10 @@ namespace Tetrim
 			SetTextView(bloxFont, Resource.Id.titleR, TetrisColor.Green);
 			SetTextView(bloxFont, Resource.Id.titleI, TetrisColor.Cyan);
 			SetTextView(bloxFont, Resource.Id.titleM, TetrisColor.Pink);
+
+			TextView userNameText = FindViewById<TextView>(Resource.Id.userNameText);
+			userNameText.SetTypeface(funnyFont, TypefaceStyle.Normal);
+			userNameText.Text = "Welcome " + User.Instance.UserName;
 
 			// Single player button
 			ButtonStroked singlePlayerButton = FindViewById<ButtonStroked>(Resource.Id.singlePlayerButton);

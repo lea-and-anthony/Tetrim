@@ -114,8 +114,8 @@ namespace Tetrim
 			// aapt resource value: 0x7f05000b
 			public const int devicesLayout = 2131034123;
 			
-			// aapt resource value: 0x7f05003f
-			public const int exitButton = 2131034175;
+			// aapt resource value: 0x7f050040
+			public const int exitButton = 2131034176;
 			
 			// aapt resource value: 0x7f050008
 			public const int friendsDevices = 2131034120;
@@ -129,8 +129,8 @@ namespace Tetrim
 			// aapt resource value: 0x7f05000c
 			public const int layoutGameMulti = 2131034124;
 			
-			// aapt resource value: 0x7f050041
-			public const int layoutPlayerNames = 2131034177;
+			// aapt resource value: 0x7f050042
+			public const int layoutPlayerNames = 2131034178;
 			
 			// aapt resource value: 0x7f050018
 			public const int level1 = 2131034136;
@@ -186,8 +186,8 @@ namespace Tetrim
 			// aapt resource value: 0x7f05001d
 			public const int linearLayout9 = 2131034141;
 			
-			// aapt resource value: 0x7f050040
-			public const int myLayout = 2131034176;
+			// aapt resource value: 0x7f050041
+			public const int myLayout = 2131034177;
 			
 			// aapt resource value: 0x7f05000a
 			public const int newDevices = 2131034122;
@@ -243,53 +243,53 @@ namespace Tetrim
 			// aapt resource value: 0x7f050006
 			public const int selectDeviceText = 2131034118;
 			
-			// aapt resource value: 0x7f05003e
-			public const int settingsButton = 2131034174;
+			// aapt resource value: 0x7f05003f
+			public const int settingsButton = 2131034175;
 			
-			// aapt resource value: 0x7f05003c
-			public const int singlePlayerButton = 2131034172;
-			
-			// aapt resource value: 0x7f050042
-			public const int tableLayout1 = 2131034178;
-			
-			// aapt resource value: 0x7f050045
-			public const int tableRow2 = 2131034181;
-			
-			// aapt resource value: 0x7f050047
-			public const int tableRow3 = 2131034183;
+			// aapt resource value: 0x7f05003d
+			public const int singlePlayerButton = 2131034173;
 			
 			// aapt resource value: 0x7f050043
-			public const int tableRow4 = 2131034179;
-			
-			// aapt resource value: 0x7f050044
-			public const int textView31 = 2131034180;
+			public const int tableLayout1 = 2131034179;
 			
 			// aapt resource value: 0x7f050046
-			public const int textView39 = 2131034182;
+			public const int tableRow2 = 2131034182;
 			
 			// aapt resource value: 0x7f050048
-			public const int textView40 = 2131034184;
+			public const int tableRow3 = 2131034184;
 			
-			// aapt resource value: 0x7f050037
-			public const int titleE = 2131034167;
+			// aapt resource value: 0x7f050044
+			public const int tableRow4 = 2131034180;
 			
-			// aapt resource value: 0x7f05003a
-			public const int titleI = 2131034170;
+			// aapt resource value: 0x7f050045
+			public const int textView31 = 2131034181;
 			
-			// aapt resource value: 0x7f050035
-			public const int titleLayout = 2131034165;
+			// aapt resource value: 0x7f050047
+			public const int textView39 = 2131034183;
 			
-			// aapt resource value: 0x7f05003b
-			public const int titleM = 2131034171;
-			
-			// aapt resource value: 0x7f050039
-			public const int titleR = 2131034169;
-			
-			// aapt resource value: 0x7f050036
-			public const int titleT = 2131034166;
+			// aapt resource value: 0x7f050049
+			public const int textView40 = 2131034185;
 			
 			// aapt resource value: 0x7f050038
-			public const int titleT2 = 2131034168;
+			public const int titleE = 2131034168;
+			
+			// aapt resource value: 0x7f05003b
+			public const int titleI = 2131034171;
+			
+			// aapt resource value: 0x7f050036
+			public const int titleLayout = 2131034166;
+			
+			// aapt resource value: 0x7f05003c
+			public const int titleM = 2131034172;
+			
+			// aapt resource value: 0x7f05003a
+			public const int titleR = 2131034170;
+			
+			// aapt resource value: 0x7f050037
+			public const int titleT = 2131034167;
+			
+			// aapt resource value: 0x7f050039
+			public const int titleT2 = 2131034169;
 			
 			// aapt resource value: 0x7f050002
 			public const int title_new_devices = 2131034114;
@@ -297,8 +297,11 @@ namespace Tetrim
 			// aapt resource value: 0x7f050000
 			public const int title_paired_devices = 2131034112;
 			
-			// aapt resource value: 0x7f05003d
-			public const int twoPlayersButton = 2131034173;
+			// aapt resource value: 0x7f05003e
+			public const int twoPlayersButton = 2131034174;
+			
+			// aapt resource value: 0x7f050035
+			public const int userNameText = 2131034165;
 			
 			static Id()
 			{
