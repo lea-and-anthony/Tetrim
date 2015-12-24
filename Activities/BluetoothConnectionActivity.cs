@@ -61,7 +61,7 @@ namespace Tetrim
 		private Receiver _receiver;
 		private StartState _state = StartState.NONE;
 		private bool _isConnectionInitiator = false;
-		private AlertDialog _waitingDialog = null;
+		private AlertDialog _currentDialog = null;
 		private Menu _menuSelected = Menu.PAIRED;
 		private ScrollView _devicesLayout;
 		private LinearLayout _friendsDevicesLayout, _pairedDevicesLayout, _newDevicesLayout;
@@ -295,12 +295,12 @@ namespace Tetrim
 
 		public void CancelConnection()
 		{
-			if(_waitingDialog != null)
-			{
-				_waitingDialog.Dismiss();
-				_waitingDialog = null;
-				Network.Instance.CommunicationWay.Start();
-			}
+			if(_currentDialog != null)
+				_currentDialog.Dismiss();
+
+			_currentDialog = null;
+			_state = StartState.NONE;
+			Network.Instance.CommunicationWay.Start();
 		}
 
 		//--------------------------------------------------------------
@@ -355,16 +355,22 @@ namespace Tetrim
 			}
 			else
 			{
+				if(_currentDialog != null)
+				{
+					_currentDialog.Dismiss();
+					_currentDialog = null;
+				}
+
 				// Display a pop-up asking if we want to play now that we are connected
 				String message = String.Format(Resources.GetString(Resource.String.game_request), Network.Instance.CommunicationWay._device.Name);
 				AlertDialog.Builder builder = new AlertDialog.Builder(this);
 				builder.SetTitle(Resource.String.game_request_title);
 				builder.SetMessage(message);
 				builder.SetCancelable(false);
-				builder.SetPositiveButton(Android.Resource.String.Yes, delegate{SendStartGameMessage();});
-				builder.SetNegativeButton(Android.Resource.String.No, delegate{Network.Instance.CommunicationWay.Start();});
-				AlertDialog alert11 = builder.Create();
-				alert11.Show();
+				builder.SetPositiveButton(Android.Resource.String.Yes, delegate{SendStartGameMessage(); _currentDialog = null;});
+				builder.SetNegativeButton(Android.Resource.String.No, delegate{CancelConnection();});
+				_currentDialog = builder.Create();
+				_currentDialog.Show();
 			}
 
 			return 0;
@@ -376,11 +382,11 @@ namespace Tetrim
 			Log.Debug(Tag, "State = none");
 			#endif
 
-			if(_waitingDialog != null)
+			if(_currentDialog != null)
 			{
 				// if the connection fail we remove the pop-up
-				_waitingDialog.Dismiss();
-				_waitingDialog = null;
+				_currentDialog.Dismiss();
+				_currentDialog = null;
 			}
 
 			_state = StartState.NONE;
@@ -397,10 +403,10 @@ namespace Tetrim
 				// The 2 players have the same version, we can launch the game if we are ready
 				if(_state == StartState.WAITING_FOR_OPPONENT)
 				{
-					if(_waitingDialog != null)
+					if(_currentDialog != null)
 					{
-						_waitingDialog.Dismiss();
-						_waitingDialog = null;
+						_currentDialog.Dismiss();
+						_currentDialog = null;
 					}
 					MenuActivity.startGame(this);// We launch the game (change view and everything)
 				}
@@ -424,10 +430,7 @@ namespace Tetrim
 			if(_state != StartState.OPPONENT_READY)
 			{
 				_state = StartState.WAITING_FOR_OPPONENT;
-				if(_waitingDialog == null)
-					displayWaitingDialog();
-				
-				_waitingDialog.SetMessage(Resources.GetString(Resource.String.waiting_for_opponent));
+				displayWaitingDialog(Resource.String.waiting_for_opponent);
 			}
 
 			return 0;
@@ -468,19 +471,19 @@ namespace Tetrim
 			}
 		}
 
-		private void displayWaitingDialog()
+		private void displayWaitingDialog(int idMessage)
 		{
-			if(_waitingDialog != null)
+			if(_currentDialog != null)
 			{
-				_waitingDialog.Dismiss();
-				_waitingDialog = null;
+				_currentDialog.Dismiss();
+				_currentDialog = null;
 			}
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
-			builder.SetMessage(Resource.String.waiting_for_opponent);
+			builder.SetMessage(idMessage);
 			builder.SetCancelable(false);
 			builder.SetNegativeButton(Android.Resource.String.Cancel, delegate{CancelConnection();});
-			_waitingDialog = builder.Create();
-			_waitingDialog.Show();
+			_currentDialog = builder.Create();
+			_currentDialog.Show();
 		}
 
 		// Start device discover with the BluetoothAdapter
@@ -515,12 +518,12 @@ namespace Tetrim
 
 			if(Network.Instance.Enabled())
 			{
+				displayWaitingDialog(Resource.String.waiting_for_opponent);
+
 				// Get the BLuetoothDevice object
 				BluetoothDevice device = BluetoothAdapter.DefaultAdapter.GetRemoteDevice(address);
 				// Attempt to connect to the device
 				Network.Instance.CommunicationWay.Connect(device);
-
-				displayWaitingDialog();
 			}
 		}
 	}
