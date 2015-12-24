@@ -10,68 +10,86 @@
         android:minHeight="25px"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:id="@+id/linearLayout2"
-        android:layout_weight="50"
-        android:gravity="center">
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="wrap_content"
+        android:id="@+id/linearLayout3"
+        android:layout_weight="50">
+        <TextView
+            android:text="Welcome"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/titleLayout">
-            <TextView
-                android:text="t"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:id="@+id/titleT"
-                android:textSize="100dp"
-                android:gravity="center"
+            android:id="@+id/userNameText"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginBottom="5dp" />
+        <LinearLayout
+            android:orientation="vertical"
+            android:minWidth="25px"
+            android:minHeight="25px"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/linearLayout2"
+            android:gravity="center">
+            <LinearLayout
+                android:orientation="horizontal"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:textColor="#ffd50000" />
-            <TextView
-                android:text="E"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:id="@+id/titleE"
-                android:textSize="100dp"
-                android:gravity="center"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:textColor="#ffff6d00" />
-            <TextView
-                android:text="t"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:id="@+id/titleT2"
-                android:textSize="100dp"
-                android:gravity="center"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:textColor="#ffffc400" />
-            <TextView
-                android:text="R"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:id="@+id/titleR"
-                android:textSize="100dp"
-                android:gravity="center"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:textColor="#ff64dd17" />
-            <TextView
-                android:text="i"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:id="@+id/titleI"
-                android:textSize="100dp"
-                android:gravity="center"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:textColor="#ff00e5ff" />
-            <TextView
-                android:text="M"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:id="@+id/titleM"
-                android:textSize="100dp"
-                android:gravity="center"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:textColor="#ffd500f9" />
+                android:layout_height="wrap_content"
+                android:id="@+id/titleLayout">
+                <TextView
+                    android:text="t"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:id="@+id/titleT"
+                    android:textSize="100dp"
+                    android:gravity="center"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:textColor="#ffd50000" />
+                <TextView
+                    android:text="E"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:id="@+id/titleE"
+                    android:textSize="100dp"
+                    android:gravity="center"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:textColor="#ffff6d00" />
+                <TextView
+                    android:text="t"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:id="@+id/titleT2"
+                    android:textSize="100dp"
+                    android:gravity="center"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:textColor="#ffffc400" />
+                <TextView
+                    android:text="R"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:id="@+id/titleR"
+                    android:textSize="100dp"
+                    android:gravity="center"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:textColor="#ff64dd17" />
+                <TextView
+                    android:text="i"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:id="@+id/titleI"
+                    android:textSize="100dp"
+                    android:gravity="center"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:textColor="#ff00e5ff" />
+                <TextView
+                    android:text="M"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:id="@+id/titleM"
+                    android:textSize="100dp"
+                    android:gravity="center"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:textColor="#ffd500f9" />
+            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
     <LinearLayout

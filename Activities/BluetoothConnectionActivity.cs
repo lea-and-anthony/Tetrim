@@ -105,7 +105,7 @@ namespace Tetrim
 			SetupLayout(ref _friendsDevicesLayout, FriendsDeviceColor);
 			SetupLayout(ref _pairedDevicesLayout, PairedDeviceColor);
 			SetupLayout(ref _newDevicesLayout, NewDeviceColor);
-			SwitchMenu(Menu.PAIRED);
+			SwitchMenu(Menu.FRIENDS);
 
 			// Test if the view is created so we can resize the buttons
 			if(_devicesLayout.ViewTreeObserver.IsAlive)
@@ -169,6 +169,14 @@ namespace Tetrim
 			_newDevicesLayout.AddView(newDeviceButton, lp);
 		}
 
+		public void AddFriendDevice(BluetoothDevice device)
+		{
+			_newDevices.Add(device);
+			ButtonStroked friendsDeviceButton = CreateButton(device, FriendsDeviceColor);
+			LinearLayout.LayoutParams lp = CreateLayoutParams();
+			_friendsDevicesLayout.AddView(friendsDeviceButton, lp);
+		}
+
 		public void AddPairedDevice(BluetoothDevice device)
 		{
 			_pairedDevices.Add(device);
@@ -217,16 +225,19 @@ namespace Tetrim
 				DisableMenuCategory(_pairedDevicesLayout, _pairedDevicesButton);
 				DisableMenuCategory(_newDevicesLayout, _newDevicesButton);
 				EnableMenuCategory(_friendsDevicesLayout, _friendsDevicesButton);
+				//_devicesLayout.SetBackgroundColor(Utils.getAndroidDarkColor(FriendsDeviceColor));
 				break;
 			case Menu.PAIRED:
 				DisableMenuCategory(_friendsDevicesLayout, _friendsDevicesButton);
 				DisableMenuCategory(_newDevicesLayout, _newDevicesButton);
 				EnableMenuCategory(_pairedDevicesLayout, _pairedDevicesButton);
+				//_devicesLayout.SetBackgroundColor(Utils.getAndroidDarkColor(PairedDeviceColor));
 				break;
 			case Menu.NEW:
 				DisableMenuCategory(_friendsDevicesLayout, _friendsDevicesButton);
 				DisableMenuCategory(_pairedDevicesLayout, _pairedDevicesButton);
 				EnableMenuCategory(_newDevicesLayout, _newDevicesButton);
+				//_devicesLayout.SetBackgroundColor(Utils.getAndroidDarkColor(NewDeviceColor));
 				break;
 			}
 		}
@@ -314,6 +325,7 @@ namespace Tetrim
 
 			if(writeBuf[0] == Constants.IdMessageStart && _state == StartState.OPPONENT_READY)
 			{
+				User.Instance.AddFriend(Network.Instance.CommunicationWay._device.Address);
 				MenuActivity.startGame(this);// We launch the game (change view and everything)
 			}
 				
@@ -408,6 +420,7 @@ namespace Tetrim
 						_currentDialog.Dismiss();
 						_currentDialog = null;
 					}
+					User.Instance.AddFriend(Network.Instance.CommunicationWay._device.Address);
 					MenuActivity.startGame(this);// We launch the game (change view and everything)
 				}
 				else
@@ -461,6 +474,10 @@ namespace Tetrim
 				_pairedDevices.Clear();
 				foreach(BluetoothDevice device in pairedDevices)
 				{
+					if(User.Instance.Friends.Contains(device.Address))
+					{
+						AddFriendDevice(device);
+					}
 					AddPairedDevice(device);
 				}
 			}
