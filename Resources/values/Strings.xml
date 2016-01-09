@@ -29,7 +29,8 @@
 	<string name="game_over_loose">Game over :-(\nVous avez perdu.</string>
 	<string name="game_over_win_title">Game over</string>
 	<string name="game_over_win">Game over :-)\nVous avez gagné.</string>
-	<string name="connection_lost">La connexion au second joueur a été interrompue. Reconnexion en cours...</string>
+	<string name="connection_back_title">Connexion rétablie</string>
+	<string name="connection_back">La connexion au second joueur a été rétablie. Voulez-vous continuer la partie en cours ?</string>
     <string name="retry_connection_title">Echec reconnexion</string>
     <string name="retry_connection">La reconnexion a échoué. Voulez-vous réessayer ?</string>
 

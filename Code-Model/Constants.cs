@@ -32,12 +32,13 @@ namespace Tetrim
 		public const byte IdMessagePiece = 1;
 		public const byte IdMessageGrid = 2;
 		public const byte IdMessageStart = 3;
-		public const byte IdMessagePause = 4;
-		public const byte IdMessageResume = 5;
-		public const byte IdMessagePiecePut = 6;
-		public const byte IdMessageNextPiece = 7;
-		public const byte IdMessageEnd = 8;
-		public const byte IdMessageScore = 9;
+		public const byte IdMessageRestart = 4;
+		public const byte IdMessagePause = 5;
+		public const byte IdMessageResume = 6;
+		public const byte IdMessagePiecePut = 7;
+		public const byte IdMessageNextPiece = 8;
+		public const byte IdMessageEnd = 9;
+		public const byte IdMessageScore = 10;
 
 		// All the messages begin by the Id
 		public const uint SizeMessagePiece = 2+1+1 + 1;

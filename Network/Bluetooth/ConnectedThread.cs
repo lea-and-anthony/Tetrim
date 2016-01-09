@@ -19,6 +19,8 @@ namespace Tetrim
 		private Stream _inStream;
 		private Stream _outStream;
 		private BluetoothManager _service;
+		private bool _continue = true;
+		private bool _end = false;
 
 		//--------------------------------------------------------------
 		// CONSTRUCTORS
@@ -57,34 +59,52 @@ namespace Tetrim
 			int bytes;
 
 			// Keep listening to the InputStream while connected
-			while(true)
+			while(_continue)
 			{
 				try
 				{
 					// Read from the InputStream
 					bytes = _inStream.Read(buffer, 0, buffer.Length);
 
-					// Send the obtained bytes to the UI Activity
-					_service.ObtainMessage((int) BluetoothManager.MessageType.Read, bytes, -1, buffer).SendToTarget();
+					if(_continue)
+					{
+						// Send the obtained bytes to the UI Activity
+						_service.ObtainMessage((int) BluetoothManager.MessageType.Read, bytes, -1, buffer).SendToTarget();
+					}
 				}
 				catch(Java.IO.IOException e)
 				{
-					Log.Error(BluetoothManager.Tag, "Disconnected because read didn't success", e);
-					_service.ConnectionLost(null);
-					break;
+					if(_continue)
+					{
+						Log.Error(BluetoothManager.Tag, "Disconnected because read didn't success, message=" + e.Message);
+						_service.ConnectionLost(null);
+						break;
+					}
 				}
 			}
+			_end = true;
    		}
 
 		public void Cancel()
 		{
-			try
+			_continue = false;
+
+			if(_socket != null)
 			{
-				_socket.Close();
-			}
-			catch(Java.IO.IOException e)
-			{
-				Log.Error(BluetoothManager.Tag, "Close() of connect socket failed", e);
+				try
+				{
+					_socket.Close();
+
+					// Wait for the end of the thread
+					while(!_end)
+					{
+						Thread.Sleep(10);
+					}
+				}
+				catch(Java.IO.IOException e)
+				{
+					Log.Error(BluetoothManager.Tag, "Close() of connected socket failed, message = " + e.Message);
+				}
 			}
 		}
 
@@ -95,13 +115,20 @@ namespace Tetrim
 			{
 				_outStream.Write(buffer, 0, buffer.Length);
 
-				// Share the sent message back to the UI Activity
-				_service.ObtainMessage((int) BluetoothManager.MessageType.Write, -1, -1, buffer).SendToTarget();
+				if(_continue)
+				{
+					// Share the sent message back to the UI Activity
+					_service.ObtainMessage((int) BluetoothManager.MessageType.Write, -1, -1, buffer).SendToTarget();
+				}
 			}
 			catch(Java.IO.IOException e)
 			{
-				Log.Error(BluetoothManager.Tag, "Disconnected because write didn't success", e);
-				_service.ConnectionLost(buffer);
+
+				if(_continue)
+				{
+					Log.Error(BluetoothManager.Tag, "Disconnected because write didn't success, message=" + e.Message);
+					_service.ConnectionLost(buffer);
+				}
 			}
 		}
 	}

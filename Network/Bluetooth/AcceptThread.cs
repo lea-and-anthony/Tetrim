@@ -17,6 +17,9 @@ namespace Tetrim
 		// The local server socket
 		private BluetoothServerSocket _serverSocket;
 		private BluetoothManager _service;
+		private bool _continue = true;
+		private bool _success = false;
+		private bool _end = false;
 		private object locker = new object ();
 
 		//--------------------------------------------------------------
@@ -52,7 +55,7 @@ namespace Tetrim
 			BluetoothSocket socket = null;
 
 			// Listen to the server socket if we're not connected
-			while(_service.GetState() != BluetoothManager.State.Connected)
+			while(_service.GetState() != BluetoothManager.State.Connected && _continue)
 			{
 				try
 				{
@@ -67,7 +70,7 @@ namespace Tetrim
 				}
 
 				// If a connection was accepted
-				if(socket != null)
+				if(socket != null && _continue)
 				{
 					lock (locker)
 					{
@@ -76,6 +79,7 @@ namespace Tetrim
 						case BluetoothManager.State.Listen:
 						case BluetoothManager.State.Connecting:
 							// Situation normal. Start the connected thread.
+							_success = true;
 							_service.Connected (socket, socket.RemoteDevice);
 							break;
 						case BluetoothManager.State.None:
@@ -94,6 +98,7 @@ namespace Tetrim
 					}
 				}
 			}
+			_end = true;
 
 			#if DEBUG
 			Log.Info(BluetoothManager.Tag, "END AcceptThread");
@@ -106,14 +111,28 @@ namespace Tetrim
 			Log.Debug(BluetoothManager.Tag, "Cancel " + this.ToString());
 			#endif
 
-			try
+			_continue = false;
+			if(_serverSocket != null)
 			{
-				_serverSocket.Close();
+				try
+				{
+					_serverSocket.Close();
+
+					if(!_success) // if it is a success we are trying to abort this thread so no need to wait
+					{
+						// Wait for the end of the thread
+						while(!_end)
+						{
+							Thread.Sleep(100);
+						}
+					}
+				}
+				catch(Java.IO.IOException e)
+				{
+					Log.Error(BluetoothManager.Tag, "Close() of server failed", e);
+				}
 			}
-			catch(Java.IO.IOException e)
-			{
-				Log.Error(BluetoothManager.Tag, "Close() of server failed", e);
-			}
+			_serverSocket = null;
 		}
 	}
 }

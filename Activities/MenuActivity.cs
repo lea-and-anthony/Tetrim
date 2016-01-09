@@ -81,8 +81,7 @@ namespace Tetrim
 			ButtonStroked singlePlayerButton = FindViewById<ButtonStroked>(Resource.Id.singlePlayerButton);
 			SetButton(singlePlayerButton, funnyFont, TetrisColor.Red);
 			singlePlayerButton.Click += delegate {
-				Network.Instance.DisableBluetooth();
-				startGame(this);
+				startGame(this, Utils.RequestCode.RequestGameOnePlayer);
 			};
 
 			// Two players button
@@ -132,10 +131,10 @@ namespace Tetrim
 		//--------------------------------------------------------------
 		// PUBLIC METHODES
 		//--------------------------------------------------------------
-		public static void startGame(Activity activity)
+		public static void startGame(Activity activity, Utils.RequestCode code)
 		{
 			Intent intent = new Intent(activity, typeof(MainActivity));
-			activity.StartActivity(intent);
+			activity.StartActivityForResult(intent, (int) code);
 		}
 	}
 }

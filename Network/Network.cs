@@ -22,6 +22,13 @@ namespace Tetrim
 			Enabled = 2			// Bluetooth activated
 		};
 
+		public enum StartState
+		{
+			NONE,
+			WAITING_FOR_OPPONENT,
+			OPPONENT_READY
+		};
+
 		//--------------------------------------------------------------
 		// EVENTS
 		//--------------------------------------------------------------
@@ -51,6 +58,7 @@ namespace Tetrim
 		public event GameMessageDelegate PiecePutMessage;
 		public event GameMessageDelegate NextPieceMessage;
 		public event GameMessageDelegate StartMessage;
+		public event StandardDelegate RestartMessage;
 		public event GameMessageDelegate EndMessage;
 		public event GameMessageDelegate ScoreMessage;
 		public event SimpleMessageDelegate PauseMessage;
@@ -217,21 +225,21 @@ namespace Tetrim
 					NextPieceMessage.Invoke(message);
 				}
 				break;
-				// It is a message for the main activity asking to begin the game
+			// It is a message for the main activity asking to begin the game
 			case Constants.IdMessageStart:
 				if(StartMessage != null)
 				{
 					StartMessage.Invoke(message);
 				}
 				break;
-				// It is a message for the main activity telling that the opponent lost
+			// It is a message for the main activity telling that the opponent lost
 			case Constants.IdMessageEnd:
 				if(EndMessage != null)
 				{
 					EndMessage.Invoke(message);
 				}
 				break;
-				// It is a message for the main activity telling the opponent score
+			// It is a message for the main activity telling the opponent score
 			case Constants.IdMessageScore:
 				if(ScoreMessage != null)
 				{
@@ -250,6 +258,12 @@ namespace Tetrim
 				if(ResumeMessage != null)
 				{
 					ResumeMessage.Invoke(false);
+				}
+				break;
+			case Constants.IdMessageRestart:
+				if(RestartMessage != null)
+				{
+					RestartMessage.Invoke();
 				}
 				break;
 			}
@@ -272,6 +286,17 @@ namespace Tetrim
 			ScoreMessage = null;
 			PauseMessage = null;
 			ResumeMessage = null;
+			RestartMessage = null;
+		}
+
+		public void WaitSync(int idMessage)
+		{
+			if(idMessage == Constants.IdMessageRestart)
+			{
+				byte[] message = {Constants.IdMessageRestart};
+				// We notify the opponent that we are ready
+				_communicationWay.Write(message);
+			}
 		}
 
 		public void NotifyWriteMessage(byte[] writeBuf)

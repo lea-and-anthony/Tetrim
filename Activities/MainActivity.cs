@@ -280,6 +280,7 @@ namespace Tetrim
 			_gameTimer.Stop();
 			_originPause = StopOrigin.LostConnection;
 
+			ReconnectActivity._messageFail = message;
 			var serverIntent = new Intent(this, typeof(ReconnectActivity));
 			StartActivityForResult(serverIntent,(int) Utils.RequestCode.RequestReconnect);
 
