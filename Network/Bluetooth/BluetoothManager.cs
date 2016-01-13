@@ -62,7 +62,7 @@ namespace Tetrim
 		// Debugging
 		public const string Tag = "Tetrim-Bluetooth";
 
-		public BluetoothDevice _device { get; private set; }
+		public string _deviceAddress { get; private set; }
 
 		//--------------------------------------------------------------
 		// ATTRIBUTES
@@ -91,7 +91,7 @@ namespace Tetrim
 		//--------------------------------------------------------------
 		public BluetoothManager()
 		{
-			_device = null;
+			_deviceAddress = string.Empty;
 			_handler = new MyHandler ();
 			_bluetoothAdapter = BluetoothAdapter.DefaultAdapter;
 			_state = State.None;
@@ -113,6 +113,7 @@ namespace Tetrim
 
 				// Cancel all the threads
 				stopThreads();
+				_deviceAddress = string.Empty;
 
 				// Start the thread to listen on a BluetoothServerSocket
 				if (_acceptThread == null)
@@ -135,7 +136,7 @@ namespace Tetrim
 				#endif
 
 				// Set the wanted device so we can check later if it is the right device we are connected to
-				_device = device;
+				_deviceAddress = device.Address;
 
 				// Cancel any thread attempting to make a connection
 				if (_state == State.Connecting)
@@ -173,7 +174,7 @@ namespace Tetrim
 				// Cancel all the threads
 				stopThreads();
 
-				if(_device != null && !_device.Equals(device))
+				if(_deviceAddress != string.Empty && _deviceAddress != device.Address)
 				{
 					// We are not connected to the right device so we stop the current connection
 					try
@@ -184,8 +185,12 @@ namespace Tetrim
 					{
 						Log.Error(Tag, "Unable to Close() socket when trying to stop a connection", e2);
 					}
+					string tmp = _deviceAddress;
+					Start();
+					_deviceAddress = tmp;
+					return;
 				}
-				_device = device;
+				_deviceAddress = device.Address;
 
 				// Start the thread to manage the connection and perform transmissions
 				_connectedThread = new ConnectedThread (socket, this);
@@ -274,12 +279,6 @@ namespace Tetrim
 		public Message ObtainMessage(int what, int arg1, int arg2, Java.Lang.Object obj)
 		{
 			return _handler.ObtainMessage(what, arg1, arg2, obj);
-		}
-
-		// Set the ConnectThread to null
-		public void ResetConnectThread()
-		{
-			_connectThread = null;
 		}
 
 		//--------------------------------------------------------------

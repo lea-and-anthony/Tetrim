@@ -20,11 +20,19 @@ namespace Tetrim
 		//--------------------------------------------------------------
 		private const string Tag = "Tetrim-MainActivity";
 
+		private enum StopOrigin
+		{
+			None,
+			MyPause,
+			PauseOpponent,
+			LostConnection
+		}
+
 		//--------------------------------------------------------------
 		// ATTRIBUTES
 		//--------------------------------------------------------------
 		private Timer _gameTimer = null;
-		private bool _originPause = false; // Set to true if it's us who ask for the pause
+		private StopOrigin _originPause = StopOrigin.None;
 
 		public Game _game { get; private set; }
 		public GameView _gameView { get; private set; }
@@ -227,6 +235,7 @@ namespace Tetrim
 				{
 					// We can restart the game if the connection is working again
 					_gameTimer.Start();
+					_originPause = StopOrigin.None;
 				}
 				else
 				{
@@ -234,8 +243,6 @@ namespace Tetrim
 					Finish();
 				}
 			}
-				
-
 		}
 
 		public override void OnBackPressed()
@@ -271,7 +278,9 @@ namespace Tetrim
 
 			// If we lost the connection, we stop the game display a pop-up and try to reconnect
 			_gameTimer.Stop();
+			_originPause = StopOrigin.LostConnection;
 
+			ReconnectActivity._messageFail = message;
 			var serverIntent = new Intent(this, typeof(ReconnectActivity));
 			StartActivityForResult(serverIntent,(int) Utils.RequestCode.RequestReconnect);
 
@@ -316,8 +325,8 @@ namespace Tetrim
 		{
 			_gameTimer.Stop();
 
-			//It is us who asked for a pause if we need to notify the other player
-			_originPause = sendRequestToOverPlayer;
+			// Set the origin so it is the right player who restart the game
+			_originPause = sendRequestToOverPlayer ? StopOrigin.MyPause : StopOrigin.PauseOpponent;
 
 			// If it is a 2 player game we need to pause the other game
 			if(sendRequestToOverPlayer && Network.Instance.Connected())
@@ -336,7 +345,7 @@ namespace Tetrim
 		//resume the game and send a message to the remote device
 		private void resumeGame()
 		{
-			if(_originPause)
+			if(_originPause == StopOrigin.MyPause)
 			{
 				resumeGame(true);
 			}
@@ -355,6 +364,7 @@ namespace Tetrim
 			_gameTimer.AutoReset = true;
 			_gameTimer.Interval = getTimerLapse();
 			_gameTimer.Start();
+			_originPause = StopOrigin.None;
 
 			return 0;
 		}

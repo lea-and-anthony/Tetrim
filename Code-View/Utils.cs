@@ -16,7 +16,9 @@ namespace Tetrim
 		public enum RequestCode
 		{
 			RequestEnableBluetooth = 1,
-			RequestReconnect = 2
+			RequestReconnect = 2,
+			RequestGameOnePlayer = 3,
+			RequestGameTwoPlayer = 4
 		};
 
 		// Event triggered when the pop up (displayed by ShowAlert) is closed

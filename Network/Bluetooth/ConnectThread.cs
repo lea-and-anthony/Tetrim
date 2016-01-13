@@ -18,6 +18,9 @@ namespace Tetrim
 		private BluetoothSocket _socket;
 		private BluetoothDevice _device;
 		private BluetoothManager _service;
+		private bool _continue = true;
+		private bool _success = false;
+		private bool _end = false;
 		private object locker = new object ();
 
 		//--------------------------------------------------------------
@@ -47,7 +50,9 @@ namespace Tetrim
 		//--------------------------------------------------------------
 		public override void Run()
 		{
-			Log.Info(BluetoothManager.Tag, "BEGIN ConnectThread");
+			#if DEBUG
+			Log.Debug(BluetoothManager.Tag, "BEGIN ConnectThread");
+			#endif
 			Name = "ConnectThread";
 
 			// Always cancel discovery because it will slow down a connection
@@ -60,44 +65,62 @@ namespace Tetrim
 				// successful connection or an exception
 				_socket.Connect();
 			}
-			catch(Java.IO.IOException)
+			catch(Java.IO.IOException e)
 			{
 				_service.ConnectionFailed();
 
+				Log.Error(BluetoothManager.Tag, "Unable to connect. Message = " + e.Message);
 				// Close the socket
 				try
 				{
 					_socket.Close();
+					_socket = null;
 				}
 				catch(Java.IO.IOException e2)
 				{
 					Log.Error(BluetoothManager.Tag, "Unable to Close() socket during connection failure", e2);
 				}
+				_end = true;
 
 				// Start the service over to restart listening mode
 				_service.Start();
 				return;
 			}
 
-			// Reset the ConnectThread because we're done
-			lock (locker)
+			if(_continue)
 			{
-				_service.ResetConnectThread();
+				// Start the connected thread
+				_success = true;
+				_service.Connected(_socket, _device);
 			}
 
-			// Start the connected thread
-			_service.Connected(_socket, _device);
+			_end = true;
+
+			#if DEBUG
+			Log.Debug(BluetoothManager.Tag, "END ConnectThread");
+			#endif
 		}
 
 		public void Cancel()
 		{
-			try
+			_continue = false;
+			if(_socket != null && !_success) // if it is a success we are trying to abort this thread so no need to wait
 			{
-				_socket.Close();
-			}
-			catch(Java.IO.IOException e)
-			{
-				Log.Error(BluetoothManager.Tag, "Close() of connect socket failed", e);
+				try
+				{
+					_socket.Close();
+					_socket = null;
+				}
+				catch(Java.IO.IOException e)
+				{
+					Log.Error(BluetoothManager.Tag, "Close() of connect socket failed", e);
+				}
+
+				// Wait for the end of the thread
+				while(!_end)
+				{
+					Thread.Sleep(10);
+				}
 			}
 		}
 	}

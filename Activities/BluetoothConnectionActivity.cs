@@ -27,7 +27,7 @@ namespace Tetrim
 		// CONSTANTS
 		//--------------------------------------------------------------
 		// Debugging
-		private const string Tag = "DeviceListActivity";
+		private const string Tag = "BluetoothConnectionActivity";
 
 		// Return Intent extra
 		public const string ExtraDeviceAddress = "device_address";
@@ -36,13 +36,6 @@ namespace Tetrim
 		private TetrisColor FriendsDeviceColor = TetrisColor.Pink;
 		private TetrisColor PairedDeviceColor = TetrisColor.Green;
 		private TetrisColor NewDeviceColor = TetrisColor.Blue;
-
-		private enum StartState
-		{
-			NONE,
-			WAITING_FOR_OPPONENT,
-			OPPONENT_READY
-		};
 
 		private enum Menu
 		{
@@ -54,14 +47,15 @@ namespace Tetrim
 		//--------------------------------------------------------------
 		// ATTRIBUTES
 		//--------------------------------------------------------------
-		private BluetoothAdapter _bluetoothAdapter;
+		private BluetoothAdapter _bluetoothAdapter = null;
 		private static List<BluetoothDevice> _friendsDevices = new List<BluetoothDevice>();
 		private static List<BluetoothDevice> _pairedDevices = new List<BluetoothDevice>();
 		private static List<BluetoothDevice> _newDevices = new List<BluetoothDevice>();
 		private Receiver _receiver;
-		private StartState _state = StartState.NONE;
+		private Network.StartState _state = Network.StartState.NONE;
 		private bool _isConnectionInitiator = false;
-		private AlertDialog _waitingDialog = null;
+		private string _opponentName = String.Empty;
+		private AlertDialog _currentDialog = null;
 		private Menu _menuSelected = Menu.PAIRED;
 		private ScrollView _devicesLayout;
 		private LinearLayout _friendsDevicesLayout, _pairedDevicesLayout, _newDevicesLayout;
@@ -134,6 +128,7 @@ namespace Tetrim
 
 			// Hook on the Network event
 			Network.Instance.EraseAllEvent();
+			Network.Instance.DeviceNameEvent += NameReceived;
 			Network.Instance.ReadEvent += ReadMessageEventReceived;
 			Network.Instance.StateConnectedEvent += StateConnectedEventReceived;
 			Network.Instance.StateConnectingEvent += StateConnectingEventReceived;
@@ -259,13 +254,13 @@ namespace Tetrim
 		protected override void OnResume ()
 		{
 			base.OnResume ();
-
-			// Performing this check in onResume() covers the case in which Bluetooth was
-			// not enabled when the button was hit, so we were paused to enable it...
-			// onResume() will be called when ACTION_REQUEST_ENABLE activity returns.
-			// Only if the state is STATE_NONE, do we know that we haven't started already
-			if (Network.Instance.WaitingForConnection())
+			if (Network.Instance.WaitingForStart())
 			{
+				// Performing this check in onResume() covers the case in which Bluetooth was
+				// not enabled when the button was hit, so we were paused to enable it...
+				// onResume() will be called when ACTION_REQUEST_ENABLE activity returns.
+				// Only if the state is STATE_NONE, do we know that we haven't started already
+
 				// Start the Bluetooth for the game
 				Network.Instance.CommunicationWay.Start();
 			}
@@ -298,6 +293,11 @@ namespace Tetrim
 			#if DEBUG
 			Log.Debug(Tag, "onActivityResult " + resultCode);
 			#endif
+			if(requestCode == (int) Utils.RequestCode.RequestGameTwoPlayer)
+			{
+				// We end this activity after the game so we come back on the menu screen
+				Finish();
+			}
 			if(Network.Instance.ResultBluetoothActivation(requestCode, resultCode, this))
 			{
 				actualizeView();
@@ -306,12 +306,12 @@ namespace Tetrim
 
 		public void CancelConnection()
 		{
-			if(_waitingDialog != null)
-			{
-				_waitingDialog.Dismiss();
-				_waitingDialog = null;
-				Network.Instance.CommunicationWay.ResetConnectThread();
-			}
+			if(_currentDialog != null)
+				_currentDialog.Dismiss();
+
+			_currentDialog = null;
+			_state = Network.StartState.NONE;
+			Network.Instance.CommunicationWay.Start();
 		}
 
 		//--------------------------------------------------------------
@@ -323,10 +323,10 @@ namespace Tetrim
 			Log.Debug(Tag, "MessageType = write");
 			#endif
 
-			if(writeBuf[0] == Constants.IdMessageStart && _state == StartState.OPPONENT_READY)
+			if(writeBuf[0] == Constants.IdMessageStart && _state == Network.StartState.OPPONENT_READY)
 			{
-				User.Instance.AddFriend(Network.Instance.CommunicationWay._device.Address);
-				MenuActivity.startGame(this);// We launch the game (change view and everything)
+				User.Instance.AddFriend(Network.Instance.CommunicationWay._deviceAddress);
+				MenuActivity.startGame(this, Utils.RequestCode.RequestGameTwoPlayer);// We launch the game (change view and everything)
 			}
 				
 
@@ -367,16 +367,21 @@ namespace Tetrim
 			}
 			else
 			{
+				if(_currentDialog != null)
+				{
+					_currentDialog.Dismiss();
+					_currentDialog = null;
+				}
+
 				// Display a pop-up asking if we want to play now that we are connected
-				String message = String.Format(Resources.GetString(Resource.String.game_request), Network.Instance.CommunicationWay._device.Name);
 				AlertDialog.Builder builder = new AlertDialog.Builder(this);
 				builder.SetTitle(Resource.String.game_request_title);
-				builder.SetMessage(message);
+				builder.SetMessage(String.Format(Resources.GetString(Resource.String.game_request), _opponentName));
 				builder.SetCancelable(false);
-				builder.SetPositiveButton(Android.Resource.String.Yes, delegate{SendStartGameMessage();});
-				builder.SetNegativeButton(Android.Resource.String.No, delegate{Network.Instance.CommunicationWay.Stop();});
-				AlertDialog alert11 = builder.Create();
-				alert11.Show();
+				builder.SetPositiveButton(Android.Resource.String.Yes, delegate{SendStartGameMessage(); _currentDialog = null;});
+				builder.SetNegativeButton(Android.Resource.String.No, delegate{CancelConnection();});
+				_currentDialog = builder.Create();
+				_currentDialog.Show();
 			}
 
 			return 0;
@@ -388,12 +393,16 @@ namespace Tetrim
 			Log.Debug(Tag, "State = none");
 			#endif
 
-			if(_waitingDialog != null)
+			if(_currentDialog != null)
 			{
-				// if the connection fail we remove the pop-up
-				_waitingDialog.Dismiss();
-				_waitingDialog = null;
+				// if the connection fail we remove the pop-up and restart the bluetooth
+				_currentDialog.Dismiss();
+				_currentDialog = null;
+				Network.Instance.CommunicationWay.Start();
 			}
+
+			_state = Network.StartState.NONE;
+			_isConnectionInitiator = false;
 
 			return 0;
    		}
@@ -405,18 +414,18 @@ namespace Tetrim
 			if(message[1] == Constants.NumVersion1 && message[2] == Constants.NumVersion2)
 			{
 				// The 2 players have the same version, we can launch the game if we are ready
-				if(_state == StartState.WAITING_FOR_OPPONENT)
+				if(_state == Network.StartState.WAITING_FOR_OPPONENT)
 				{
-					if(_waitingDialog != null)
+					if(_currentDialog != null)
 					{
-						_waitingDialog.Dismiss();
-						_waitingDialog = null;
+						_currentDialog.Dismiss();
+						_currentDialog = null;
 					}
-					User.Instance.AddFriend(Network.Instance.CommunicationWay._device.Address);
-					MenuActivity.startGame(this);// We launch the game (change view and everything)
+					User.Instance.AddFriend(Network.Instance.CommunicationWay._deviceAddress);
+					MenuActivity.startGame(this, Utils.RequestCode.RequestGameTwoPlayer);// We launch the game (change view and everything)
 				}
 				else
-					_state = StartState.OPPONENT_READY;
+					_state = Network.StartState.OPPONENT_READY;
 			}
 			else
 			{
@@ -432,15 +441,18 @@ namespace Tetrim
 			// We notify the opponent that we are ready
 			Network.Instance.CommunicationWay.Write(message);
 
-			if(_state != StartState.OPPONENT_READY)
+			if(_state != Network.StartState.OPPONENT_READY)
 			{
-				_state = StartState.WAITING_FOR_OPPONENT;
-				if(_waitingDialog == null)
-					displayWaitingDialog();
-				
-				_waitingDialog.SetMessage(Resources.GetString(Resource.String.waiting_for_opponent));
+				_state = Network.StartState.WAITING_FOR_OPPONENT;
+				displayWaitingDialog(Resource.String.waiting_for_opponent);
 			}
 
+			return 0;
+		}
+
+		public int NameReceived(string name)
+		{
+			_opponentName = name;
 			return 0;
 		}
 
@@ -484,19 +496,19 @@ namespace Tetrim
 			}
 		}
 
-		private void displayWaitingDialog()
+		private void displayWaitingDialog(int idMessage)
 		{
-			if(_waitingDialog != null)
+			if(_currentDialog != null)
 			{
-				_waitingDialog.Dismiss();
-				_waitingDialog = null;
+				_currentDialog.Dismiss();
+				_currentDialog = null;
 			}
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
-			builder.SetMessage(Resource.String.waiting_for_opponent);
+			builder.SetMessage(idMessage);
 			builder.SetCancelable(false);
 			builder.SetNegativeButton(Android.Resource.String.Cancel, delegate{CancelConnection();});
-			_waitingDialog = builder.Create();
-			_waitingDialog.Show();
+			_currentDialog = builder.Create();
+			_currentDialog.Show();
 		}
 
 		// Start device discover with the BluetoothAdapter
@@ -531,12 +543,12 @@ namespace Tetrim
 
 			if(Network.Instance.Enabled())
 			{
+				displayWaitingDialog(Resource.String.waiting_for_opponent);
+
 				// Get the BLuetoothDevice object
 				BluetoothDevice device = BluetoothAdapter.DefaultAdapter.GetRemoteDevice(address);
 				// Attempt to connect to the device
 				Network.Instance.CommunicationWay.Connect(device);
-
-				displayWaitingDialog();
 			}
 		}
 	}
