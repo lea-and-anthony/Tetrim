@@ -11,7 +11,7 @@ using Android.Bluetooth;
 
 namespace Tetrim
 {
-	[Activity(Label = "Tetrim", MainLauncher = true, Icon = "@drawable/icon", Theme = "@android:style/Theme.NoTitleBar.Fullscreen")]
+	[Activity(Label = "Tetrim", MainLauncher = true, Icon = "@drawable/icon", Theme = "@android:style/Theme.NoTitleBar.Fullscreen", ScreenOrientation = Android.Content.PM.ScreenOrientation.Portrait)]
 	public class MenuActivity : Activity
 	{
 		//--------------------------------------------------------------
@@ -22,7 +22,8 @@ namespace Tetrim
 		//--------------------------------------------------------------
 		// ATTRIBUTES
 		//--------------------------------------------------------------
-
+		private TextView _userNameText;
+		private CustomDialogBuilder.RequestCodes userNameDialogRequestCode = CustomDialogBuilder.RequestCodes.Text;
 		//--------------------------------------------------------------
 		// EVENT CATCHING METHODES
 		//--------------------------------------------------------------
@@ -42,23 +43,8 @@ namespace Tetrim
 
 			if(!User.Instance.IsUserStored)
 			{
-				// TODO : ask for user name
-				AlertDialog.Builder builder = new AlertDialog.Builder(this);
-				builder.SetTitle("What is your name ?");
-
-				// Set up the input
-				EditText input = new EditText(this);
-				// Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
-				//input.InputType = Android.Text.InputTypes.ClassText;
-				builder.SetView(input);
-
-				// Set up the buttons
-				builder.SetPositiveButton("OK", delegate {
-					User.Instance.SetName(input.Text);
-				});
-				builder.SetNegativeButton("Cancel", delegate {});
-
-				builder.Show();
+				Intent intent = Utils.CreateUserNameDialog(this, Resources);
+				StartActivityForResult(intent, (int)userNameDialogRequestCode);
 			}
 
 			// Retrieve the fonts
@@ -73,9 +59,9 @@ namespace Tetrim
 			SetTextView(bloxFont, Resource.Id.titleI, TetrisColor.Cyan);
 			SetTextView(bloxFont, Resource.Id.titleM, TetrisColor.Pink);
 
-			TextView userNameText = FindViewById<TextView>(Resource.Id.userNameText);
-			userNameText.SetTypeface(funnyFont, TypefaceStyle.Normal);
-			userNameText.Text = "Welcome " + User.Instance.UserName;
+			_userNameText = FindViewById<TextView>(Resource.Id.userNameText);
+			_userNameText.SetTypeface(funnyFont, TypefaceStyle.Normal);
+			_userNameText.Text = Resources.GetString(Resource.String.welcomeUser, User.Instance.UserName);
 
 			// Single player button
 			ButtonStroked singlePlayerButton = FindViewById<ButtonStroked>(Resource.Id.singlePlayerButton);
@@ -110,6 +96,21 @@ namespace Tetrim
 				// TODO : handle Exit
 			};
 		}
+		protected override void OnActivityResult (int requestCode, Result resultCode, Intent data)
+		{
+			if(resultCode==Result.Ok)
+			{
+				if(requestCode==(int)CustomDialogBuilder.RequestCodes.Text)
+				{
+					String userName = data.GetStringExtra(userNameDialogRequestCode.ToString());
+					User.Instance.SetName(userName);
+					if(_userNameText != null)
+					{
+						_userNameText.Text = Resources.GetString(Resource.String.welcomeUser, User.Instance.UserName);
+					}
+				}
+			}
+		}
 
 		protected void SetTextView(Typeface font, int id, TetrisColor color)
 		{
@@ -121,10 +122,10 @@ namespace Tetrim
 		protected void SetButton(ButtonStroked button, Typeface font, TetrisColor color)
 		{
 			button.SetTypeface(font, TypefaceStyle.Normal);
-			button.StrokeBorderWidth = 40;
-			button.StrokeTextWidth = 20;
-			button.RadiusIn = 30;
-			button.RadiusOut = 20;
+			button.StrokeBorderWidth = 15;
+			button.StrokeTextWidth = 7;
+			button.RadiusIn = 10;
+			button.RadiusOut = 7;
 			button.StrokeColor = Utils.getAndroidDarkColor(color);
 			button.FillColor = Utils.getAndroidColor(color);
 		}

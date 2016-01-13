@@ -151,6 +151,18 @@ namespace Tetrim
 				return Utils.GetPixelsFromDP(context, size);
 			}
 		}
+
+		public static Intent CreateUserNameDialog(Activity activity, Android.Content.Res.Resources resources)
+		{
+			CustomDialogBuilder builder = new CustomDialogBuilder(activity.BaseContext);
+			builder.Title = resources.GetString(Resource.String.askName);
+			builder.Message = resources.GetString(Resource.String.askName);
+			builder.ContentType = CustomDialogBuilder.ContentTypes.EditText;
+			builder.RequestCode = CustomDialogBuilder.RequestCodes.Text;
+			builder.PositiveText = resources.GetString(Resource.String.ok);
+			CustomDialog.Builder = builder;
+			return new Intent(activity, typeof(CustomDialog));
+		}
 	}
 }
 

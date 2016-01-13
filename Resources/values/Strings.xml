@@ -10,6 +10,20 @@
     <string name="turn_right_arrow">f</string>
     <string name="turn_left_arrow">g</string>
 
+    <!-- Menu -->
+    <string name="welcome">Welcome !</string>
+    <string name="welcomeUser">Welcome %1$s !</string>
+    <string name="onePlayer">1 player</string>
+    <string name="twoPlayers">2 players</string>
+    <string name="settings">settings</string>
+    <string name="exit">exit</string>
+
+    <!-- Prompt Name Dialog -->
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+
+    <!-- Prompt Name Dialog -->
+    <string name="askName">What is your name ?</string>
 
 	<string name="connexionBluetooth">Se connecter à un autre périphérique</string>
 	<string name="BTNotAvailableTitle">Bluetooth non disponible</string>

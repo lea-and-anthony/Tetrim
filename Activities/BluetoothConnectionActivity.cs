@@ -20,7 +20,7 @@ namespace Tetrim
 	// devices detected in the area after discovery. When a device is chosen
 	// by the user, the MAC address of the device is sent back to the parent
 	// Activity in the result Intent.
-	[Activity(Label = "Tetrim", Icon = "@drawable/icon", Theme = "@android:style/Theme.NoTitleBar.Fullscreen")]		
+	[Activity(Label = "Tetrim", Icon = "@drawable/icon", Theme = "@android:style/Theme.NoTitleBar.Fullscreen", ScreenOrientation = Android.Content.PM.ScreenOrientation.Portrait)]		
 	public class BluetoothConnectionActivity : Activity, ViewTreeObserver.IOnGlobalLayoutListener
 	{
 		//--------------------------------------------------------------
@@ -472,6 +472,7 @@ namespace Tetrim
 					if(User.Instance.Friends.Contains(device.Address))
 					{
 						AddFriendDevice(device);
+						_friendsDevices.Add(device);
 					}
 					AddPairedDevice(device);
 				}

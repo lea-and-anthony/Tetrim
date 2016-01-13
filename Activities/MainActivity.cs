@@ -137,10 +137,10 @@ namespace Tetrim
 			button.SetMaxHeight(button.MeasuredWidth);
 			button.SetMinimumHeight(button.MeasuredWidth);
 			button.SetTextSize(ComplexUnitType.Px, button.MeasuredWidth);
-			button.StrokeBorderWidth = 20;
-			button.StrokeTextWidth = 15;
-			button.RadiusIn = 20;
-			button.RadiusOut = 15;
+			button.StrokeBorderWidth = 7;
+			button.StrokeTextWidth = 5;
+			button.RadiusIn = 7;
+			button.RadiusOut = 5;
 			button.StrokeColor = Utils.getAndroidDarkColor(color);
 			button.FillColor = Utils.getAndroidColor(color);
 			button.IsTextStroked = false;

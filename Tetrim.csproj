@@ -74,6 +74,8 @@
     <Compile Include="Code-View\TextViewStroked.cs" />
     <Compile Include="Activities\ReconnectActivity.cs" />
     <Compile Include="Code-Model\User.cs" />
+    <Compile Include="Activities\CustomDialog.cs" />
+    <Compile Include="Code-View\CustomDialogBuilder.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
@@ -128,6 +130,7 @@
     <AndroidResource Include="Resources\layout\GameMulti.axml" />
     <AndroidResource Include="Resources\layout\Main.axml" />
     <AndroidResource Include="Resources\layout\BluetoothDevices.axml" />
+    <AndroidResource Include="Resources\layout\AlertDialog.axml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Code-Model\" />

@@ -27,10 +27,10 @@ namespace Tetrim
 
 		public Color StrokeColor = new Color(100, 100, 100, 255);
 		public Color FillColor = new Color(255, 255, 255, 255);
-		public int StrokeBorderWidth = 40;
-		public int StrokeTextWidth = 20;
-		public int RadiusIn = 30;
-		public int RadiusOut = 20;
+		private int _strokeBorderWidth = 15;
+		private int _strokeTextWidth = 7;
+		private int _radiusIn = 10;
+		private int _radiusOut = 7;
 		public bool IsTextStroked = true;
 
 		public int TextSize = 30;
@@ -44,19 +44,71 @@ namespace Tetrim
 		Bitmap _unpressedImage = null;
 
 		//--------------------------------------------------------------
+		// PROPERTIES
+		//--------------------------------------------------------------
+
+		public int StrokeBorderWidth
+		{
+			get
+			{
+				return _strokeBorderWidth;
+			}
+			set
+			{
+				_strokeBorderWidth = Utils.GetPixelsFromDP(_context, value);
+			}
+		}
+
+		public int StrokeTextWidth
+		{
+			get
+			{
+				return _strokeTextWidth;
+			}
+			set
+			{
+				_strokeTextWidth = Utils.GetPixelsFromDP(_context, value);
+			}
+		}
+
+		public int RadiusIn
+		{
+			get
+			{
+				return _radiusIn;
+			}
+			set
+			{
+				_radiusIn = Utils.GetPixelsFromDP(_context, value);
+			}
+		}
+
+		public int RadiusOut
+		{
+			get
+			{
+				return _radiusOut;
+			}
+			set
+			{
+				_radiusOut = Utils.GetPixelsFromDP(_context, value);
+			}
+		}
+
+		//--------------------------------------------------------------
 		// CONSTRUCTORS
 		//--------------------------------------------------------------
 		public ButtonStroked (Context context, IAttributeSet set) : base(context, set)
 		{
-			_context = context;
-			Typeface = Typeface.CreateFromAsset(context.Assets,"Foo.ttf");
-			Text = Tag == null ? Text : Tag.ToString();
-			TextSize = Utils.GetPixelsFromDP(_context, TextSize);
-			SetScaleType(ScaleType.FitCenter);
-			SetAdjustViewBounds(true);
+			CreateButton(context);
 		}
 
 		public ButtonStroked (Context context) : base(context)
+		{
+			CreateButton(context);
+		}
+
+		private void CreateButton(Context context)
 		{
 			_context = context;
 			Typeface = Typeface.CreateFromAsset(context.Assets,"Foo.ttf");
@@ -64,6 +116,12 @@ namespace Tetrim
 			TextSize = Utils.GetPixelsFromDP(_context, TextSize);
 			SetScaleType(ScaleType.FitCenter);
 			SetAdjustViewBounds(true);
+
+			// Convert in pixels
+			StrokeBorderWidth = StrokeBorderWidth;
+			StrokeTextWidth = StrokeTextWidth;
+			RadiusIn = RadiusIn;
+			RadiusOut = RadiusOut;
 		}
 
 		public void SetTypeface(Typeface typeface, TypefaceStyle style)
@@ -103,7 +161,7 @@ namespace Tetrim
 			Paint strokeBackPaint = new Paint();
 			strokeBackPaint.Color = StrokeColor;
 			strokeBackPaint.SetStyle(Paint.Style.Stroke);
-			strokeBackPaint.StrokeWidth = this.StrokeBorderWidth;
+			strokeBackPaint.StrokeWidth = this._strokeBorderWidth;
 			strokeBackPaint.AntiAlias = true;
 
 			// Text paint
@@ -121,17 +179,17 @@ namespace Tetrim
 			strokePaint.TextSize = TextSize;
 			strokePaint.SetTypeface(Typeface);
 			strokePaint.SetStyle(Paint.Style.Stroke);
-			strokePaint.StrokeWidth = StrokeTextWidth;
+			strokePaint.StrokeWidth = _strokeTextWidth;
 			strokePaint.AntiAlias = true;
 
 			// Background bounds
 			Rect local = new Rect();
 			this.GetLocalVisibleRect(local);
 			RectF bounds = new RectF(local);
-			bounds.Top += StrokeBorderWidth/2;
-			bounds.Left += StrokeBorderWidth/2;
-			bounds.Right -= StrokeBorderWidth/2;
-			bounds.Bottom -= StrokeBorderWidth/2;
+			bounds.Top += _strokeBorderWidth/2;
+			bounds.Left += _strokeBorderWidth/2;
+			bounds.Right -= _strokeBorderWidth/2;
+			bounds.Bottom -= _strokeBorderWidth/2;
 
 			while(bounds.Top > Height)
 			{
@@ -237,8 +295,8 @@ namespace Tetrim
 				canvas.DrawRect(bounds, fillBackPaint);
 				break;
 			default:
-				canvas.DrawRoundRect(bounds, RadiusOut, RadiusOut, strokeBackPaint);
-				canvas.DrawRoundRect(bounds, RadiusIn, RadiusIn, fillBackPaint);
+				canvas.DrawRoundRect(bounds, _radiusOut, _radiusOut, strokeBackPaint);
+				canvas.DrawRoundRect(bounds, _radiusIn, _radiusIn, fillBackPaint);
 				break;
 			}
 		}
