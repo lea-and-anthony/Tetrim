@@ -126,11 +126,14 @@ namespace Tetrim
 			// aapt resource value: 0x7f050011
 			public const int devicesLayout = 2131034129;
 			
-			// aapt resource value: 0x7f050046
-			public const int exitButton = 2131034182;
+			// aapt resource value: 0x7f050047
+			public const int exitButton = 2131034183;
 			
 			// aapt resource value: 0x7f05000e
 			public const int friendsDevices = 2131034126;
+			
+			// aapt resource value: 0x7f05002f
+			public const int gameLinearLayout = 2131034159;
 			
 			// aapt resource value: 0x7f050030
 			public const int layoutButtonsLeft = 2131034160;
@@ -141,8 +144,8 @@ namespace Tetrim
 			// aapt resource value: 0x7f050012
 			public const int layoutGameMulti = 2131034130;
 			
-			// aapt resource value: 0x7f050048
-			public const int layoutPlayerNames = 2131034184;
+			// aapt resource value: 0x7f050049
+			public const int layoutPlayerNames = 2131034185;
 			
 			// aapt resource value: 0x7f05001e
 			public const int level1 = 2131034142;
@@ -150,8 +153,8 @@ namespace Tetrim
 			// aapt resource value: 0x7f05002d
 			public const int level2 = 2131034157;
 			
-			// aapt resource value: 0x7f05002f
-			public const int linearLayout1 = 2131034159;
+			// aapt resource value: 0x7f050043
+			public const int linearLayout1 = 2131034179;
 			
 			// aapt resource value: 0x7f050025
 			public const int linearLayout10 = 2131034149;
@@ -198,8 +201,8 @@ namespace Tetrim
 			// aapt resource value: 0x7f050023
 			public const int linearLayout9 = 2131034147;
 			
-			// aapt resource value: 0x7f050047
-			public const int myLayout = 2131034183;
+			// aapt resource value: 0x7f050048
+			public const int myLayout = 2131034184;
 			
 			// aapt resource value: 0x7f050004
 			public const int negativeButton = 2131034116;
@@ -261,32 +264,32 @@ namespace Tetrim
 			// aapt resource value: 0x7f05000c
 			public const int selectDeviceText = 2131034124;
 			
-			// aapt resource value: 0x7f050045
-			public const int settingsButton = 2131034181;
+			// aapt resource value: 0x7f050046
+			public const int settingsButton = 2131034182;
 			
-			// aapt resource value: 0x7f050043
-			public const int singlePlayerButton = 2131034179;
-			
-			// aapt resource value: 0x7f050049
-			public const int tableLayout1 = 2131034185;
-			
-			// aapt resource value: 0x7f05004c
-			public const int tableRow2 = 2131034188;
-			
-			// aapt resource value: 0x7f05004e
-			public const int tableRow3 = 2131034190;
+			// aapt resource value: 0x7f050044
+			public const int singlePlayerButton = 2131034180;
 			
 			// aapt resource value: 0x7f05004a
-			public const int tableRow4 = 2131034186;
-			
-			// aapt resource value: 0x7f05004b
-			public const int textView31 = 2131034187;
+			public const int tableLayout1 = 2131034186;
 			
 			// aapt resource value: 0x7f05004d
-			public const int textView39 = 2131034189;
+			public const int tableRow2 = 2131034189;
 			
 			// aapt resource value: 0x7f05004f
-			public const int textView40 = 2131034191;
+			public const int tableRow3 = 2131034191;
+			
+			// aapt resource value: 0x7f05004b
+			public const int tableRow4 = 2131034187;
+			
+			// aapt resource value: 0x7f05004c
+			public const int textView31 = 2131034188;
+			
+			// aapt resource value: 0x7f05004e
+			public const int textView39 = 2131034190;
+			
+			// aapt resource value: 0x7f050050
+			public const int textView40 = 2131034192;
 			
 			// aapt resource value: 0x7f05003e
 			public const int titleE = 2131034174;
@@ -315,8 +318,8 @@ namespace Tetrim
 			// aapt resource value: 0x7f050006
 			public const int title_paired_devices = 2131034118;
 			
-			// aapt resource value: 0x7f050044
-			public const int twoPlayersButton = 2131034180;
+			// aapt resource value: 0x7f050045
+			public const int twoPlayersButton = 2131034181;
 			
 			// aapt resource value: 0x7f05003b
 			public const int userNameText = 2131034171;

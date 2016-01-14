@@ -137,7 +137,7 @@ namespace Tetrim
 		protected override void OnSizeChanged (int w, int h, int oldw, int oldh)
 		{
 			base.OnSizeChanged (w, h, oldw, oldh);
-			if((w != 0 && h != 0 && _unpressedImage == null) || (_unpressedImage != null && w != _unpressedImage.Width && h != _unpressedImage.Height))
+			if((w != 0 && h != 0 && _unpressedImage == null) || (_unpressedImage != null && (w != _unpressedImage.Width || h != _unpressedImage.Height)))
 			{
 				InitializeImages();
 			}

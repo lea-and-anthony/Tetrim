@@ -150,7 +150,7 @@
             android:layout_height="match_parent"
             android:id="@+id/linearLayout4"
             android:layout_weight="34">
-            <Tetrim.MyView
+            <Tetrim.GridView
                 android:id="@+id/OpponentGridView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
@@ -293,7 +293,7 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:id="@+id/linearLayout1"
+        android:id="@+id/gameLinearLayout"
         android:layout_weight="65"
         android:weightSum="100">
         <LinearLayout
@@ -349,7 +349,7 @@
                 android:shadowRadius="0.01"
                 android:background="#ffc62828" />
         </LinearLayout>
-        <Tetrim.MyView
+        <Tetrim.GridView
             android:id="@+id/PlayerGridView"
             android:layout_width="0dp"
             android:layout_height="match_parent"

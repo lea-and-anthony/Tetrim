@@ -34,7 +34,6 @@ namespace Tetrim
 			{
 				_blocks[i] = new Block(piece._blocks[i]);
 			}
-
 		}
 
 		public Piece (Shape shape, uint angle, Grid grid)
@@ -42,9 +41,10 @@ namespace Tetrim
 			_shape = shape;
 			_color = pickColor (_shape);
 			_blocks = new Block[Constants.BlockPerPiece];
-			placeBlockAccordingToShape(Constants.GridSizeXmin + Constants.GridSizeXmax / 2, Constants.GridSizeYmax);
+			placeBlockAccordingToShape((Constants.GridSizeXmin + Constants.GridSizeXmax) / 2, Constants.GridSizeYmax);
 			_angle = angle;
 			turnPieceAccordingToAngle(grid);
+			movePieceUp(Constants.GridSizeXmax);
 		}
 
 		public Piece(int x , int y)
@@ -232,7 +232,8 @@ namespace Tetrim
 					break;
 				}
 			}
-			// Rotate the piece if it can be rotated
+
+			// Validate the new position if it is ok
 			if(canMove)
 			{
 				for (uint i = 0 ; i < Constants.BlockPerPiece ; i++)
@@ -384,6 +385,25 @@ namespace Tetrim
 			}
 		}
 
+		// Move the piece up so that at least one block has his y coordinate equal to maxY
+		private void movePieceUp(int maxY)
+		{
+			int offsetUp = maxY - _blocks[0]._y;
+			for(uint i = 1 ; i < Constants.BlockPerPiece; i++)
+			{
+				if(maxY - _blocks[i]._y < offsetUp)
+					offsetUp = maxY - _blocks[i]._y;
+			}
+
+			if(offsetUp > 0)
+			{
+				for(uint i = 0 ; i < Constants.BlockPerPiece; i++)
+				{
+					_blocks[i]._y += offsetUp;
+				}
+			}
+		}
+
 		private bool isOutOfGrid(int x, int y)
 		{
 			if(x < 0 || x > Constants.GridSizeXmax || y < 0 || y > Constants.GridSizeYmax)
@@ -407,6 +427,23 @@ namespace Tetrim
 			bool canRotate = true;
 			if(grid != null)
 			{
+				// First we need to check if the piece is too high
+				// In this case, we need to make it go down
+				int offsetDown = 0;
+				for(uint i = 0 ; i < Constants.BlockPerPiece; i++)
+				{
+					if(newY[i] - offsetDown > Constants.GridSizeYmax)
+						offsetDown = newY[i] - Constants.GridSizeYmax;
+				}
+
+				if(offsetDown > 0)
+				{
+					for(uint i = 0 ; i < Constants.BlockPerPiece; i++)
+					{
+						newY[i] -= offsetDown;
+					}
+				}
+
 				// We are going to make 3 iterations to find a position that is good
 				// First with the position already calculated, then with a shift to the right
 				// and finally with a shift to the left
@@ -431,11 +468,13 @@ namespace Tetrim
 						}
 						canRotate = true;
 					}
+
 					for (uint i = 0 ; i < Constants.BlockPerPiece; i++)
 					{
 						if (grid.isOutOfGrid(newX[i], newY[i]) || grid.isBlock(newX[i], newY[i]))
 						{
 							canRotate = false;
+							break;
 						}
 					}
 					iteration++;

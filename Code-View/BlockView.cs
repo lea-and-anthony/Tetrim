@@ -184,7 +184,6 @@ namespace Tetrim
 
 		public void Draw (Canvas canvas, float blockSize, Dictionary<TetrisColor, Bitmap> blockImages, float xOffset, float yOffset)
 		{
-			// DONE : handle lock and multi-threading to prevent the drawing of a destroyed block
 			if (_block != null)
 			{
 				// Define the boundaries of the block
@@ -207,7 +206,7 @@ namespace Tetrim
 			_isShadow = isShadow;
 		}
 
-		// set xSize and ySize to the x and y size of the block (this function suppose that the block is in 0,0)
+		// set xSize and ySize to the x and y size of the block (this function suppose that the piece is in 0,0)
 		public void GetDrawnSize(float blockSize, ref float xSize, ref float ySize)
 		{
 			xSize = blockSize*(_block._x+1);
