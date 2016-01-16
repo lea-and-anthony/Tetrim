@@ -5,6 +5,11 @@ namespace Tetrim
 	public class Grid
 	{
 		//--------------------------------------------------------------
+		// EVENTS
+		//--------------------------------------------------------------
+		public delegate void StandardDelegate();
+		
+		//--------------------------------------------------------------
 		// ATTRIBUTES
 		//--------------------------------------------------------------
 		public Block[,] _map { get; private set; }
@@ -12,6 +17,8 @@ namespace Tetrim
 		public Piece _shadowPiece { get; private set; }
 		public Piece _nextPiece { get; private set; }
 		public bool _isNextPieceModified { get; private set; }
+
+		public event StandardDelegate NextPieceChangedEvent = null;
 
 		//--------------------------------------------------------------
 		// CONSTRUCTORS
@@ -22,6 +29,7 @@ namespace Tetrim
 			_fallingPiece = new Piece (this);
 			_shadowPiece = new Piece (this, _fallingPiece);
 			_nextPiece = new Piece(0,0);
+			_nextPiece.MoveToZero();
 			_isNextPieceModified = false;
 			UpdateShadowPiece();
 		}
@@ -111,11 +119,17 @@ namespace Tetrim
 			}
 
 			// We create next the new piece
-			_fallingPiece = new Piece (this, _nextPiece._shape);
+			_fallingPiece = new Piece (_nextPiece._shape, _nextPiece._angle, this);
 			_shadowPiece = new Piece (this, _fallingPiece);
 			_nextPiece = new Piece (0, 0);
+			_nextPiece.MoveToZero();
 			_isNextPieceModified = false;
 			UpdateShadowPiece();
+
+			if(NextPieceChangedEvent != null)
+			{
+				NextPieceChangedEvent.Invoke();
+			}
 		}
 			
 
@@ -247,8 +261,13 @@ namespace Tetrim
 		// Interpret the message of the next shape to use
 		public void interpretNextPiece(byte[] bytesMessage, uint begin)
 		{
-			_nextPiece.ChangeShape((Shape) bytesMessage[begin], 0, 0);
+			_nextPiece.ChangeShape((Shape) bytesMessage[begin], (uint) bytesMessage[begin + 1]);
+			_nextPiece.MoveToZero();
 			_isNextPieceModified = true;
+			if(NextPieceChangedEvent != null)
+			{
+				NextPieceChangedEvent.Invoke();
+			}
 		}
 	}
 }

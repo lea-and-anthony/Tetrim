@@ -357,62 +357,76 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="70" />
-        <LinearLayout
+        <RelativeLayout
             android:orientation="vertical"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:id="@+id/layoutButtonsRight"
-            android:layout_gravity="bottom"
+            android:layout_height="match_parent"
+            android:id="@+id/layoutRightGrid"
             android:layout_weight="15">
-            <Tetrim.ButtonStroked
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/buttonTurnRight"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
-                android:text="~&gt;"
-                android:textColor="#fffafafa"
+            <Tetrim.NextPieceView
+                android:id="@+id/NextPieceView"
+                android:layout_marginTop="5dp"
                 android:layout_marginLeft="2dp"
                 android:layout_marginRight="2dp"
-                android:shadowColor="#ff212121"
-                android:shadowDx="2"
-                android:shadowDy="2"
-                android:shadowRadius="0.01"
-                android:background="#ff00b0ff"
-                android:tag="@string/turn_right_arrow" />
-            <Tetrim.ButtonStroked
-                android:text="-&gt;"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/buttonMoveRight"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
-                android:layout_marginLeft="2dp"
-                android:layout_marginRight="2dp"
-                android:textColor="#fffafafa"
-                android:shadowColor="#ff212121"
-                android:shadowDx="2"
-                android:shadowDy="2"
-                android:shadowRadius="0.01"
-                android:background="#ff00c853"
-                android:tag="@string/right_arrow" />
-            <Tetrim.ButtonStroked
-                android:text="v v"
+                android:layout_alignParentTop="true" />
+            <LinearLayout
+                android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/buttonMoveFoot"
-                android:layout_marginLeft="2dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginRight="2dp"
-                android:layout_marginBottom="10dp"
-                android:textColor="#fffafafa"
-                android:shadowColor="#ff212121"
-                android:shadowRadius="0.01"
-                android:shadowDx="0"
-                android:shadowDy="3"
-                android:background="#ffc62828"
-                android:tag="@string/bottom_arrow" />
-        </LinearLayout>
+                android:id="@+id/layoutButtonsRight"
+                android:layout_alignParentBottom="true">
+                <Tetrim.ButtonStroked
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/buttonTurnRight"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:text="~&gt;"
+                    android:textColor="#fffafafa"
+                    android:layout_marginLeft="2dp"
+                    android:layout_marginRight="2dp"
+                    android:shadowColor="#ff212121"
+                    android:shadowDx="2"
+                    android:shadowDy="2"
+                    android:shadowRadius="0.01"
+                    android:background="#ff00b0ff"
+                    android:tag="@string/turn_right_arrow" />
+                <Tetrim.ButtonStroked
+                    android:text="-&gt;"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/buttonMoveRight"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginLeft="2dp"
+                    android:layout_marginRight="2dp"
+                    android:textColor="#fffafafa"
+                    android:shadowColor="#ff212121"
+                    android:shadowDx="2"
+                    android:shadowDy="2"
+                    android:shadowRadius="0.01"
+                    android:background="#ff00c853"
+                    android:tag="@string/right_arrow" />
+                <Tetrim.ButtonStroked
+                    android:text="v v"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/buttonMoveFoot"
+                    android:layout_marginLeft="2dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="2dp"
+                    android:layout_marginBottom="10dp"
+                    android:textColor="#fffafafa"
+                    android:shadowColor="#ff212121"
+                    android:shadowRadius="0.01"
+                    android:shadowDx="0"
+                    android:shadowDy="3"
+                    android:background="#ffc62828"
+                    android:tag="@string/bottom_arrow" />
+            </LinearLayout>
+        </RelativeLayout>
     </LinearLayout>
     <LinearLayout
         android:orientation="horizontal"

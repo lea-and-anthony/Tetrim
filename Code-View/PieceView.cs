@@ -10,7 +10,7 @@ namespace Tetrim
 		//--------------------------------------------------------------
 		// ATTRIBUTES
 		//--------------------------------------------------------------
-		private Piece _piece; // Instance of the piece to display
+		public Piece _piece {get; private set;} // Instance of the piece to display
 		private bool _isShadow; // true if the piece is a shadow at the bottom of the grid
 		private BlockView[] _blocksView; // Array of the BlockViews constituting the piece
 

@@ -132,6 +132,12 @@ namespace Tetrim
 			int difference = (myGrid.MeasuredWidth - size.X) / 2;
 			myGrid.LayoutParameters = new LinearLayout.LayoutParams(size.X, size.Y);
 
+			// Change the size of the components to center them
+			NextPieceView nextPieceView = FindViewById<NextPieceView>(Resource.Id.NextPieceView);
+			nextPieceView.SetPlayer(_game._player1);
+			nextPieceView.LayoutParameters = new RelativeLayout.LayoutParams(nextPieceView.MeasuredWidth + difference, 
+																				nextPieceView.MeasuredWidth + difference);
+
 			// Set the buttons
 			Utils.SetArrowButton(FindViewById<ButtonStroked>(Resource.Id.buttonMoveLeft), TetrisColor.Green, difference);
 			Utils.SetArrowButton(FindViewById<ButtonStroked>(Resource.Id.buttonMoveRight), TetrisColor.Green, difference);
@@ -185,7 +191,6 @@ namespace Tetrim
 			if(!isSamePiece)
 			{
 				_gameView._player1View.Update();
-				// TODO here post invalidate of the nextPieceView
 			}
 
 			TextView player1name = FindViewById<TextView> (Resource.Id.player1name);

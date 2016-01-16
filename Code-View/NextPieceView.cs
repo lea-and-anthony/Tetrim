@@ -50,7 +50,7 @@ namespace Tetrim
 		{
 			// Associate the new instance
 			_player = player;
-
+			player._grid.NextPieceChangedEvent += PostInvalidate;
 			_nextPiece = new PieceView(player._grid._nextPiece, false);
 		}
 
@@ -84,6 +84,7 @@ namespace Tetrim
 			if(_nextPiece != null && _player != null)
 			{
 				// First, we check if it is still the same piece we need to display
+				_nextPiece.Update(_player._grid._nextPiece, false);
 
 				// Get the size of the piece when drawn because if it's a 'O' or a 'I' it won't take the same space
 				float xSize = 0;

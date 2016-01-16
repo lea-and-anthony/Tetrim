@@ -94,8 +94,9 @@ namespace Tetrim
 			{
 				Log.Debug("Tetrim-GridView", "ClipBound of the view not starting from 0 : ClipBound (Top, Left) = " +  canvas.ClipBounds.Top + ", " + canvas.ClipBounds.Left);
 			}
-			
-			canvas.DrawBitmap(_bitmapBuffer, -canvas.ClipBounds.Left, -canvas.ClipBounds.Top, null);
+
+			//canvas.DrawBitmap(_bitmapBuffer, -canvas.ClipBounds.Left, -canvas.ClipBounds.Top, null);
+			canvas.DrawBitmap(_bitmapBuffer, 0, 0, null);
 
 			// Draw the pieces
 			_shadowPieceView.Draw(canvas, _blockSize, _blockImages);

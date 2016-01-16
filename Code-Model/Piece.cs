@@ -42,8 +42,8 @@ namespace Tetrim
 			_color = pickColor (_shape);
 			_blocks = new Block[Constants.BlockPerPiece];
 			placeBlockAccordingToShape((Constants.GridSizeXmin + Constants.GridSizeXmax) / 2, Constants.GridSizeYmax);
-			_angle = angle;
-			turnPieceAccordingToAngle(grid);
+			_angle = 0;
+			turnPieceAccordingToAngle(grid, angle);
 			movePieceUp(Constants.GridSizeXmax);
 		}
 
@@ -53,8 +53,8 @@ namespace Tetrim
 			_color = pickColor(_shape);
 			_blocks = new Block[Constants.BlockPerPiece];
 			placeBlockAccordingToShape(x+1, y+2);
-			_angle = pickAngle();
-			turnPieceAccordingToAngle(null);
+			_angle = 0;
+			turnPieceAccordingToAngle(null, pickAngle());
 		}
 
 		//--------------------------------------------------------------
@@ -271,17 +271,18 @@ namespace Tetrim
 		{
 			_shape = (Shape) bytesMessage[begin + 3];
 			_color = pickColor(_shape);
-			_angle = (uint) bytesMessage[begin + 2];
+			_angle = 0;
 			placeBlockAccordingToShape((int) bytesMessage[begin], (int) bytesMessage[begin + 1]);
-			turnPieceAccordingToAngle(null);
+			turnPieceAccordingToAngle(null, (uint) bytesMessage[begin + 2]);
 		}
 
-		public void ChangeShape(Shape newShape, int x, int y)
+		public void ChangeShape(Shape newShape, uint newAngle)
 		{
 			_shape = newShape;
 			_color = pickColor(_shape);
-			placeBlockAccordingToShape(x+1, y+2);
 			_angle = 0;
+			placeBlockAccordingToShape(0, 0);
+			turnPieceAccordingToAngle(null, newAngle);
 		}
 
 		public byte[] getMessage(byte[] bytes, uint begin)
@@ -300,6 +301,7 @@ namespace Tetrim
 			byte[] bytes = new byte[Constants.SizeMessageNextPiece];
 			bytes[0] = Constants.IdMessageNextPiece;
 			bytes[1] = (byte) _shape;
+			bytes[2] = (byte) _angle;
 			return bytes;
 		}
 
@@ -376,13 +378,9 @@ namespace Tetrim
 			}
 		}
 
-		private void turnPieceAccordingToAngle(Grid grid)
+		private void turnPieceAccordingToAngle(Grid grid, uint angle)
 		{
-			for (uint i = _angle ; i > 0; i--)
-			{
-				if(!TurnLeft(grid))
-					_angle--;
-			}
+			for (uint i = angle ; i > 0 && TurnLeft(grid); i--);
 		}
 
 		// Move the piece up so that at least one block has his y coordinate equal to maxY
