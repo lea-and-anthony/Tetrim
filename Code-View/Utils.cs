@@ -263,12 +263,59 @@ namespace Tetrim
 		public static Intent CreateMakeSureDialog(Activity activity, Android.Content.Res.Resources resources, string message, EventHandler posAction)
 		{
 			CustomDialogBuilder builder = new CustomDialogBuilder(activity.BaseContext);
-			builder.Message = message;
-			builder.PositiveText = resources.GetString(Resource.String.yesDialog);
-			builder.PositiveAction += posAction;
-			builder.NegativeText = resources.GetString(Resource.String.noDialog);
 			builder.ContentType = CustomDialogBuilder.DialogContentType.TextView;
 			builder.RequestCode = CustomDialogBuilder.DialogRequestCode.PosOrNeg;
+			builder.Message = message;
+			builder.NegativeText = resources.GetString(Resource.String.noDialog);
+			builder.PositiveText = resources.GetString(Resource.String.yesDialog);
+			builder.PositiveAction += posAction;
+			CustomDialog.Builder = builder;
+			return new Intent(activity, typeof(CustomDialog));
+		}
+
+		public static Intent CreateGameOverDialogSingle(Activity activity, Android.Content.Res.Resources resources, int score)
+		{
+			// Create the content
+			TextView scoreText = new TextView(activity.BaseContext);
+			scoreText.SetTextSize(ComplexUnitType.Dip, 20);
+			scoreText.SetTypeface(Utils.TextFont);
+			TextView highScoreText = new TextView(activity.BaseContext);
+			highScoreText.SetTextSize(ComplexUnitType.Dip, 20);
+			highScoreText.SetTypeface(Utils.TextFont);
+			if(score > User.Instance.HighScore)
+			{
+				// New Highscore ! in green
+				scoreText.SetTextColor(Utils.getAndroidColor(TetrisColor.Green));
+				scoreText.Text = resources.GetString(Resource.String.newHighScore);
+				// #highscore# in yellow
+				highScoreText.SetTextColor(Utils.getAndroidColor(TetrisColor.Yellow));
+				highScoreText.Text = score.ToString();
+			}
+			else
+			{
+				// Your score : #score# in red
+				scoreText.SetTextColor(Utils.getAndroidColor(TetrisColor.Red));
+				scoreText.Text = resources.GetString(Resource.String.playerScore, score.ToString());
+				// You highscore : #highscore# in blue
+				scoreText.SetTextColor(Utils.getAndroidColor(TetrisColor.Cyan));
+				scoreText.Text = resources.GetString(Resource.String.playerScore, User.Instance.HighScore.ToString());
+			}
+
+			// Create the builder
+			CustomDialogBuilder builder = new CustomDialogBuilder(activity.BaseContext);
+			builder.ContentType = CustomDialogBuilder.DialogContentType.None;
+			builder.RequestCode = CustomDialogBuilder.DialogRequestCode.PosOrNeg;
+			builder.PositiveText = resources.GetString(Resource.String.playAgain);
+			builder.PositiveAction += delegate {
+				MenuActivity.startGame(activity, Utils.RequestCode.RequestGameOnePlayer);
+				activity.Finish();
+			};
+			builder.NegativeText = resources.GetString(Resource.String.menu);
+			builder.NegativeAction += delegate {
+				activity.Finish();
+			};
+
+			// Create the dialog
 			CustomDialog.Builder = builder;
 			return new Intent(activity, typeof(CustomDialog));
 		}

@@ -26,11 +26,16 @@
     <!-- Prompt Dialog -->
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
-    <string name="askSure">Are you sure?</string>
-    <string name="askSureDeleteFriends">Delete friends?</string>
-    <string name="askSureDeleteHighScore">Delete highscore?</string>
+    <string name="askSure">Are you sure ?</string>
+    <string name="askSureDeleteFriends">Delete friends ?</string>
+    <string name="askSureDeleteHighScore">Delete highscore ?</string>
     <string name="yesDialog">Yes!</string>
     <string name="noDialog">No...</string>
+    <string name="playAgain">Again !</string>
+    <string name="menu">Menu</string>
+    <string name="playerScore">Your score : %1$s</string>
+    <string name="playerHighScore">Your highscore : %1$s</string>
+    <string name="newHighScore">New highscore !</string>
 
     <!-- Prompt Name Dialog -->
     <string name="askName">What is your name ?</string>
