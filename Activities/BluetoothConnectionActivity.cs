@@ -191,10 +191,10 @@ namespace Tetrim
 			button.Gravity = GravityFlags.Left;
 			int padding = Utils.GetPixelsFromDP(this.BaseContext, 20);
 			button.SetPadding(padding, padding, padding, padding);
-			button.StrokeBorderWidth = 20;
-			button.StrokeTextWidth = 15;
-			button.RadiusIn = 20;
-			button.RadiusOut = 15;
+			button.StrokeBorderWidth = 7;
+			button.StrokeTextWidth = 5;
+			button.RadiusIn = 7;
+			button.RadiusOut = 5;
 			button.IsTextStroked = false;
 			button.Shape = ButtonStroked.ButtonShape.BottomTop;
 			button.Click += delegate {
