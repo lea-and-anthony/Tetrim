@@ -36,6 +36,9 @@
     <string name="playerScore">Your score : %1$s</string>
     <string name="playerHighScore">Your highscore : %1$s</string>
     <string name="newHighScore">New highscore !</string>
+    <string name="playerWin">You win !</string>
+    <string name="playerLoose">You loose !</string>
+    <string name="gameOver">GAME OVER</string>
 
     <!-- Prompt Name Dialog -->
     <string name="askName">What is your name ?</string>

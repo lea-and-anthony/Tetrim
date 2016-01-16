@@ -90,7 +90,6 @@
     <AndroidResource Include="Resources\drawable-xhdpi\Icon.png" />
     <AndroidResource Include="Resources\drawable-xxhdpi\Icon.png" />
     <AndroidResource Include="Resources\drawable-xxxhdpi\Icon.png" />
-    <AndroidResource Include="Resources\layout\device_name.axml" />
     <AndroidResource Include="Resources\drawable-hdpi\move_bottom.png" />
     <AndroidResource Include="Resources\drawable-hdpi\move_down.png" />
     <AndroidResource Include="Resources\drawable-hdpi\move_left.png" />
@@ -127,13 +126,10 @@
     <AndroidResource Include="Resources\drawable-xxxhdpi\turn_left.png" />
     <AndroidResource Include="Resources\drawable-xxxhdpi\turn_right.png" />
     <AndroidResource Include="Resources\layout\Home.axml" />
-    <AndroidResource Include="Resources\layout\BluetoothConnection.axml" />
     <AndroidResource Include="Resources\layout\GameMulti.axml" />
-    <AndroidResource Include="Resources\layout\Main.axml" />
     <AndroidResource Include="Resources\layout\BluetoothDevices.axml" />
     <AndroidResource Include="Resources\layout\AlertDialog.axml" />
     <AndroidResource Include="Resources\layout\Settings.axml" />
-    <AndroidResource Include="Resources\layout\GameOverDialogSingle.axml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Code-Model\" />

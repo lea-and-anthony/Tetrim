@@ -282,33 +282,78 @@ namespace Tetrim
 		public static Intent CreateGameOverDialogSingle(Activity activity, Android.Content.Res.Resources resources, int score)
 		{
 			// Create the content
+			TextView titleText = new TextView(activity.BaseContext);
+			titleText.SetTextSize(ComplexUnitType.Dip, 30);
+			Utils.SetTextFont(titleText);
+			titleText.Text = resources.GetString(Resource.String.gameOver);
+			titleText.Gravity = GravityFlags.CenterHorizontal;
+			titleText.SetTextColor(Utils.getAndroidColor(TetrisColor.Red));
 			TextView scoreText = new TextView(activity.BaseContext);
 			scoreText.SetTextSize(ComplexUnitType.Dip, 20);
-			scoreText.SetTypeface(Utils.TextFont);
+			Utils.SetTextFont(scoreText);
 			TextView highScoreText = new TextView(activity.BaseContext);
 			highScoreText.SetTextSize(ComplexUnitType.Dip, 20);
-			highScoreText.SetTypeface(Utils.TextFont);
+			Utils.SetTextFont(highScoreText);
 			if(score > User.Instance.HighScore)
 			{
 				// New Highscore ! in green
 				scoreText.SetTextColor(Utils.getAndroidColor(TetrisColor.Green));
 				scoreText.Text = resources.GetString(Resource.String.newHighScore);
 				// #highscore# in yellow
-				highScoreText.SetTextColor(Utils.getAndroidColor(TetrisColor.Yellow));
-				highScoreText.Text = score.ToString();
+				highScoreText.SetTextColor(Utils.getAndroidColor(TetrisColor.Green));
+				highScoreText.Text = resources.GetString(Resource.String.playerScore, score.ToString());
 			}
 			else
 			{
 				// Your score : #score# in red
-				scoreText.SetTextColor(Utils.getAndroidColor(TetrisColor.Red));
+				scoreText.SetTextColor(Utils.getAndroidColor(TetrisColor.Yellow));
 				scoreText.Text = resources.GetString(Resource.String.playerScore, score.ToString());
 				// You highscore : #highscore# in blue
-				scoreText.SetTextColor(Utils.getAndroidColor(TetrisColor.Cyan));
-				scoreText.Text = resources.GetString(Resource.String.playerScore, User.Instance.HighScore.ToString());
+				highScoreText.SetTextColor(Utils.getAndroidColor(TetrisColor.Yellow));
+				highScoreText.Text = resources.GetString(Resource.String.playerHighScore, User.Instance.HighScore.ToString());
 			}
 
 			// Create the builder
 			CustomDialogBuilder builder = new CustomDialogBuilder(activity.BaseContext);
+			builder.Content.Add(titleText);
+			builder.Content.Add(scoreText);
+			builder.Content.Add(highScoreText);
+			builder.ContentType = CustomDialogBuilder.DialogContentType.None;
+			builder.RequestCode = CustomDialogBuilder.DialogRequestCode.PosOrNeg;
+			builder.PositiveText = resources.GetString(Resource.String.playAgain);
+			builder.PositiveAction += delegate {
+				MenuActivity.startGame(activity, Utils.RequestCode.RequestGameOnePlayer);
+				activity.Finish();
+			};
+			builder.NegativeText = resources.GetString(Resource.String.menu);
+			builder.NegativeAction += delegate {
+				activity.Finish();
+			};
+
+			// Create the dialog
+			CustomDialog.Builder = builder;
+			return new Intent(activity, typeof(CustomDialog));
+		}
+
+		public static Intent CreateGameOverDialogMulti(Activity activity, Android.Content.Res.Resources resources, bool hasWon)
+		{
+			// Create the content
+			TextView titleText = new TextView(activity.BaseContext);
+			titleText.SetTextSize(ComplexUnitType.Dip, 30);
+			Utils.SetTextFont(titleText);
+			titleText.Text = resources.GetString(Resource.String.gameOver);
+			titleText.Gravity = GravityFlags.CenterHorizontal;
+			titleText.SetTextColor(Utils.getAndroidColor(TetrisColor.Yellow));
+			TextView text = new TextView(activity.BaseContext);
+			text.SetTextSize(ComplexUnitType.Dip, 30);
+			Utils.SetTextFont(text);
+			text.Text = resources.GetString(hasWon ? Resource.String.playerWin : Resource.String.playerLoose);
+			text.SetTextColor(Utils.getAndroidColor(hasWon ? TetrisColor.Green : TetrisColor.Red));
+
+			// Create the builder
+			CustomDialogBuilder builder = new CustomDialogBuilder(activity.BaseContext);
+			builder.Content.Add(titleText);
+			builder.Content.Add(text);
 			builder.ContentType = CustomDialogBuilder.DialogContentType.None;
 			builder.RequestCode = CustomDialogBuilder.DialogRequestCode.PosOrNeg;
 			builder.PositiveText = resources.GetString(Resource.String.playAgain);

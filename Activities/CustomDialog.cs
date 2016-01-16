@@ -92,6 +92,12 @@ namespace Tetrim
 				_field.TextSize = Utils.GetPixelsFromDP(this.BaseContext, 7);
 				_content.AddView(_field, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MatchParent, LinearLayout.LayoutParams.WrapContent));
 				break;
+			case CustomDialogBuilder.DialogContentType.None:
+				foreach(View view in Builder.Content)
+				{
+					_content.AddView(view, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MatchParent, LinearLayout.LayoutParams.WrapContent));
+				}
+				break;
 			default:
 				break;
 			}
