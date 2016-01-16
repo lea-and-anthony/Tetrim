@@ -60,14 +60,16 @@ namespace Tetrim
 
 			// Creation of the view
 			_gameView = new GameView(_game);
-			MyView view = FindViewById<MyView>(Resource.Id.PlayerGridView);
-			view.m_gridView = _gameView.m_player1View._gridView;
+			GridView myGrid = FindViewById<GridView>(Resource.Id.PlayerGridView);
+			myGrid.Init(_game._player1._grid);
+			_gameView._player1View._gridView = myGrid;
 
 			// If it is a 2 player game
 			if(Network.Instance.Connected())
 			{
-				MyView view2 = FindViewById<MyView>(Resource.Id.OpponentGridView);
-				view2.m_gridView = _gameView.m_player2View._gridView;
+				GridView gridOpponent = FindViewById<GridView>(Resource.Id.OpponentGridView);
+				gridOpponent.Init(_game._player2._grid);
+				_gameView._player2View._gridView = gridOpponent;
 
 				ViewProposedPiece viewProposed = FindViewById<ViewProposedPiece>(Resource.Id.ProposedPiecesView);
 				viewProposed.SetPlayer(_game._player1);
@@ -124,13 +126,22 @@ namespace Tetrim
 			Utils.SetTextFont(FindViewById<TextView>(Resource.Id.level1));
 			Utils.SetTextFont(FindViewById<TextView>(Resource.Id.level2));
 
+			// Change the size of the components to center them
+			GridView myGrid = FindViewById<GridView>(Resource.Id.PlayerGridView);
+			Point size = GridView.CalculateUseSize(myGrid.MeasuredWidth, myGrid.MeasuredHeight);
+			int difference = (myGrid.MeasuredWidth - size.X) / 2;
+			myGrid.LayoutParameters = new LinearLayout.LayoutParams(size.X, size.Y);
+
 			// Set the buttons
-			Utils.SetArrowButton(FindViewById<ButtonStroked>(Resource.Id.buttonMoveLeft), TetrisColor.Green);
-			Utils.SetArrowButton(FindViewById<ButtonStroked>(Resource.Id.buttonMoveRight), TetrisColor.Green);
-			Utils.SetArrowButton(FindViewById<ButtonStroked>(Resource.Id.buttonTurnLeft), TetrisColor.Cyan);
-			Utils.SetArrowButton(FindViewById<ButtonStroked>(Resource.Id.buttonTurnRight), TetrisColor.Cyan);
-			Utils.SetArrowButton(FindViewById<ButtonStroked>(Resource.Id.buttonMoveDown), TetrisColor.Red);
-			Utils.SetArrowButton(FindViewById<ButtonStroked>(Resource.Id.buttonMoveFoot), TetrisColor.Red);
+			Utils.SetArrowButton(FindViewById<ButtonStroked>(Resource.Id.buttonMoveLeft), TetrisColor.Green, difference);
+			Utils.SetArrowButton(FindViewById<ButtonStroked>(Resource.Id.buttonMoveRight), TetrisColor.Green, difference);
+			Utils.SetArrowButton(FindViewById<ButtonStroked>(Resource.Id.buttonTurnLeft), TetrisColor.Cyan, difference);
+			Utils.SetArrowButton(FindViewById<ButtonStroked>(Resource.Id.buttonTurnRight), TetrisColor.Cyan, difference);
+			Utils.SetArrowButton(FindViewById<ButtonStroked>(Resource.Id.buttonMoveDown), TetrisColor.Red, difference);
+			Utils.SetArrowButton(FindViewById<ButtonStroked>(Resource.Id.buttonMoveFoot), TetrisColor.Red, difference);
+
+			LinearLayout gameLayout = FindViewById<LinearLayout>(Resource.Id.gridButtonLayout);
+			gameLayout.WeightSum = 0;
 		}
 
 		// Called when an other application is displayed in front of this one
@@ -173,7 +184,8 @@ namespace Tetrim
 			bool isSamePiece = _game._player1._grid.MovePieceDown(_game._player1);
 			if(!isSamePiece)
 			{
-				_gameView.m_player1View.Update();
+				_gameView._player1View.Update();
+				// TODO here post invalidate of the nextPieceView
 			}
 
 			TextView player1name = FindViewById<TextView> (Resource.Id.player1name);
@@ -181,7 +193,7 @@ namespace Tetrim
 			TextView player1level = FindViewById<TextView> (Resource.Id.player1level);
 			TextView player1rows = FindViewById<TextView> (Resource.Id.player1rows);
 
-			RunOnUiThread(() => _gameView.m_player1View.Draw(player1name, player1score, player1level, player1rows));
+			RunOnUiThread(() => _gameView._player1View.Draw(player1name, player1score, player1level, player1rows));
 			
 			if (_game._player1._grid.isGameOver())
 			{
@@ -275,7 +287,7 @@ namespace Tetrim
 			_game._player2.interpretMessage(message);
 
 			// Update of the opponent grid (the display will be done with the other grid)
-			_gameView.m_player2View.Update();
+			_gameView._player2View.Update();
 
 			// Display of the model of the opponent
 			FindViewById(Resource.Id.OpponentGridView).PostInvalidate();
@@ -283,7 +295,7 @@ namespace Tetrim
 			TextView player2score = FindViewById<TextView> (Resource.Id.player2score);
 			TextView player2level = FindViewById<TextView> (Resource.Id.player2level);
 			TextView player2rows = FindViewById<TextView> (Resource.Id.player2rows);
-			_gameView.m_player2View.Draw(player2name, player2score, player2level, player2rows);
+			_gameView._player2View.Draw(player2name, player2score, player2level, player2rows);
 
 			return 0;
 		}
@@ -380,25 +392,31 @@ namespace Tetrim
 			};
 
 			FindViewById<ButtonStroked>(Resource.Id.buttonMoveDown).Click += delegate {
-				_gameTimer.Stop();
+				if(_game.MoveDown())
+				{
+					_gameTimer.Stop();
 
-				_game.MoveDown();
-				actualizeViewOtherPlayer(true, null, false);
-				// Display of the current model
-				FindViewById(Resource.Id.PlayerGridView).PostInvalidate();
+					// TODO: actualize the score displayed
+					actualizeViewOtherPlayer(true, null, false);
+					// Display of the current model
+					FindViewById(Resource.Id.PlayerGridView).PostInvalidate();
 
-				_gameTimer.Start();
+					_gameTimer.Start();
+				}
 			};
 
 			FindViewById<ButtonStroked>(Resource.Id.buttonMoveFoot).Click += delegate {
-				_gameTimer.Stop();
+				if(_game.MoveBottom())
+				{
+					_gameTimer.Stop();
 
-				_game.MoveBottom();
-				actualizeViewOtherPlayer(true, null, false);
-				// Display of the current model
-				FindViewById(Resource.Id.PlayerGridView).PostInvalidate();
+					// TODO: actualize the score displayed
+					actualizeViewOtherPlayer(true, null, false);
+					// Display of the current model
+					FindViewById(Resource.Id.PlayerGridView).PostInvalidate();
 
-				_gameTimer.Start();
+					_gameTimer.Start();
+				}
 			};
 		}
 

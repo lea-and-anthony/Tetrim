@@ -72,16 +72,21 @@ namespace Tetrim
 			_grid.MoveRight();
 		}
 
-		public void MoveDown()
+		public bool MoveDown()
 		{
-			_grid.MoveDown();
-			_score += Constants.ScoreMoveDown * _level;
+			if(_grid.MoveDown())
+			{
+				_score += Constants.ScoreMoveDown * _level;
+				return true;
+			}
+			return false;
 		}
 
-		public void MoveBottom()
+		public bool MoveBottom()
 		{
 			int nbDown = _grid.MoveBottom ();
 			_score += (uint) (Constants.ScoreMoveBottom * nbDown) * _level;
+			return nbDown > 0;
 		}
 
 		public void TurnLeft()

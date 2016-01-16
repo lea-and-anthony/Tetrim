@@ -40,14 +40,14 @@ namespace Tetrim
 			_player1.MoveRight();
 		}
 
-		public void MoveDown()
+		public bool MoveDown()
 		{
-			_player1.MoveDown();
+			return _player1.MoveDown();
 		}
 
-		public void MoveBottom()
+		public bool MoveBottom()
 		{
-			_player1.MoveBottom ();
+			return _player1.MoveBottom ();
 		}
 
 		public void TurnLeft()

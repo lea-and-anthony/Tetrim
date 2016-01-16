@@ -9,7 +9,7 @@ namespace Tetrim
 		// ATTRIBUTES
 		//--------------------------------------------------------------
 		private Player _player; // Instance of the player to display
-		public GridView _gridView { get; private set; } // View of the player's grid
+		public GridView _gridView = null; // View of the player's grid
 
 		//--------------------------------------------------------------
 		// CONSTRUCTORS
@@ -18,9 +18,6 @@ namespace Tetrim
 		{
 			// Associate the instance
 			_player = player;
-
-			// Create the associated GridView
-			_gridView = new GridView(_player._grid);
 		}
 
 		//--------------------------------------------------------------
@@ -38,7 +35,8 @@ namespace Tetrim
 		public void Update()
 		{
 			// Update the grid
-			_gridView.Update();
+			if(_gridView != null)
+				_gridView.Update();
 		}
 	}
 }

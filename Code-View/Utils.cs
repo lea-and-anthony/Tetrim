@@ -113,6 +113,12 @@ namespace Tetrim
 			return Android.Graphics.Color.White;
 		}
 
+		public static Paint createPaintWithStyle(Paint paint, Paint.Style style)
+		{
+			paint.SetStyle(style);
+			return paint;
+		}
+
 		public static void SetTitleTextView(TextView titleTextView, TetrisColor color)
 		{
 			titleTextView.SetTypeface(Utils.TitleFont, TypefaceStyle.Normal);
@@ -159,9 +165,9 @@ namespace Tetrim
 			button.IsTextStroked = false;
 		}
 
-		public static void SetArrowButton(ButtonStroked button, TetrisColor color)
+		public static void SetArrowButton(ButtonStroked button, TetrisColor color, int difference)
 		{
-			SetIconButton(button, color, Utils.ArrowFont, button.MeasuredWidth);
+			SetIconButton(button, color, Utils.ArrowFont, button.MeasuredWidth + difference);
 		}
 
 		public static void SetArrowButtonWithHeight(ButtonStroked button, TetrisColor color)

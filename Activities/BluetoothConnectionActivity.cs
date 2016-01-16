@@ -92,6 +92,7 @@ namespace Tetrim
 			_newDevicesButton.Click +=(sender, e) => {
 				SwitchMenu(Menu.NEW);
 				startDiscovery();
+				// TODO: display a waiting animation here
 			};
 
 			// Create the layouts

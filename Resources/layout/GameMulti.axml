@@ -150,7 +150,7 @@
             android:layout_height="match_parent"
             android:id="@+id/enemyGrid"
             android:layout_weight="34">
-            <Tetrim.MyView
+            <Tetrim.GridView
                 android:id="@+id/OpponentGridView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
@@ -352,7 +352,7 @@
                 android:background="#ffc62828"
                 android:tag="@string/down_arrow" />
         </LinearLayout>
-        <Tetrim.MyView
+        <Tetrim.GridView
             android:id="@+id/PlayerGridView"
             android:layout_width="0dp"
             android:layout_height="match_parent"

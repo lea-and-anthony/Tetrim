@@ -172,9 +172,9 @@ namespace Tetrim
 			UpdateShadowPiece();
 		}
 
-		public void MoveDown()
+		public bool MoveDown()
 		{
-			_fallingPiece.MoveDown(this);
+			return _fallingPiece.MoveDown(this);
 		}
 
 		public int MoveBottom()

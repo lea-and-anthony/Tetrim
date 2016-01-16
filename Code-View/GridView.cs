@@ -2,11 +2,14 @@
 using System.Threading;
 using System.Collections.Generic;
 
+using Android.Views;
 using Android.Graphics;
+using Android.Content;
+using Android.Util;
 
 namespace Tetrim
 {
-	public class GridView
+	public class GridView : View
 	{
 		//--------------------------------------------------------------
 		// CONSTANTS
@@ -23,34 +26,117 @@ namespace Tetrim
 		private static Color BackgroundColor = Color.Rgb(25, 20, 35);
 
 		// Paints used to draw the grid
-		private static Paint BackgroundPaint = createPaintWithStyle(
+		private static Paint BackgroundPaint = Utils.createPaintWithStyle(
 			new Paint {AntiAlias = true, Color = BackgroundColor},
 			Paint.Style.Fill);
-		private static Paint BorderPaint = createPaintWithStyle(
+		private static Paint BorderPaint = Utils.createPaintWithStyle(
 			new Paint {AntiAlias = true, Color = BorderColor, StrokeWidth = StrokeWidthBorder},
 			Paint.Style.Stroke);
-		private static Paint GridPaint = createPaintWithStyle(
+		private static Paint GridPaint = Utils.createPaintWithStyle(
 			new Paint {AntiAlias = true, Color = BorderColor, StrokeWidth = StrokeWidthBorder, Alpha = QuarteringAlpha},
 			Paint.Style.Stroke);
 
 		//--------------------------------------------------------------
 		// ATTRIBUTES
 		//--------------------------------------------------------------
-		private Grid _grid; // Instance of the grid to display
-		private BlockView[,] _mapView; // Array of the BlockViews constituting the grid
+		private Grid _grid = null; // Instance of the grid to display
+		private BlockView[,] _mapView = null; // Array of the BlockViews constituting the grid
 
-		private PieceView _fallingPieceView; // View of the piece falling from the top of the grid
-		private PieceView _shadowPieceView; // View of the shadow of the piece falling from the top of the grid
+		private PieceView _fallingPieceView = null; // View of the piece falling from the top of the grid
+		private PieceView _shadowPieceView = null; // View of the shadow of the piece falling from the top of the grid
 
 		private int _blockSize = 0; // Size of the blocks in pixels according to the screen resolution
 		private Dictionary<TetrisColor, Bitmap> _blockImages = new Dictionary<TetrisColor, Bitmap>(); // Images of the blocks
+		private Bitmap _bitmapBuffer = null;// Buffer to render the view faster
 
 		private Mutex _mutexView = null; // To Prevent the modification of the view while it is displayed
 
 		//--------------------------------------------------------------
 		// CONSTRUCTORS
 		//--------------------------------------------------------------
-		public GridView (Grid grid)
+		public GridView (Context context, IAttributeSet attrs) : base(context, attrs)
+		{
+		}
+
+		//--------------------------------------------------------------
+		// STATIC METHODES
+		//--------------------------------------------------------------
+		public static int CalculateBlockSize(Rect rect)
+		{
+			
+			return Math.Min(Math.Abs(rect.Right - rect.Left)/Constants.GridSizeX,
+				Math.Abs(rect.Top - rect.Bottom)/Constants.GridSizeY);
+		}
+
+		public static Point CalculateUseSize(int width, int height)
+		{
+			int blockSize = CalculateBlockSize(new Rect(0, 0, width, height));
+			return new Point(blockSize * Constants.GridSizeX + (int) StrokeWidthBorder, blockSize * Constants.GridSizeY + (int) StrokeWidthBorder);
+		}
+
+		//--------------------------------------------------------------
+		// PROTECTED METHODES
+		//--------------------------------------------------------------
+		public override void Draw (Canvas canvas)
+		{
+			base.OnDraw(canvas);
+
+			if(_grid == null)
+				return; // if the gridView haven't been initialized, we stop
+
+			// Before drawing any block, we need to set the mutex so we don't change the view while it is displayed
+			_mutexView.WaitOne();
+
+			if(_bitmapBuffer == null)
+				DrawBitmap();
+
+			if(canvas.ClipBounds.Left != 0 || canvas.ClipBounds.Top != 0)
+			{
+				Log.Debug("Tetrim-GridView", "ClipBound of the view not starting from 0 : ClipBound (Top, Left) = " +  canvas.ClipBounds.Top + ", " + canvas.ClipBounds.Left);
+			}
+			
+			canvas.DrawBitmap(_bitmapBuffer, -canvas.ClipBounds.Left, -canvas.ClipBounds.Top, null);
+
+			// Draw the pieces
+			_shadowPieceView.Draw(canvas, _blockSize, _blockImages);
+			_fallingPieceView.Draw(canvas, _blockSize, _blockImages);
+
+			// Now we can change the view
+			_mutexView.ReleaseMutex();
+		}
+
+		//--------------------------------------------------------------
+		// PUBLIC METHODES
+		//--------------------------------------------------------------
+		public void Update()
+		{
+			// Before updating any block, we need to set the mutex so we don't display the view while it is updating
+			_mutexView.WaitOne();
+
+			// Update the pieces
+			_shadowPieceView.Update(_grid._shadowPiece, true);
+			_fallingPieceView.Update(_grid._fallingPiece, false);
+
+			// Update the blocks of the grid
+			for (uint i = 0 ; i < _grid._map.GetLength(0) ; i++)
+			{
+				for (uint j = 0 ; j < _grid._map.GetLength(1) ; j++)
+				{
+					_mapView [i, j].Update(_grid._map[i,j], false);
+				}
+			}
+
+			// We need to redraw the view
+			if(_bitmapBuffer != null)
+				_bitmapBuffer.Dispose();
+			
+			_bitmapBuffer = null;
+
+			// Now we can display the view
+			_mutexView.ReleaseMutex();
+		}
+
+		public void Init(Grid grid)
 		{
 			// Associate the instance
 			_grid = grid;
@@ -73,24 +159,23 @@ namespace Tetrim
 		}
 
 		//--------------------------------------------------------------
-		// STATIC METHODES
+		// PRIVATE METHODES
 		//--------------------------------------------------------------
-		private static Paint createPaintWithStyle(Paint paint, Paint.Style style)
+		private void DrawBitmap()
 		{
-			paint.SetStyle(style);
-			return paint;
-		}
+			if(_grid == null)
+				return; // if the gridView haven't been initialized, we stop
 
-		//--------------------------------------------------------------
-		// PUBLIC METHODES
-		//--------------------------------------------------------------
-		public void Draw (Canvas canvas)
-		{
+			_bitmapBuffer = Bitmap.CreateBitmap(Width, Height, Bitmap.Config.Argb8888);
+			Canvas bitmapCanvas = new Canvas(_bitmapBuffer);
+
 			// If it is the first draw, calculate the size of the block according to the size of the canvas
 			if (_blockSize == 0)
 			{
 				// Calculate the size of the block
-				_blockSize = calculateBlockSize(canvas);
+				Rect rectBound = new Rect();
+				GetDrawingRect(rectBound);
+				_blockSize = CalculateBlockSize(rectBound);
 
 				// Create the blocks images with the right size
 				foreach(TetrisColor color in Enum.GetValues(typeof(TetrisColor)))
@@ -101,77 +186,36 @@ namespace Tetrim
 
 			// Calculate the boundaries of the grid
 			float left = _blockSize*Constants.GridSizeXmin;
-			float top = Math.Abs(canvas.ClipBounds.Top - canvas.ClipBounds.Bottom)-_blockSize*Constants.GridSizeYmin;
+			float top = Height - _blockSize*Constants.GridSizeYmin;
 			float right = _blockSize*(Constants.GridSizeXmax+1);
-			float bottom = Math.Abs (canvas.ClipBounds.Top - canvas.ClipBounds.Bottom) - _blockSize * (Constants.GridSizeYmax+1);
+			float bottom = Height - _blockSize*(Constants.GridSizeYmax+1);
 
 			// Draw the background
-			canvas.DrawRect(left, top, right, bottom, BackgroundPaint);
+			bitmapCanvas.DrawRect(left, top, right, bottom, BackgroundPaint);
 
 			// Draw the border
-			canvas.DrawRect(left + StrokeWidthBorder/2, top, right, bottom - StrokeWidthBorder/2, BorderPaint);
+			bitmapCanvas.DrawRect(left + StrokeWidthBorder/2, top, right, bottom - StrokeWidthBorder/2, BorderPaint);
 
 			// Draw the vertical quartering
 			for(float x = left ; x < right ; x += _blockSize)
 			{
-				canvas.DrawLine(x, top, x, bottom, GridPaint);
+				bitmapCanvas.DrawLine(x, top, x, bottom, GridPaint);
 			}
 
 			// Draw the horizontal quartering
 			for(float y = bottom ; y < top ; y += _blockSize)
 			{
-				canvas.DrawLine(left, y, right, y, GridPaint);
+				bitmapCanvas.DrawLine(left, y, right, y, GridPaint);
 			}
-
-			// Before drawing any block, we need to set the mutex so we don't change the view while it is displayed
-			_mutexView.WaitOne();
-
-			// Draw the pieces
-			_shadowPieceView.Draw(canvas, _blockSize, _blockImages);
-			_fallingPieceView.Draw(canvas, _blockSize, _blockImages);
 
 			// Draw the blocks
 			for (uint i = 0 ; i < _grid._map.GetLength(0) ; i++)
 			{
 				for (uint j = 0 ; j < _grid._map.GetLength(1) ; j++)
 				{
-					_mapView[i,j].Draw(canvas, _blockSize, _blockImages);
+					_mapView[i,j].Draw(bitmapCanvas, _blockSize, _blockImages);
 				}
 			}
-
-			// Now we can change the view
-			_mutexView.ReleaseMutex();
-		}
-
-		public void Update()
-		{
-			// Before updating any block, we need to set the mutex so we don't display the view while it is updating
-			_mutexView.WaitOne();
-
-			// Update the pieces
-			_shadowPieceView.Update(_grid._shadowPiece, true);
-			_fallingPieceView.Update(_grid._fallingPiece, false);
-
-			// Update the blocks of the grid
-			for (uint i = 0 ; i < _grid._map.GetLength(0) ; i++)
-			{
-				for (uint j = 0 ; j < _grid._map.GetLength(1) ; j++)
-				{
-					_mapView [i, j].Update(_grid._map[i,j], false);
-				}
-			}
-
-			// Now we can display the view
-			_mutexView.ReleaseMutex();
-		}
-			
-		//--------------------------------------------------------------
-		// PRIVATE METHODES
-		//--------------------------------------------------------------
-		private int calculateBlockSize(Canvas canvas)
-		{
-			return Math.Min(Math.Abs(canvas.ClipBounds.Right-canvas.ClipBounds.Left)/Constants.GridSizeX,
-				Math.Abs(canvas.ClipBounds.Top - canvas.ClipBounds.Bottom)/Constants.GridSizeY);
 		}
 	}
 }

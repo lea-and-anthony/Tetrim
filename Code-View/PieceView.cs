@@ -36,7 +36,7 @@ namespace Tetrim
 		//--------------------------------------------------------------
 		public void Draw (Canvas canvas, float blockSize, Dictionary<TetrisColor, Bitmap> blockImages)
 		{
-			Draw (canvas, blockSize, blockImages, 0, 0);
+			Draw (canvas, blockSize, blockImages, -canvas.ClipBounds.Left, -canvas.ClipBounds.Top);
 		}
 
 		public void Draw (Canvas canvas, float blockSize, Dictionary<TetrisColor, Bitmap> blockImages, float xOffset, float yOffset)

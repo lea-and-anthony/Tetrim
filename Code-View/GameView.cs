@@ -7,8 +7,8 @@ namespace Tetrim
 		//--------------------------------------------------------------
 		// ATTRIBUTES
 		//--------------------------------------------------------------
-		public PlayerView m_player1View { get; private set; } // View of the player 1
-		public PlayerView m_player2View { get; private set; } // View of the player 2
+		public PlayerView _player1View { get; private set; } // View of the player 1
+		public PlayerView _player2View { get; private set; } // View of the player 2
 
 		//--------------------------------------------------------------
 		// CONSTRUCTORS
@@ -16,8 +16,8 @@ namespace Tetrim
 		public GameView (Game game)
 		{
 			// Associate the instances
-			m_player1View = new PlayerView(game._player1);
-			m_player2View = new PlayerView(game._player2);
+			_player1View = new PlayerView(game._player1);
+			_player2View = new PlayerView(game._player2);
    		}
 	}
 }
