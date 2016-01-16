@@ -204,13 +204,20 @@ namespace Tetrim
 			{
 				_gameTimer.Stop();
 				Utils.PopUpEndEvent += endGame;
-				// If it is a 1 player game
+
 				if(!Network.Instance.Connected())
 				{
-					User.Instance.AddHighScore(int.Parse(player1score.ToString()));
+					// If it is a 1 player game
+					Intent intent = Utils.CreateGameOverDialogSingle(this, Resources, _game._player1._score);
+					User.Instance.AddHighScore(_game._player1._score);
+					StartActivity(intent);
 				}
-
-				RunOnUiThread(() => Utils.ShowAlert (Resource.String.game_over_loose_title, Resource.String.game_over_loose, this));
+				else
+				{
+					// If it is a 2 players game
+					Intent intent = Utils.CreateGameOverDialogMulti(this, Resources, false);
+					StartActivity(intent);
+				}
 			}
 
 			//  Network
@@ -262,7 +269,9 @@ namespace Tetrim
 		{
 			_gameTimer.Stop();
 			Utils.PopUpEndEvent += endGame;
-			RunOnUiThread(() => Utils.ShowAlert (Resource.String.game_over_win_title, Resource.String.game_over_win, this));
+			//RunOnUiThread(() => Utils.ShowAlert (Resource.String.game_over_win_title, Resource.String.game_over_win, this));
+			Intent intent = Utils.CreateGameOverDialogMulti(this, Resources, true);
+			StartActivity(intent);
 			return 0;
 		}
 
@@ -333,6 +342,7 @@ namespace Tetrim
 			}
 
 			Utils.PopUpEndEvent += resumeGame;
+			// TODO : change dialog
 			Utils.ShowAlert(Resource.String.Pause_title, Resource.String.Pause, this);
 
 			return 0;

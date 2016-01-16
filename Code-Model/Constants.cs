@@ -22,10 +22,10 @@ namespace Tetrim
 		public const int ColorMax = (int) TetrisColor.ColorMax;
 
 		public const int MaxLevel = 30;
-		public static uint Score1Row = 100;
-		public static uint Score2Rows = 300;
-		public static uint Score3Rows = 500;
-		public static uint Score4Rows = 800;
+		public static int Score1Row = 100;
+		public static int Score2Rows = 300;
+		public static int Score3Rows = 500;
+		public static int Score4Rows = 800;
 		public const int ScoreMoveDown = 1;
 		public const int ScoreMoveBottom = 2;
 

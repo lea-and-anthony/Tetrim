@@ -9,8 +9,8 @@ namespace Tetrim
 		// ATTRIBUTES
 		//--------------------------------------------------------------
 		public string _name { get; private set; }
-		public uint _score { get; private set; }
-		public uint _level { get; private set; }
+		public int _score { get; private set; }
+		public int _level { get; private set; }
 		public int _removedRows { get; private set; }
 		public Grid _grid { get; private set; }
 		public Piece[] _proposedPieces { get; private set; }
@@ -85,7 +85,7 @@ namespace Tetrim
 		public bool MoveBottom()
 		{
 			int nbDown = _grid.MoveBottom ();
-			_score += (uint) (Constants.ScoreMoveBottom * nbDown) * _level;
+			_score += (Constants.ScoreMoveBottom * nbDown) * _level;
 			return nbDown > 0;
 		}
 
@@ -169,8 +169,8 @@ namespace Tetrim
 			if(message.Length < Constants.SizeMessageScore || message[0] != Constants.IdMessageScore)
 				return false;
 
-			_score = BitConverter.ToUInt32(message, 1);
-			_level = BitConverter.ToUInt32(message, 1 + sizeof(uint));
+			_score = BitConverter.ToInt32(message, 1);
+			_level = BitConverter.ToInt32(message, 1 + sizeof(uint));
 			_removedRows = BitConverter.ToInt32(message, 1 + 2*sizeof(uint));
 			return true;
 		}

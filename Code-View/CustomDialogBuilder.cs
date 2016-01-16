@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 
 using Android.Content;
 using Android.Graphics;
+using Android.Views;
 
 namespace Tetrim
 {
@@ -13,7 +15,8 @@ namespace Tetrim
 		public enum DialogContentType
 		{
 			TextView,
-			EditText
+			EditText,
+			None
 		}
 
 		public enum DialogRequestCode
@@ -31,6 +34,7 @@ namespace Tetrim
 		public string Title, Message;
 		public string PositiveText, NegativeText;
 		public string ReturnText;
+		public List<View> Content = new List<View>();
 
 		public Color StrokeColor = Utils.getAndroidDarkColor(TetrisColor.Blue);
 		public Color FillColor = new Color(0, 0, 50, 255);
