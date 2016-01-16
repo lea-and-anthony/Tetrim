@@ -53,45 +53,52 @@ namespace Tetrim
 			#if DEBUG
 			Log.Debug(BluetoothManager.Tag, "BEGIN ConnectThread");
 			#endif
-			Name = "ConnectThread";
 
-			// Always cancel discovery because it will slow down a connection
-			_service.BluetoothAdapter.CancelDiscovery();
-
-			// Make a connection to the BluetoothSocket
-			try
+			if(_socket != null)
 			{
-				// This is a blocking call and will only return on a
-				// successful connection or an exception
-				_socket.Connect();
-			}
-			catch(Java.IO.IOException e)
-			{
-				_service.ConnectionFailed();
+				Name = "ConnectThread";
 
-				Log.Error(BluetoothManager.Tag, "Unable to connect. Message = " + e.Message);
-				// Close the socket
+				// Always cancel discovery because it will slow down a connection
+				_service.BluetoothAdapter.CancelDiscovery();
+
+				// Make a connection to the BluetoothSocket
 				try
 				{
-					_socket.Close();
-					_socket = null;
+					// This is a blocking call and will only return on a
+					// successful connection or an exception
+					_socket.Connect();
 				}
-				catch(Java.IO.IOException e2)
+				catch(Java.IO.IOException e)
 				{
-					Log.Error(BluetoothManager.Tag, "Unable to Close() socket during connection failure", e2);
+					if(_continue)
+					{
+						_service.ConnectionFailed();
+
+						Log.Error(BluetoothManager.Tag, "Unable to connect. Message = " + e.Message);
+						// Close the socket
+						try
+						{
+							if(_socket != null)
+							{
+								_socket.Close();
+								_socket = null;
+							}
+						}
+						catch(Java.IO.IOException e2)
+						{
+							Log.Error(BluetoothManager.Tag, "Unable to Close() socket during connection failure", e2);
+						}
+					}
+					_end = true;
+					return;
 				}
-				_end = true;
 
-				// Start the service over to restart listening mode
-				_service.Start();
-				return;
-			}
-
-			if(_continue)
-			{
-				// Start the connected thread
-				_success = true;
-				_service.Connected(_socket, _device);
+				if(_continue)
+				{
+					// Start the connected thread
+					_success = true;
+					_service.Connected(_socket, _device);
+				}
 			}
 
 			_end = true;

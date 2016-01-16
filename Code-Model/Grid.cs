@@ -118,7 +118,7 @@ namespace Tetrim
 				player.UpdatePlayerRemoveRow(nbRemovedRows);
 			}
 
-			// We create next the new piece
+			// Next, we create the new piece
 			_fallingPiece = new Piece (_nextPiece._shape, _nextPiece._angle, this);
 			_shadowPiece = new Piece (this, _fallingPiece);
 			_nextPiece = new Piece (0, 0);

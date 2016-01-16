@@ -361,6 +361,12 @@ namespace Tetrim
 			Log.Debug(Tag, "State = connected");
 			#endif
 
+			// No need to continue the discovery now that we are connected
+			if(_bluetoothAdapter.IsDiscovering)
+			{
+				_bluetoothAdapter.CancelDiscovery();
+			}
+
 			if(_isConnectionInitiator)
 			{
 				// Send a request to start a game
