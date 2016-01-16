@@ -10,13 +10,13 @@ namespace Tetrim
 		//--------------------------------------------------------------
 		// CONSTANTS
 		//--------------------------------------------------------------
-		public enum ContentTypes
+		public enum DialogContentType
 		{
 			TextView,
 			EditText
 		}
 
-		public enum RequestCodes
+		public enum DialogRequestCode
 		{
 			PosOrNeg,
 			Text
@@ -30,12 +30,13 @@ namespace Tetrim
 		public EventHandler PositiveAction, NegativeAction;
 		public string Title, Message;
 		public string PositiveText, NegativeText;
+		public string ReturnText;
 
 		public Color StrokeColor = Utils.getAndroidDarkColor(TetrisColor.Blue);
 		public Color FillColor = new Color(0, 0, 50, 255);
 
-		public ContentTypes ContentType = ContentTypes.TextView;
-		public RequestCodes RequestCode = RequestCodes.PosOrNeg;
+		public DialogContentType ContentType = DialogContentType.TextView;
+		public DialogRequestCode RequestCode = DialogRequestCode.PosOrNeg;
 
 		private int _strokeBorderWidth = 15;
 		private int _radiusIn = 10;

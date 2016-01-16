@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/relativeLayout1"
+        android:layout_marginBottom="10dp">
+        <Tetrim.ButtonStroked
+            android:text="1 player"
+            android:id="@+id/backButton"
+            android:textSize="30dp"
+            android:background="#ffffff"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_centerVertical="true"
+            android:tag="x"
+            android:layout_alignParentRight="true" />
+        <TextView
+            android:text="settings"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:id="@+id/settingsTitle"
+            android:gravity="center_horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:textSize="40dp" />
+    </RelativeLayout>
+    <LinearLayout
+        android:orientation="vertical"
+        android:minWidth="25px"
+        android:minHeight="25px"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/linearLayout1">
+        <Tetrim.ButtonStroked
+            android:text="1 player"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/deleteFriendsButton"
+            android:textSize="30dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginBottom="5dp"
+            android:background="#ffffff"
+            android:layout_marginLeft="5dp"
+            android:tag="@string/deleteFriends" />
+        <Tetrim.ButtonStroked
+            android:text="1 player"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/changeNameButton"
+            android:textSize="30dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginBottom="5dp"
+            android:background="#ffffff"
+            android:layout_marginLeft="5dp"
+            android:tag="@string/changeName" />
+        <Tetrim.ButtonStroked
+            android:text="1 player"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/deleteHighScoresButton"
+            android:textSize="30dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginBottom="5dp"
+            android:background="#ffffff"
+            android:layout_marginLeft="5dp"
+            android:tag="@string/deleteHighScores" />
+    </LinearLayout>
+</LinearLayout>

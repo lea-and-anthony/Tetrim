@@ -18,9 +18,19 @@
     <string name="settings">settings</string>
     <string name="exit">exit</string>
 
-    <!-- Prompt Name Dialog -->
+    <!-- Settings -->
+    <string name="deleteFriends">delete friends</string>
+    <string name="deleteHighScores">delete high scores</string>
+    <string name="changeName">change user name</string>
+
+    <!-- Prompt Dialog -->
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
+    <string name="askSure">Are you sure?</string>
+    <string name="askSureDeleteFriends">Delete friends?</string>
+    <string name="askSureDeleteHighScore">Delete highscore?</string>
+    <string name="yesDialog">Yes!</string>
+    <string name="noDialog">No...</string>
 
     <!-- Prompt Name Dialog -->
     <string name="askName">What is your name ?</string>

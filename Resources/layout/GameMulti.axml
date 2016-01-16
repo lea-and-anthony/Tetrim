@@ -10,14 +10,14 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:id="@+id/linearLayout2"
+        android:id="@+id/statsLayout"
         android:weightSum="100"
         android:layout_weight="25">
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:id="@+id/linearLayout3"
+            android:id="@+id/myStatsLayout"
             android:layout_weight="33"
             android:weightSum="100">
             <LinearLayout
@@ -148,7 +148,7 @@
             android:minHeight="25px"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:id="@+id/linearLayout4"
+            android:id="@+id/enemyGrid"
             android:layout_weight="34">
             <Tetrim.GridView
                 android:id="@+id/OpponentGridView"
@@ -159,7 +159,7 @@
             android:orientation="vertical"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:id="@+id/linearLayout5"
+            android:id="@+id/enemyStatsLayout"
             android:layout_weight="33"
             android:weightSum="100">
             <LinearLayout
@@ -293,7 +293,7 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:id="@+id/gameLinearLayout"
+        android:id="@+id/gridButtonLayout"
         android:layout_weight="65"
         android:weightSum="100">
         <LinearLayout
@@ -317,7 +317,8 @@
                 android:shadowDx="-2"
                 android:shadowDy="2"
                 android:shadowRadius="0.01"
-                android:background="#ff00b0ff" />
+                android:background="#ff00b0ff"
+                android:tag="@string/turn_left_arrow" />
             <Tetrim.ButtonStroked
                 android:text="&lt;-"
                 android:layout_width="match_parent"
@@ -332,7 +333,8 @@
                 android:shadowDx="-2"
                 android:shadowDy="2"
                 android:shadowRadius="0.01"
-                android:background="#ff00c853" />
+                android:background="#ff00c853"
+                android:tag="@string/left_arrow" />
             <Tetrim.ButtonStroked
                 android:text="v"
                 android:layout_width="match_parent"
@@ -347,7 +349,8 @@
                 android:shadowDx="0"
                 android:shadowDy="3"
                 android:shadowRadius="0.01"
-                android:background="#ffc62828" />
+                android:background="#ffc62828"
+                android:tag="@string/down_arrow" />
         </LinearLayout>
         <Tetrim.GridView
             android:id="@+id/PlayerGridView"
@@ -375,7 +378,8 @@
                 android:shadowDx="2"
                 android:shadowDy="2"
                 android:shadowRadius="0.01"
-                android:background="#ff00b0ff" />
+                android:background="#ff00b0ff"
+                android:tag="@string/turn_right_arrow" />
             <Tetrim.ButtonStroked
                 android:text="-&gt;"
                 android:layout_width="match_parent"
@@ -390,7 +394,8 @@
                 android:shadowDx="2"
                 android:shadowDy="2"
                 android:shadowRadius="0.01"
-                android:background="#ff00c853" />
+                android:background="#ff00c853"
+                android:tag="@string/right_arrow" />
             <Tetrim.ButtonStroked
                 android:text="v v"
                 android:layout_width="match_parent"
@@ -405,7 +410,8 @@
                 android:shadowRadius="0.01"
                 android:shadowDx="0"
                 android:shadowDy="3"
-                android:background="#ffc62828" />
+                android:background="#ffc62828"
+                android:tag="@string/bottom_arrow" />
         </LinearLayout>
     </LinearLayout>
     <LinearLayout
@@ -414,7 +420,7 @@
         android:minHeight="25px"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:id="@+id/linearLayout12"
+        android:id="@+id/piecesLayout"
         android:layout_weight="10">
         <Tetrim.ViewProposedPiece
             android:id="@+id/ProposedPiecesView"

@@ -8,11 +8,12 @@ using Android.Widget;
 using Android.OS;
 using Android.Util;
 using Android.Bluetooth;
+using Android.Views;
 
 namespace Tetrim
 {
 	[Activity(Label = "Tetrim", MainLauncher = true, Icon = "@drawable/icon", Theme = "@android:style/Theme.NoTitleBar.Fullscreen", ScreenOrientation = Android.Content.PM.ScreenOrientation.Portrait)]
-	public class MenuActivity : Activity
+	public class MenuActivity : Activity, ViewTreeObserver.IOnGlobalLayoutListener
 	{
 		//--------------------------------------------------------------
 		// CONSTANTS
@@ -23,7 +24,7 @@ namespace Tetrim
 		// ATTRIBUTES
 		//--------------------------------------------------------------
 		private TextView _userNameText;
-		private CustomDialogBuilder.RequestCodes userNameDialogRequestCode = CustomDialogBuilder.RequestCodes.Text;
+
 		//--------------------------------------------------------------
 		// EVENT CATCHING METHODES
 		//--------------------------------------------------------------
@@ -41,94 +42,89 @@ namespace Tetrim
 			ISharedPreferences sharedPreferencesUser = ApplicationContext.GetSharedPreferences(User.UserFileNameKey, FileCreationMode.Private);
 			User.GiveContext(ref sharedPreferencesUser);
 
+			// Retrieve the user's name
 			if(!User.Instance.IsUserStored)
 			{
-				Intent intent = Utils.CreateUserNameDialog(this, Resources);
-				StartActivityForResult(intent, (int)userNameDialogRequestCode);
+				Intent intent = Utils.CreateUserNameDialogNoCancel(this, Resources);
+				StartActivityForResult(intent, (int)Utils.RequestCode.RequestUserName);
 			}
 
 			// Retrieve the fonts
-			Typeface funnyFont = Typeface.CreateFromAsset(Assets,"Foo.ttf");
-			Typeface bloxFont = Typeface.CreateFromAsset(Assets,"Blox.ttf");
+			Utils.TextFont = Typeface.CreateFromAsset(Assets,"Foo.ttf");
+			Utils.TitleFont = Typeface.CreateFromAsset(Assets,"Blox.ttf");
+			Utils.ArrowFont = Typeface.CreateFromAsset(Assets,"Arrows.otf");
 
-			// Set the title text view
-			SetTextView(bloxFont, Resource.Id.titleT, TetrisColor.Red);
-			SetTextView(bloxFont, Resource.Id.titleE, TetrisColor.Orange);
-			SetTextView(bloxFont, Resource.Id.titleT2, TetrisColor.Yellow);
-			SetTextView(bloxFont, Resource.Id.titleR, TetrisColor.Green);
-			SetTextView(bloxFont, Resource.Id.titleI, TetrisColor.Cyan);
-			SetTextView(bloxFont, Resource.Id.titleM, TetrisColor.Pink);
+			// Set the title
+			Utils.SetTitleTextView(FindViewById<TextView>(Resource.Id.titleT), TetrisColor.Red);
+			Utils.SetTitleTextView(FindViewById<TextView>(Resource.Id.titleE), TetrisColor.Orange);
+			Utils.SetTitleTextView(FindViewById<TextView>(Resource.Id.titleT2), TetrisColor.Yellow);
+			Utils.SetTitleTextView(FindViewById<TextView>(Resource.Id.titleR), TetrisColor.Green);
+			Utils.SetTitleTextView(FindViewById<TextView>(Resource.Id.titleI), TetrisColor.Cyan);
+			Utils.SetTitleTextView(FindViewById<TextView>(Resource.Id.titleM), TetrisColor.Pink);
 
+			// Set the user name
 			_userNameText = FindViewById<TextView>(Resource.Id.userNameText);
-			_userNameText.SetTypeface(funnyFont, TypefaceStyle.Normal);
+			_userNameText.SetTypeface(Utils.TextFont, TypefaceStyle.Normal);
 			_userNameText.Text = Resources.GetString(Resource.String.welcomeUser, User.Instance.UserName);
 
 			// Single player button
 			ButtonStroked singlePlayerButton = FindViewById<ButtonStroked>(Resource.Id.singlePlayerButton);
-			SetButton(singlePlayerButton, funnyFont, TetrisColor.Red);
+			Utils.SetMenuButton(singlePlayerButton, TetrisColor.Red);
 			singlePlayerButton.Click += delegate {
 				startGame(this, Utils.RequestCode.RequestGameOnePlayer);
 			};
 
 			// Two players button
 			ButtonStroked twoPlayersButton = FindViewById<ButtonStroked>(Resource.Id.twoPlayersButton);
-			SetButton(twoPlayersButton, funnyFont, TetrisColor.Cyan);
+			Utils.SetMenuButton(twoPlayersButton, TetrisColor.Cyan);
 			twoPlayersButton.Click += delegate {
 				// Start the bluetooth connection
 				var bluetoothConnectionActivity = new Intent(this, typeof(BluetoothConnectionActivity));
 				StartActivity(bluetoothConnectionActivity);
-				//StartActivityForResult(deviceListActivity, (int) RequestCode.RequestConnectDevice);
 				// TODO : add another connection mode
 			};
 
 			// Settings button
 			ButtonStroked settingsButton = FindViewById<ButtonStroked>(Resource.Id.settingsButton);
-			SetButton(settingsButton, funnyFont, TetrisColor.Green);
-			settingsButton.Click += delegate {
-				// TODO : handle Settings
+			Utils.SetMenuButton(settingsButton, TetrisColor.Green);
+			settingsButton.Click += delegate {  
+				var settingsActivity = new Intent(this, typeof(SettingsActivity));
+				StartActivity(settingsActivity);
 			};
 
 			// Exit button
 			ButtonStroked exitButton = FindViewById<ButtonStroked>(Resource.Id.exitButton);
-			SetButton(exitButton, funnyFont, TetrisColor.Yellow);
+			Utils.SetMenuButton(exitButton, TetrisColor.Yellow);
 			exitButton.Click += delegate {
-				// TODO : handle Exit
+				System.Diagnostics.Process.GetCurrentProcess().CloseMainWindow();
 			};
-		}
-		protected override void OnActivityResult (int requestCode, Result resultCode, Intent data)
-		{
-			if(resultCode==Result.Ok)
+
+			// Test if the view is created so we can resize the buttons
+			LinearLayout menuContainer = FindViewById<LinearLayout>(Resource.Id.menuContainer);
+			if(menuContainer.ViewTreeObserver.IsAlive)
 			{
-				if(requestCode==(int)CustomDialogBuilder.RequestCodes.Text)
-				{
-					String userName = data.GetStringExtra(userNameDialogRequestCode.ToString());
-					User.Instance.SetName(userName);
-					if(_userNameText != null)
-					{
-						_userNameText.Text = Resources.GetString(Resource.String.welcomeUser, User.Instance.UserName);
-					}
-				}
+				menuContainer.ViewTreeObserver.AddOnGlobalLayoutListener(this);
 			}
 		}
 
-		protected void SetTextView(Typeface font, int id, TetrisColor color)
+		protected override void OnResume ()
 		{
-			TextView titleTextView = FindViewById<TextView> (id);
-			titleTextView.SetTypeface(font, TypefaceStyle.Normal);
-			titleTextView.SetTextColor(Utils.getAndroidColor(color));
+			base.OnResume();
+			UpdateUserNameInUI();
 		}
 
-		protected void SetButton(ButtonStroked button, Typeface font, TetrisColor color)
+		public void OnGlobalLayout()
 		{
-			button.SetTypeface(font, TypefaceStyle.Normal);
-			button.StrokeBorderWidth = 15;
-			button.StrokeTextWidth = 7;
-			button.RadiusIn = 10;
-			button.RadiusOut = 7;
-			button.StrokeColor = Utils.getAndroidDarkColor(color);
-			button.FillColor = Utils.getAndroidColor(color);
-		}
+			// The view is completely loaded now, so getMeasuredWidth() won't return 0
+			ButtonStroked settingsButton = FindViewById<ButtonStroked>(Resource.Id.settingsButton);
+			Utils.MenuButtonHeight = settingsButton.Height;
 
+			// Destroy the onGlobalLayout afterwards, otherwise it keeps changing
+			// the sizes non-stop, even though it's already done
+			LinearLayout menuContainer = FindViewById<LinearLayout>(Resource.Id.menuContainer);
+			menuContainer.ViewTreeObserver.RemoveGlobalOnLayoutListener(this);
+		}
+			
 		//--------------------------------------------------------------
 		// PUBLIC METHODES
 		//--------------------------------------------------------------
@@ -136,6 +132,17 @@ namespace Tetrim
 		{
 			Intent intent = new Intent(activity, typeof(MainActivity));
 			activity.StartActivityForResult(intent, (int) code);
+		}
+
+		//--------------------------------------------------------------
+		// PUBLIC METHODES
+		//--------------------------------------------------------------
+		private void UpdateUserNameInUI()
+		{
+			if(_userNameText != null)
+			{
+				_userNameText.Text = Resources.GetString(Resource.String.welcomeUser, User.Instance.UserName);
+			}
 		}
 	}
 }

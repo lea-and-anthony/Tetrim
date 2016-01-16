@@ -111,22 +111,20 @@ namespace Tetrim
 
 		protected void InitializeUI()
 		{
-			// Set the text font
-			Typeface niceFont = Typeface.CreateFromAsset(Assets,"Foo.ttf");
-			SetText(niceFont, Resource.Id.player1name);
-			SetText(niceFont, Resource.Id.player2name);
-			SetText(niceFont, Resource.Id.player1score);
-			SetText(niceFont, Resource.Id.player2score);
-			SetText(niceFont, Resource.Id.player1rows);
-			SetText(niceFont, Resource.Id.player2rows);
-			SetText(niceFont, Resource.Id.player1level);
-			SetText(niceFont, Resource.Id.player2level);
-			SetText(niceFont, Resource.Id.score1);
-			SetText(niceFont, Resource.Id.score2);
-			SetText(niceFont, Resource.Id.rows1);
-			SetText(niceFont, Resource.Id.rows2);
-			SetText(niceFont, Resource.Id.level1);
-			SetText(niceFont, Resource.Id.level2);
+			Utils.SetTextFont(FindViewById<TextView>(Resource.Id.player1name));
+			Utils.SetTextFont(FindViewById<TextView>(Resource.Id.player2name));
+			Utils.SetTextFont(FindViewById<TextView>(Resource.Id.player1score));
+			Utils.SetTextFont(FindViewById<TextView>(Resource.Id.player2score));
+			Utils.SetTextFont(FindViewById<TextView>(Resource.Id.player1rows));
+			Utils.SetTextFont(FindViewById<TextView>(Resource.Id.player2rows));
+			Utils.SetTextFont(FindViewById<TextView>(Resource.Id.player1level));
+			Utils.SetTextFont(FindViewById<TextView>(Resource.Id.player2level));
+			Utils.SetTextFont(FindViewById<TextView>(Resource.Id.score1));
+			Utils.SetTextFont(FindViewById<TextView>(Resource.Id.score2));
+			Utils.SetTextFont(FindViewById<TextView>(Resource.Id.rows1));
+			Utils.SetTextFont(FindViewById<TextView>(Resource.Id.rows2));
+			Utils.SetTextFont(FindViewById<TextView>(Resource.Id.level1));
+			Utils.SetTextFont(FindViewById<TextView>(Resource.Id.level2));
 
 			// Change the size of the components to center them
 			GridView myGrid = FindViewById<GridView>(Resource.Id.PlayerGridView);
@@ -135,40 +133,15 @@ namespace Tetrim
 			myGrid.LayoutParameters = new LinearLayout.LayoutParams(size.X, size.Y);
 
 			// Set the buttons
-			Typeface arrowFont = Typeface.CreateFromAsset(Assets,"Arrows.otf");
-			SetButton(arrowFont, Resource.Id.buttonMoveLeft, Resource.String.left_arrow, TetrisColor.Green, difference);
-			SetButton(arrowFont, Resource.Id.buttonMoveRight, Resource.String.right_arrow, TetrisColor.Green, difference);
-			SetButton(arrowFont, Resource.Id.buttonTurnLeft, Resource.String.turn_left_arrow, TetrisColor.Cyan, difference);
-			SetButton(arrowFont, Resource.Id.buttonTurnRight, Resource.String.turn_right_arrow, TetrisColor.Cyan, difference);
-			SetButton(arrowFont, Resource.Id.buttonMoveDown, Resource.String.down_arrow, TetrisColor.Red, difference);
-			SetButton(arrowFont, Resource.Id.buttonMoveFoot, Resource.String.bottom_arrow, TetrisColor.Red, difference);
+			Utils.SetArrowButton(FindViewById<ButtonStroked>(Resource.Id.buttonMoveLeft), TetrisColor.Green, difference);
+			Utils.SetArrowButton(FindViewById<ButtonStroked>(Resource.Id.buttonMoveRight), TetrisColor.Green, difference);
+			Utils.SetArrowButton(FindViewById<ButtonStroked>(Resource.Id.buttonTurnLeft), TetrisColor.Cyan, difference);
+			Utils.SetArrowButton(FindViewById<ButtonStroked>(Resource.Id.buttonTurnRight), TetrisColor.Cyan, difference);
+			Utils.SetArrowButton(FindViewById<ButtonStroked>(Resource.Id.buttonMoveDown), TetrisColor.Red, difference);
+			Utils.SetArrowButton(FindViewById<ButtonStroked>(Resource.Id.buttonMoveFoot), TetrisColor.Red, difference);
 
-			LinearLayout gameLayout = FindViewById<LinearLayout>(Resource.Id.gameLinearLayout);
+			LinearLayout gameLayout = FindViewById<LinearLayout>(Resource.Id.gridButtonLayout);
 			gameLayout.WeightSum = 0;
-		}
-
-		protected void SetButton(Typeface font, int idButton, int idText, TetrisColor color, int difference)
-		{
-			ButtonStroked button = FindViewById<ButtonStroked>(idButton);
-			button.IsSquared = true;
-			button.SetTypeface(font, TypefaceStyle.Normal);
-			button.Text = Resources.GetString(idText);
-			int width = button.MeasuredWidth + difference;
-			button.LayoutParameters = new LinearLayout.LayoutParams(width, width);
-			button.SetTextSize(ComplexUnitType.Px, width);
-			button.StrokeBorderWidth = 7;
-			button.StrokeTextWidth = 5;
-			button.RadiusIn = 7;
-			button.RadiusOut = 5;
-			button.StrokeColor = Utils.getAndroidDarkColor(color);
-			button.FillColor = Utils.getAndroidColor(color);
-			button.IsTextStroked = false;
-		}
-
-		protected void SetText(Typeface font, int idText)
-		{
-			TextView textView = FindViewById<TextView> (idText);
-			textView.SetTypeface(font, TypefaceStyle.Normal);
 		}
 
 		// Called when an other application is displayed in front of this one
@@ -212,7 +185,7 @@ namespace Tetrim
 			if(!isSamePiece)
 			{
 				_gameView._player1View.Update();
-				// TODO here post invalidate
+				// TODO here post invalidate of the nextPieceView
 			}
 
 			TextView player1name = FindViewById<TextView> (Resource.Id.player1name);
@@ -226,6 +199,12 @@ namespace Tetrim
 			{
 				_gameTimer.Stop();
 				Utils.PopUpEndEvent += endGame;
+				// If it is a 1 player game
+				if(!Network.Instance.Connected())
+				{
+					User.Instance.AddHighScore(int.Parse(player1score.ToString()));
+				}
+
 				RunOnUiThread(() => Utils.ShowAlert (Resource.String.game_over_loose_title, Resource.String.game_over_loose, this));
 			}
 

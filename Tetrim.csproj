@@ -75,6 +75,7 @@
     <Compile Include="Code-Model\User.cs" />
     <Compile Include="Activities\CustomDialog.cs" />
     <Compile Include="Code-View\CustomDialogBuilder.cs" />
+    <Compile Include="Activities\SettingsActivity.cs" />
     <Compile Include="Code-View\NextPieceView.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -131,6 +132,7 @@
     <AndroidResource Include="Resources\layout\Main.axml" />
     <AndroidResource Include="Resources\layout\BluetoothDevices.axml" />
     <AndroidResource Include="Resources\layout\AlertDialog.axml" />
+    <AndroidResource Include="Resources\layout\Settings.axml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Code-Model\" />

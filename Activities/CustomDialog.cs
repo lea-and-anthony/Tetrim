@@ -75,7 +75,7 @@ namespace Tetrim
 			_content = FindViewById<LinearLayout>(Resource.Id.alertContent);
 			switch (Builder.ContentType)
 			{
-			case CustomDialogBuilder.ContentTypes.TextView:
+			case CustomDialogBuilder.DialogContentType.TextView:
 				if(!String.IsNullOrEmpty(Builder.Message))
 				{
 					_message = new TextView(this.BaseContext);
@@ -85,7 +85,7 @@ namespace Tetrim
 					_content.AddView(_message, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MatchParent, LinearLayout.LayoutParams.WrapContent));
 				}
 				break;
-			case CustomDialogBuilder.ContentTypes.EditText:
+			case CustomDialogBuilder.DialogContentType.EditText:
 				_field = new EditText(this.BaseContext);
 				_field.SetTypeface(niceFont, TypefaceStyle.Normal);
 				_field.Hint = Builder.Message;
@@ -119,10 +119,10 @@ namespace Tetrim
 			else
 			{
 				LinearLayout.LayoutParams lpPos = (LinearLayout.LayoutParams) _positiveButton.LayoutParameters;
-				lpPos.RightMargin = Builder.StrokeBorderWidth/2;
+				lpPos.LeftMargin = Builder.StrokeBorderWidth/2;
 				_positiveButton.LayoutParameters = lpPos;
 				LinearLayout.LayoutParams lpNeg = (LinearLayout.LayoutParams) _negativeButton.LayoutParameters;
-				lpNeg.LeftMargin = Builder.StrokeBorderWidth/2;
+				lpNeg.RightMargin = Builder.StrokeBorderWidth/2;
 				_negativeButton.LayoutParameters = lpNeg;
 			}
 
@@ -137,18 +137,21 @@ namespace Tetrim
 				button.StrokeColor = Utils.getAndroidDarkColor(color);
 				button.FillColor = Utils.getAndroidColor(color);
 				button.Text = text;
-				button.TextSize = Utils.GetPixelsFromDP(this.BaseContext, 20);
+				button.TextSize = Utils.GetPixelsFromDP(BaseContext, 20);
+				button.Click += delegate {
+					Builder.ReturnText = (Builder.RequestCode == CustomDialogBuilder.DialogRequestCode.Text ) ? _field.Text : null;
+				};
 				button.Click += action;
 				button.Click += delegate {
 					Intent intent = new Intent();
 					switch(Builder.RequestCode)
 					{
-					case CustomDialogBuilder.RequestCodes.PosOrNeg:
+					case CustomDialogBuilder.DialogRequestCode.PosOrNeg:
 						intent.PutExtra(Builder.RequestCode.ToString(), answer);
 						SetResult(Android.App.Result.Ok, intent);
 						Finish();
 						break;
-					case CustomDialogBuilder.RequestCodes.Text:
+					case CustomDialogBuilder.DialogRequestCode.Text:
 						if(answer)
 						{
 							if(!String.IsNullOrEmpty(_field.Text))
