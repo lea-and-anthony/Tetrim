@@ -26,13 +26,13 @@ namespace Tetrim
 		private static Color BackgroundColor = Color.Rgb(25, 20, 35);
 
 		// Paints used to draw the grid
-		private static Paint BackgroundPaint = createPaintWithStyle(
+		private static Paint BackgroundPaint = Utils.createPaintWithStyle(
 			new Paint {AntiAlias = true, Color = BackgroundColor},
 			Paint.Style.Fill);
-		private static Paint BorderPaint = createPaintWithStyle(
+		private static Paint BorderPaint = Utils.createPaintWithStyle(
 			new Paint {AntiAlias = true, Color = BorderColor, StrokeWidth = StrokeWidthBorder},
 			Paint.Style.Stroke);
-		private static Paint GridPaint = createPaintWithStyle(
+		private static Paint GridPaint = Utils.createPaintWithStyle(
 			new Paint {AntiAlias = true, Color = BorderColor, StrokeWidth = StrokeWidthBorder, Alpha = QuarteringAlpha},
 			Paint.Style.Stroke);
 
@@ -61,12 +61,6 @@ namespace Tetrim
 		//--------------------------------------------------------------
 		// STATIC METHODES
 		//--------------------------------------------------------------
-		private static Paint createPaintWithStyle(Paint paint, Paint.Style style)
-		{
-			paint.SetStyle(style);
-			return paint;
-		}
-
 		public static int CalculateBlockSize(Rect rect)
 		{
 			

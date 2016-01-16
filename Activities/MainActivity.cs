@@ -212,6 +212,7 @@ namespace Tetrim
 			if(!isSamePiece)
 			{
 				_gameView._player1View.Update();
+				// TODO here post invalidate
 			}
 
 			TextView player1name = FindViewById<TextView> (Resource.Id.player1name);

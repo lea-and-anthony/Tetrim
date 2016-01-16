@@ -108,6 +108,12 @@ namespace Tetrim
 			return Android.Graphics.Color.White;
 		}
 
+		public static Paint createPaintWithStyle(Paint paint, Paint.Style style)
+		{
+			paint.SetStyle(style);
+			return paint;
+		}
+
 		// Display a simple pop up with a title, a text and an "OK" button
 		// Trigger the PopUpEndEvent event when the OK button is pressed
 		public static void ShowAlert(int idTitle, int idMessage, Context context)
