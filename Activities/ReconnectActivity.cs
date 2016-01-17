@@ -11,8 +11,6 @@ using Android.Widget;
 
 namespace Tetrim
 {
-	// TODO: check if necessary to add this setting:
-	//ConfigurationChanges=Android.Content.PM.ConfigChanges.KeyboardHidden | Android.Content.PM.ConfigChanges.Orientation)]	
 	[Activity(Label = "@string/reconnect_activity", Icon = "@drawable/icon", Theme = "@android:style/Theme.Dialog", ScreenOrientation = Android.Content.PM.ScreenOrientation.Portrait)]
 	public class ReconnectActivity : Activity
 	{

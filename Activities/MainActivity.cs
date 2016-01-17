@@ -203,7 +203,7 @@ namespace Tetrim
 			if (_game._player1._grid.isGameOver())
 			{
 				_gameTimer.Stop();
-				Utils.PopUpEndEvent += endGame;
+				//Utils.PopUpEndEvent += endGame;
 
 				if(!Network.Instance.Connected())
 				{
@@ -268,7 +268,7 @@ namespace Tetrim
 		private int OnReceiveEndMessage(byte[] message)
 		{
 			_gameTimer.Stop();
-			Utils.PopUpEndEvent += endGame;
+			//Utils.PopUpEndEvent += endGame;
 			//RunOnUiThread(() => Utils.ShowAlert (Resource.String.game_over_win_title, Resource.String.game_over_win, this));
 			Intent intent = Utils.CreateGameOverDialogMulti(this, Resources, true);
 			StartActivity(intent);
