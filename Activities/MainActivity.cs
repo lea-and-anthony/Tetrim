@@ -3,6 +3,7 @@ using System.Timers;
 
 using Android.App;
 using Android.Graphics;
+using Android.Graphics.Drawables;
 using Android.Content;
 using Android.Widget;
 using Android.OS;
@@ -45,12 +46,12 @@ namespace Tetrim
 			base.OnCreate(bundle);
 
 			// Set our view from the "main" layout resource
-			SetContentView(Resource.Layout.GameMulti);
+			SetContentView(Resource.Layout.GameSingle);
 
 			// Creation of the model
 			_game = new Game();
 
-			LinearLayout gameLayout = FindViewById<LinearLayout>(Resource.Id.layoutGameMulti);
+			LinearLayout gameLayout = FindViewById<LinearLayout>(Resource.Id.layoutGameSingle);
 
 			// Test if the view is created so we can resize the buttons
 			if(gameLayout.ViewTreeObserver.IsAlive)
@@ -71,7 +72,7 @@ namespace Tetrim
 				gridOpponent.Init(_game._player2._grid);
 				_gameView._player2View._gridView = gridOpponent;
 
-				ViewProposedPiece viewProposed = FindViewById<ViewProposedPiece>(Resource.Id.ProposedPiecesView);
+				ViewProposedPiece viewProposed = FindViewById<ViewProposedPiece>(Resource.Id.player2piece);
 				viewProposed.SetPlayer(_game._player1);
 
 				// Hook on network event
@@ -105,26 +106,28 @@ namespace Tetrim
 
 			// Destroy the onGlobalLayout afterwards, otherwise it keeps changing
 			// the sizes non-stop, even though it's already done
-			LinearLayout gameLayout = FindViewById<LinearLayout>(Resource.Id.layoutGameMulti);
+			LinearLayout gameLayout = FindViewById<LinearLayout>(Resource.Id.layoutGameSingle);
 			gameLayout.ViewTreeObserver.RemoveGlobalOnLayoutListener(this);
 		}
 
 		protected void InitializeUI()
 		{
-			Utils.SetTextFont(FindViewById<TextView>(Resource.Id.player1name));
-			Utils.SetTextFont(FindViewById<TextView>(Resource.Id.player2name));
-			Utils.SetTextFont(FindViewById<TextView>(Resource.Id.player1score));
-			Utils.SetTextFont(FindViewById<TextView>(Resource.Id.player2score));
-			Utils.SetTextFont(FindViewById<TextView>(Resource.Id.player1rows));
-			Utils.SetTextFont(FindViewById<TextView>(Resource.Id.player2rows));
-			Utils.SetTextFont(FindViewById<TextView>(Resource.Id.player1level));
-			Utils.SetTextFont(FindViewById<TextView>(Resource.Id.player2level));
-			Utils.SetTextFont(FindViewById<TextView>(Resource.Id.score1));
-			Utils.SetTextFont(FindViewById<TextView>(Resource.Id.score2));
-			Utils.SetTextFont(FindViewById<TextView>(Resource.Id.rows1));
-			Utils.SetTextFont(FindViewById<TextView>(Resource.Id.rows2));
-			Utils.SetTextFont(FindViewById<TextView>(Resource.Id.level1));
-			Utils.SetTextFont(FindViewById<TextView>(Resource.Id.level2));
+			setPlayerName(Resource.Id.player1name, true);
+			//setPlayerName(Resource.Id.player2name, false);
+			setPlayerStat(Resource.Id.player1score, true, false);
+			//setPlayerStat(Resource.Id.player2score, false, false);
+			setPlayerStat(Resource.Id.player1rows, true, false);
+			//setPlayerStat(Resource.Id.player2rows, false, false);
+			setPlayerStat(Resource.Id.player1level, true, false);
+			//setPlayerStat(Resource.Id.player2level, false, false);
+			setPlayerStat(Resource.Id.score1, true, true);
+			//setPlayerStat(Resource.Id.score2, false, true);
+			setPlayerStat(Resource.Id.rows1, true, true);
+			//setPlayerStat(Resource.Id.rows2, false, true);
+			setPlayerStat(Resource.Id.level1, true, true);
+			//setPlayerStat(Resource.Id.level2, false, true);
+			setPlayerStat(Resource.Id.piece1, true, true);
+			//setPlayerStat(Resource.Id.piece2, false, true);
 
 			// Change the size of the components to center them
 			GridView myGrid = FindViewById<GridView>(Resource.Id.PlayerGridView);
@@ -133,10 +136,12 @@ namespace Tetrim
 			myGrid.LayoutParameters = new LinearLayout.LayoutParams(size.X, size.Y);
 
 			// Change the size of the components to center them
-			NextPieceView nextPieceView = FindViewById<NextPieceView>(Resource.Id.NextPieceView);
+			NextPieceView nextPieceView = FindViewById<NextPieceView>(Resource.Id.player1piece);
 			nextPieceView.SetPlayer(_game._player1);
-			nextPieceView.LayoutParameters = new RelativeLayout.LayoutParams(nextPieceView.MeasuredWidth + difference, 
-																				nextPieceView.MeasuredWidth + difference);
+			nextPieceView.SetBackgroundColor(Utils.getAndroidColor(TetrisColor.Cyan));
+
+			//ViewProposedPiece proposedPiecesView = FindViewById<ViewProposedPiece>(Resource.Id.player2piece);
+			//proposedPiecesView.SetBackgroundColor(Utils.getAndroidColor(TetrisColor.Red));
 
 			// Set the buttons
 			Utils.SetArrowButton(FindViewById<ButtonStroked>(Resource.Id.buttonMoveLeft), TetrisColor.Green, difference);
@@ -148,6 +153,64 @@ namespace Tetrim
 
 			LinearLayout gameLayout = FindViewById<LinearLayout>(Resource.Id.gridButtonLayout);
 			gameLayout.WeightSum = 0;
+
+			//setBackground();
+		}
+
+		private void setBackground()
+		{
+			LinearLayout player2layout = FindViewById<LinearLayout>(Resource.Id.player2layout);
+			// Create image
+			Bitmap player2background = Bitmap.CreateBitmap(player2layout.Width, player2layout.Height, Bitmap.Config.Argb8888);
+			Canvas backCanvas = new Canvas(player2background);
+
+			// Background fill paint
+			Paint fillBackPaint = new Paint();
+			fillBackPaint.Color = Utils.Player2Background;
+			fillBackPaint.AntiAlias = true;
+
+			// Background stroke paint
+			// TODO : same width as buttons and set layout margins
+			int strokeBorderWidth = Utils.GetPixelsFromDP(BaseContext, 10);
+			Paint strokeBackPaint = new Paint();
+			strokeBackPaint.Color = Utils.getAndroidColor(TetrisColor.Red);
+			strokeBackPaint.SetStyle(Paint.Style.Stroke);
+			strokeBackPaint.StrokeWidth = strokeBorderWidth;
+			strokeBackPaint.AntiAlias = true;
+
+			// Get rectangle
+			Rect local = new Rect();
+			player2layout.GetLocalVisibleRect(local);
+			RectF bounds = new RectF(local);
+			bounds.Left += strokeBorderWidth/2;
+			bounds.Bottom -= strokeBorderWidth/2;
+			bounds.Top -= strokeBorderWidth;
+			bounds.Right += strokeBorderWidth;
+
+			// Actually draw background
+			int radiusIn = Utils.GetPixelsFromDP(BaseContext, 7);
+			int radiusOut = Utils.GetPixelsFromDP(BaseContext, 5);
+			backCanvas.DrawRoundRect(bounds, radiusOut, radiusOut, strokeBackPaint);
+			backCanvas.DrawRoundRect(bounds, radiusIn, radiusIn, fillBackPaint);
+
+			// Use it as background
+			player2layout.SetBackgroundDrawable(new BitmapDrawable(player2background));
+		}
+
+		private void setPlayerStat(int id, bool me, bool isTitle)
+		{
+			TextView textView = FindViewById<TextView>(id);
+			Utils.SetTextFont(textView);
+			textView.SetBackgroundColor(Utils.getAndroidColor(me ? TetrisColor.Cyan : TetrisColor.Red));
+			textView.SetTextColor(!isTitle ? (me ? Utils.Player1Background : Utils.Player2Background)
+				: Utils.getAndroidDarkColor(me ? TetrisColor.Cyan : TetrisColor.Red));
+		}
+
+		private void setPlayerName(int id, bool me)
+		{
+			TextView textView = FindViewById<TextView>(id);
+			Utils.SetTextFont(textView);
+			textView.SetTextColor(Utils.getAndroidColor(me ? TetrisColor.Cyan : TetrisColor.Red));
 		}
 
 		// Called when an other application is displayed in front of this one
@@ -319,7 +382,7 @@ namespace Tetrim
 			UpdateOpponentView(message);
 			if(message[Constants.SizeMessagePiecePut - 1] == 1)
 			{
-				FindViewById<ViewProposedPiece>(Resource.Id.ProposedPiecesView).ChangeProposedPiece();
+				FindViewById<ViewProposedPiece>(Resource.Id.player2piece).ChangeProposedPiece();
 			}
 
 			return 0;

@@ -130,6 +130,7 @@
     <AndroidResource Include="Resources\layout\BluetoothDevices.axml" />
     <AndroidResource Include="Resources\layout\AlertDialog.axml" />
     <AndroidResource Include="Resources\layout\Settings.axml" />
+    <AndroidResource Include="Resources\layout\GameSingle.axml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Code-Model\" />

@@ -21,6 +21,12 @@ namespace Tetrim
 			RequestUserName = 5,
 		};
 
+
+		//public static Color Player1Background = Color.ParseColor("#ff00171a");
+		//public static Color Player2Background = Color.ParseColor("#ff250000");
+		public static Color Player1Background = Color.ParseColor("#ff000000");
+		public static Color Player2Background = Color.ParseColor("#ff000000");
+
 		public static Typeface TextFont;
 		public static Typeface TitleFont;
 		public static Typeface ArrowFont;

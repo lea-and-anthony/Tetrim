@@ -5,6 +5,7 @@ using Android.Content;
 using Android.Views;
 using Android.Graphics;
 using Android.Util;
+using Android.Runtime;
 
 namespace Tetrim
 {
@@ -23,6 +24,10 @@ namespace Tetrim
 		//--------------------------------------------------------------
 		// CONSTRUCTORS
 		//--------------------------------------------------------------
+		/*public ViewProposedPiece(IntPtr javaReference, JniHandleOwnership transfer) : base(javaReference, transfer)
+		{
+		}*/
+
 		public ViewProposedPiece(Context context, IAttributeSet attrs) : base(context, attrs)
 		{
 		}

@@ -55,7 +55,7 @@ namespace Tetrim
 		public const byte NumVersion2 = 0;
 
 		public const int NbProposedPiece = 4;
-		public const int NbLinePropPiece = 1;
+		public const int NbLinePropPiece = 2;
 	}
 
 	public enum Shape
