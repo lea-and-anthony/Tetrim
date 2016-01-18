@@ -34,7 +34,7 @@ namespace Tetrim
 
 			// Destroy the onGlobalLayout afterwards, otherwise it keeps changing
 			// the sizes non-stop, even though it's already done
-			LinearLayout gameLayout = FindViewById<LinearLayout>(Resource.Id.layoutGameMulti);
+			LinearLayout gameLayout = FindViewById<LinearLayout>(Resource.Id.layoutGame);
 			gameLayout.ViewTreeObserver.RemoveGlobalOnLayoutListener(this);
 		}
 
@@ -44,12 +44,9 @@ namespace Tetrim
 		{
 			base.OnPause();
 
-			if(_gameTimer != null)
+			if(_gameTimer != null && _gameTimer.Enabled)
 			{
-				if(_gameTimer.Enabled)
-					pauseGame(true);
-				else
-					resumeGame();
+				pauseGame(true);
 			}
 		}
 
@@ -99,7 +96,7 @@ namespace Tetrim
 		// Init the model and the view for a one player game
 		protected void initGame()
 		{
-			LinearLayout gameLayout = FindViewById<LinearLayout>(Resource.Id.layoutGameMulti);
+			LinearLayout gameLayout = FindViewById<LinearLayout>(Resource.Id.layoutGame);
 
 			// Test if the view is created so we can resize the buttons
 			if(gameLayout.ViewTreeObserver.IsAlive)
@@ -109,6 +106,9 @@ namespace Tetrim
 
 			// Creation of the model
 			_player1 = new Player();
+
+			// And the view
+			_player1View = new PlayerView(_player1);
 
 			GridView myGrid = FindViewById<GridView>(Resource.Id.PlayerGridView);
 			myGrid.Init(_player1._grid);
@@ -136,20 +136,14 @@ namespace Tetrim
 
 		protected virtual void initializeUI()
 		{
-			Utils.SetTextFont(FindViewById<TextView>(Resource.Id.player1name));
-			Utils.SetTextFont(FindViewById<TextView>(Resource.Id.player2name));
-			Utils.SetTextFont(FindViewById<TextView>(Resource.Id.player1score));
-			Utils.SetTextFont(FindViewById<TextView>(Resource.Id.player2score));
-			Utils.SetTextFont(FindViewById<TextView>(Resource.Id.player1rows));
-			Utils.SetTextFont(FindViewById<TextView>(Resource.Id.player2rows));
-			Utils.SetTextFont(FindViewById<TextView>(Resource.Id.player1level));
-			Utils.SetTextFont(FindViewById<TextView>(Resource.Id.player2level));
-			Utils.SetTextFont(FindViewById<TextView>(Resource.Id.score1));
-			Utils.SetTextFont(FindViewById<TextView>(Resource.Id.score2));
-			Utils.SetTextFont(FindViewById<TextView>(Resource.Id.rows1));
-			Utils.SetTextFont(FindViewById<TextView>(Resource.Id.rows2));
-			Utils.SetTextFont(FindViewById<TextView>(Resource.Id.level1));
-			Utils.SetTextFont(FindViewById<TextView>(Resource.Id.level2));
+			setPlayerName(Resource.Id.player1name, true);
+			setPlayerStat(Resource.Id.player1score, true, false);
+			setPlayerStat(Resource.Id.player1rows, true, false);
+			setPlayerStat(Resource.Id.player1level, true, false);
+			setPlayerStat(Resource.Id.score1, true, true);
+			setPlayerStat(Resource.Id.rows1, true, true);
+			setPlayerStat(Resource.Id.level1, true, true);
+			setPlayerStat(Resource.Id.piece1, true, true);
 
 			// Change the size of the components to center them
 			GridView myGrid = FindViewById<GridView>(Resource.Id.PlayerGridView);
@@ -158,10 +152,9 @@ namespace Tetrim
 			myGrid.LayoutParameters = new LinearLayout.LayoutParams(size.X, size.Y);
 
 			// Change the size of the components to center them
-			NextPieceView nextPieceView = FindViewById<NextPieceView>(Resource.Id.NextPieceView);
+			NextPieceView nextPieceView = FindViewById<NextPieceView>(Resource.Id.player1piece);
 			nextPieceView.SetPlayer(_player1);
-			nextPieceView.LayoutParameters = new RelativeLayout.LayoutParams(nextPieceView.MeasuredWidth + difference, 
-				nextPieceView.MeasuredWidth + difference);
+			nextPieceView.SetBackgroundColor(Utils.getAndroidColor(TetrisColor.Cyan));
 
 			// Set the buttons
 			Utils.SetArrowButton(FindViewById<ButtonStroked>(Resource.Id.buttonMoveLeft), TetrisColor.Green, difference);
@@ -175,6 +168,22 @@ namespace Tetrim
 			// now we have set the size it is useless and it will allow the layout to actualize
 			LinearLayout gameLayout = FindViewById<LinearLayout>(Resource.Id.gridButtonLayout);
 			gameLayout.WeightSum = 0;
+		}
+
+		protected void setPlayerStat(int id, bool me, bool isTitle)
+		{
+			TextView textView = FindViewById<TextView>(id);
+			Utils.SetTextFont(textView);
+			textView.SetBackgroundColor(Utils.getAndroidColor(me ? TetrisColor.Cyan : TetrisColor.Red));
+			textView.SetTextColor(!isTitle ? (me ? Utils.Player1Background : Utils.Player2Background)
+				: Utils.getAndroidDarkColor(me ? TetrisColor.Cyan : TetrisColor.Red));
+		}
+
+		protected void setPlayerName(int id, bool me)
+		{
+			TextView textView = FindViewById<TextView>(id);
+			Utils.SetTextFont(textView);
+			textView.SetTextColor(Utils.getAndroidColor(me ? TetrisColor.Cyan : TetrisColor.Red));
 		}
 
 		protected void endGame()

@@ -4,44 +4,55 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:keepScreenOn="true"
-    android:id="@+id/layoutGameMulti"
-    android:weightSum="100">
+    android:id="@+id/layoutGame"
+    android:weightSum="100"
+    android:paddingTop="1dp"
+    android:paddingRight="1dp"
+    android:paddingBottom="1dp"
+    android:paddingLeft="1dp">
     <LinearLayout
         android:orientation="horizontal"
+        android:minWidth="25px"
+        android:minHeight="25px"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:id="@+id/statsLayout"
-        android:weightSum="100"
-        android:layout_weight="25">
+        android:id="@+id/playersLayout"
+        android:layout_weight="37"
+        android:weightSum="100">
         <LinearLayout
             android:orientation="vertical"
+            android:minWidth="25px"
+            android:minHeight="25px"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:id="@+id/myStatsLayout"
+            android:id="@+id/player1layout"
             android:layout_weight="33"
-            android:weightSum="100">
+            android:weightSum="100"
+            android:paddingBottom="8dp"
+            android:paddingRight="3dp">
             <LinearLayout
                 android:orientation="horizontal"
                 android:minWidth="25px"
                 android:minHeight="25px"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:id="@+id/linearLayout6"
-                android:layout_weight="30">
+                android:id="@+id/player1nameLayout"
+                android:layout_weight="19">
                 <TextView
                     android:text="Player 1"
                     android:textAppearance="?android:attr/textAppearanceLarge"
                     android:id="@+id/player1name"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:gravity="center" />
+                    android:gravity="center"
+                    android:textColor="#ff4db6ac" />
             </LinearLayout>
             <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:id="@+id/linearLayout7"
-                android:layout_weight="30">
+                android:id="@+id/player1scoreLayout"
+                android:layout_weight="23">
                 <TextView
                     android:text="Score"
                     android:textAppearance="?android:attr/textAppearanceSmall"
@@ -50,10 +61,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="#ff212121"
-                    android:background="#ffb0bec5"
+                    android:background="#ff4db6ac"
                     android:layout_marginLeft="2dp"
                     android:layout_marginTop="2dp"
-                    android:layout_marginRight="2dp" />
+                    android:layout_marginRight="2dp"
+                    android:paddingRight="2dp"
+                    android:paddingLeft="2dp" />
                 <TextView
                     android:text="Score"
                     android:textAppearance="?android:attr/textAppearanceLarge"
@@ -61,7 +74,7 @@
                     android:gravity="center"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="#ffb0bec5"
+                    android:background="#ff4db6ac"
                     android:textColor="#ff212121"
                     android:layout_marginLeft="2dp"
                     android:layout_marginRight="2dp"
@@ -71,8 +84,8 @@
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:id="@+id/linearLayout8"
-                android:layout_weight="40"
+                android:id="@+id/player1rowsLevelLayout"
+                android:layout_weight="23"
                 android:weightSum="100">
                 <LinearLayout
                     android:orientation="vertical"
@@ -80,7 +93,7 @@
                     android:minHeight="25px"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:id="@+id/linearLayout13"
+                    android:id="@+id/player1rowsLayout"
                     android:layout_weight="50">
                     <TextView
                         android:text="Rows"
@@ -90,10 +103,12 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="#ff212121"
-                        android:background="#ffb0bec5"
+                        android:background="#ff4db6ac"
                         android:layout_marginLeft="2dp"
                         android:layout_marginTop="2dp"
-                        android:layout_marginRight="2dp" />
+                        android:layout_marginRight="2dp"
+                        android:paddingRight="2dp"
+                        android:paddingLeft="2dp" />
                     <TextView
                         android:text="Rows"
                         android:textAppearance="?android:attr/textAppearanceLarge"
@@ -101,7 +116,7 @@
                         android:gravity="center"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:background="#ffb0bec5"
+                        android:background="#ff4db6ac"
                         android:textColor="#ff212121"
                         android:layout_marginLeft="2dp"
                         android:layout_marginRight="2dp"
@@ -113,7 +128,7 @@
                     android:minHeight="25px"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:id="@+id/linearLayout14"
+                    android:id="@+id/player1levelLayout"
                     android:layout_weight="50">
                     <TextView
                         android:text="Level"
@@ -122,11 +137,13 @@
                         android:gravity="left"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="#ffb0bec5"
+                        android:background="#ff4db6ac"
                         android:textColor="#ff212121"
                         android:layout_marginLeft="2dp"
                         android:layout_marginTop="2dp"
-                        android:layout_marginRight="2dp" />
+                        android:layout_marginRight="2dp"
+                        android:paddingRight="2dp"
+                        android:paddingLeft="2dp" />
                     <TextView
                         android:text="Level"
                         android:textAppearance="?android:attr/textAppearanceLarge"
@@ -134,154 +151,247 @@
                         android:gravity="center"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:background="#ffb0bec5"
+                        android:background="#ff4db6ac"
                         android:textColor="#ff212121"
                         android:layout_marginLeft="2dp"
                         android:layout_marginRight="2dp"
                         android:layout_marginBottom="2dp" />
                 </LinearLayout>
-            </LinearLayout>
-        </LinearLayout>
-        <LinearLayout
-            android:orientation="vertical"
-            android:minWidth="25px"
-            android:minHeight="25px"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:id="@+id/enemyGrid"
-            android:layout_weight="34">
-            <Tetrim.GridView
-                android:id="@+id/OpponentGridView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-        </LinearLayout>
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:id="@+id/enemyStatsLayout"
-            android:layout_weight="33"
-            android:weightSum="100">
-            <LinearLayout
-                android:orientation="horizontal"
-                android:minWidth="25px"
-                android:minHeight="25px"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:id="@+id/linearLayout9"
-                android:layout_weight="30">
-                <TextView
-                    android:text="Player 2"
-                    android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:id="@+id/player2name"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center" />
             </LinearLayout>
             <LinearLayout
                 android:orientation="vertical"
                 android:minWidth="25px"
                 android:minHeight="25px"
+                android:id="@+id/player1pieceLayout"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:id="@+id/linearLayout10"
-                android:layout_weight="30">
+                android:layout_weight="35">
                 <TextView
-                    android:text="Score"
+                    android:text="Next piece"
                     android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:id="@+id/score2"
-                    android:gravity="left"
+                    android:id="@+id/piece1"
+                    android:gravity="center"
+                    android:textColor="#ff212121"
+                    android:background="#ff4db6ac"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="#ff212121"
-                    android:background="#ffb0bec5"
                     android:layout_marginLeft="2dp"
                     android:layout_marginTop="2dp"
-                    android:layout_marginRight="2dp" />
-                <TextView
-                    android:text="Score"
-                    android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:id="@+id/player2score"
-                    android:gravity="center"
-                    android:background="#ffb0bec5"
-                    android:textColor="#ff212121"
+                    android:layout_marginRight="2dp"
+                    android:paddingRight="2dp"
+                    android:paddingLeft="2dp" />
+                <Tetrim.NextPieceView
+                    android:id="@+id/player1piece"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:background="#ff4db6ac"
                     android:layout_marginLeft="2dp"
                     android:layout_marginRight="2dp"
                     android:layout_marginBottom="2dp" />
             </LinearLayout>
+        </LinearLayout>
+        <LinearLayout
+            android:orientation="horizontal"
+            android:minWidth="25px"
+            android:minHeight="25px"
+            android:id="@+id/player2layout"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="67"
+            android:weightSum="67"
+            android:paddingLeft="8dp"
+            android:paddingBottom="8dp">
             <LinearLayout
-                android:orientation="horizontal"
+                android:orientation="vertical"
                 android:minWidth="25px"
                 android:minHeight="25px"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:id="@+id/linearLayout11"
-                android:layout_weight="40"
+                android:id="@+id/player2column1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="34"
                 android:weightSum="100">
                 <LinearLayout
-                    android:orientation="vertical"
+                    android:orientation="horizontal"
                     android:minWidth="25px"
                     android:minHeight="25px"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:id="@+id/linearLayout15"
-                    android:layout_weight="50">
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:id="@+id/player2nameLayout"
+                    android:layout_weight="19">
                     <TextView
-                        android:text="Rows"
-                        android:textAppearance="?android:attr/textAppearanceSmall"
-                        android:id="@+id/rows2"
-                        android:gravity="left"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="2dp"
-                        android:layout_marginTop="2dp"
-                        android:layout_marginRight="2dp"
-                        android:background="#ffb0bec5"
-                        android:textColor="#ff212121" />
-                    <TextView
-                        android:text="Rows"
+                        android:text="Player 2"
                         android:textAppearance="?android:attr/textAppearanceLarge"
-                        android:id="@+id/player2rows"
-                        android:gravity="center"
+                        android:id="@+id/player2name"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:background="#ffb0bec5"
-                        android:textColor="#ff212121"
-                        android:layout_marginLeft="2dp"
-                        android:layout_marginRight="2dp"
-                        android:layout_marginBottom="2dp" />
+                        android:gravity="center"
+                        android:textColor="#ffff6e40" />
                 </LinearLayout>
                 <LinearLayout
                     android:orientation="vertical"
                     android:minWidth="25px"
                     android:minHeight="25px"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:id="@+id/linearLayout16"
-                    android:layout_weight="50">
+                    android:id="@+id/enemyGrid"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="81">
+                    <Tetrim.GridView
+                        android:id="@+id/OpponentGridView"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" />
+                </LinearLayout>
+            </LinearLayout>
+            <LinearLayout
+                android:orientation="vertical"
+                android:minWidth="25px"
+                android:minHeight="25px"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:id="@+id/player2column2"
+                android:layout_weight="33"
+                android:weightSum="100">
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:minWidth="25px"
+                    android:minHeight="25px"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:id="@+id/player2scoreLayout"
+                    android:layout_weight="23">
                     <TextView
-                        android:text="Level"
+                        android:text="Score"
                         android:textAppearance="?android:attr/textAppearanceSmall"
-                        android:id="@+id/level2"
+                        android:id="@+id/score2"
                         android:gravity="left"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="#ffb0bec5"
+                        android:textColor="#ff212121"
+                        android:background="#ffff6e40"
                         android:layout_marginLeft="2dp"
                         android:layout_marginTop="2dp"
                         android:layout_marginRight="2dp"
-                        android:textColor="#ff212121" />
+                        android:paddingRight="2dp"
+                        android:paddingLeft="2dp" />
                     <TextView
-                        android:text="Level"
+                        android:text="Score"
                         android:textAppearance="?android:attr/textAppearanceLarge"
-                        android:id="@+id/player2level"
+                        android:id="@+id/player2score"
                         android:gravity="center"
+                        android:background="#ffff6e40"
+                        android:textColor="#ff212121"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:background="#ffb0bec5"
+                        android:layout_marginLeft="2dp"
+                        android:layout_marginRight="2dp"
+                        android:layout_marginBottom="2dp" />
+                </LinearLayout>
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:minWidth="25px"
+                    android:minHeight="25px"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:id="@+id/player1rowsLevelLayout"
+                    android:layout_weight="23"
+                    android:weightSum="100">
+                    <LinearLayout
+                        android:orientation="vertical"
+                        android:minWidth="25px"
+                        android:minHeight="25px"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:id="@+id/player2rowsLayout"
+                        android:layout_weight="50">
+                        <TextView
+                            android:text="Rows"
+                            android:textAppearance="?android:attr/textAppearanceSmall"
+                            android:id="@+id/rows2"
+                            android:gravity="left"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="2dp"
+                            android:layout_marginTop="2dp"
+                            android:layout_marginRight="2dp"
+                            android:background="#ffff6e40"
+                            android:textColor="#ff212121"
+                            android:paddingRight="2dp"
+                            android:paddingLeft="2dp" />
+                        <TextView
+                            android:text="Rows"
+                            android:textAppearance="?android:attr/textAppearanceLarge"
+                            android:id="@+id/player2rows"
+                            android:gravity="center"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="#ffff6e40"
+                            android:textColor="#ff212121"
+                            android:layout_marginLeft="2dp"
+                            android:layout_marginRight="2dp"
+                            android:layout_marginBottom="2dp" />
+                    </LinearLayout>
+                    <LinearLayout
+                        android:orientation="vertical"
+                        android:minWidth="25px"
+                        android:minHeight="25px"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:id="@+id/player2levelLayout"
+                        android:layout_weight="50">
+                        <TextView
+                            android:text="Level"
+                            android:textAppearance="?android:attr/textAppearanceSmall"
+                            android:id="@+id/level2"
+                            android:gravity="left"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="#ffff6e40"
+                            android:layout_marginLeft="2dp"
+                            android:layout_marginTop="2dp"
+                            android:layout_marginRight="2dp"
+                            android:textColor="#ff212121"
+                            android:paddingRight="2dp"
+                            android:paddingLeft="2dp" />
+                        <TextView
+                            android:text="Level"
+                            android:textAppearance="?android:attr/textAppearanceLarge"
+                            android:id="@+id/player2level"
+                            android:gravity="center"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="#ffff6e40"
+                            android:textColor="#ff212121"
+                            android:layout_marginLeft="2dp"
+                            android:layout_marginRight="2dp"
+                            android:layout_marginBottom="2dp" />
+                    </LinearLayout>
+                </LinearLayout>
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:minWidth="25px"
+                    android:minHeight="25px"
+                    android:id="@+id/player2pieceLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="54">
+                    <TextView
+                        android:text="Next piece"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:id="@+id/piece2"
+                        android:gravity="center"
                         android:textColor="#ff212121"
+                        android:background="#ffff6e40"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="2dp"
+                        android:layout_marginTop="2dp"
+                        android:layout_marginRight="2dp"
+                        android:paddingRight="2dp"
+                        android:paddingLeft="2dp" />
+                    <Tetrim.ViewProposedPiece
+                        android:id="@+id/player2piece"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="#ffff6e40"
                         android:layout_marginLeft="2dp"
                         android:layout_marginRight="2dp"
                         android:layout_marginBottom="2dp" />
@@ -294,14 +404,15 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:id="@+id/gridButtonLayout"
-        android:layout_weight="65"
-        android:weightSum="100">
+        android:layout_weight="63"
+        android:weightSum="100"
+        android:paddingTop="3dp">
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:id="@+id/layoutButtonsLeft"
-            android:layout_gravity="bottom"
+            android:layout_gravity="top"
             android:layout_weight="15">
             <Tetrim.ButtonStroked
                 android:text="&lt;~"
@@ -357,88 +468,60 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="70" />
-        <RelativeLayout
+        <LinearLayout
             android:orientation="vertical"
+            android:id="@+id/layoutButtonsRight"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:id="@+id/layoutRightGrid"
             android:layout_weight="15">
-            <Tetrim.NextPieceView
-                android:id="@+id/NextPieceView"
-                android:layout_marginTop="5dp"
+            <Tetrim.ButtonStroked
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/buttonTurnRight"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:text="~&gt;"
+                android:textColor="#fffafafa"
                 android:layout_marginLeft="2dp"
                 android:layout_marginRight="2dp"
+                android:shadowColor="#ff212121"
+                android:shadowDx="2"
+                android:shadowDy="2"
+                android:shadowRadius="0.01"
+                android:background="#ff00b0ff"
+                android:tag="@string/turn_right_arrow" />
+            <Tetrim.ButtonStroked
+                android:text="-&gt;"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentTop="true" />
-            <LinearLayout
-                android:orientation="vertical"
+                android:id="@+id/buttonMoveRight"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp"
+                android:textColor="#fffafafa"
+                android:shadowColor="#ff212121"
+                android:shadowDx="2"
+                android:shadowDy="2"
+                android:shadowRadius="0.01"
+                android:background="#ff00c853"
+                android:tag="@string/right_arrow" />
+            <Tetrim.ButtonStroked
+                android:text="v v"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/layoutButtonsRight"
-                android:layout_alignParentBottom="true">
-                <Tetrim.ButtonStroked
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/buttonTurnRight"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginBottom="10dp"
-                    android:text="~&gt;"
-                    android:textColor="#fffafafa"
-                    android:layout_marginLeft="2dp"
-                    android:layout_marginRight="2dp"
-                    android:shadowColor="#ff212121"
-                    android:shadowDx="2"
-                    android:shadowDy="2"
-                    android:shadowRadius="0.01"
-                    android:background="#ff00b0ff"
-                    android:tag="@string/turn_right_arrow" />
-                <Tetrim.ButtonStroked
-                    android:text="-&gt;"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/buttonMoveRight"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginBottom="10dp"
-                    android:layout_marginLeft="2dp"
-                    android:layout_marginRight="2dp"
-                    android:textColor="#fffafafa"
-                    android:shadowColor="#ff212121"
-                    android:shadowDx="2"
-                    android:shadowDy="2"
-                    android:shadowRadius="0.01"
-                    android:background="#ff00c853"
-                    android:tag="@string/right_arrow" />
-                <Tetrim.ButtonStroked
-                    android:text="v v"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/buttonMoveFoot"
-                    android:layout_marginLeft="2dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginRight="2dp"
-                    android:layout_marginBottom="10dp"
-                    android:textColor="#fffafafa"
-                    android:shadowColor="#ff212121"
-                    android:shadowRadius="0.01"
-                    android:shadowDx="0"
-                    android:shadowDy="3"
-                    android:background="#ffc62828"
-                    android:tag="@string/bottom_arrow" />
-            </LinearLayout>
-        </RelativeLayout>
-    </LinearLayout>
-    <LinearLayout
-        android:orientation="horizontal"
-        android:minWidth="25px"
-        android:minHeight="25px"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:id="@+id/piecesLayout"
-        android:layout_weight="10">
-        <Tetrim.ViewProposedPiece
-            android:id="@+id/ProposedPiecesView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+                android:id="@+id/buttonMoveFoot"
+                android:layout_marginLeft="2dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="2dp"
+                android:layout_marginBottom="10dp"
+                android:textColor="#fffafafa"
+                android:shadowColor="#ff212121"
+                android:shadowRadius="0.01"
+                android:shadowDx="0"
+                android:shadowDy="3"
+                android:background="#ffc62828"
+                android:tag="@string/bottom_arrow" />
+        </LinearLayout>
     </LinearLayout>
 </LinearLayout>

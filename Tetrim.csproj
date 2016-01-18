@@ -70,13 +70,13 @@
     <Compile Include="Code-View\TextViewStroked.cs" />
     <Compile Include="Activities\ReconnectActivity.cs" />
     <Compile Include="Code-Model\User.cs" />
-    <Compile Include="Activities\CustomDialog.cs" />
-    <Compile Include="Code-View\CustomDialogBuilder.cs" />
     <Compile Include="Activities\SettingsActivity.cs" />
     <Compile Include="Code-View\NextPieceView.cs" />
     <Compile Include="Activities\GameSingleActivity.cs" />
     <Compile Include="Activities\GameMultiActivity.cs" />
     <Compile Include="Activities\GameActivity.cs" />
+    <Compile Include="Code-View\DialogBuilder.cs" />
+    <Compile Include="Activities\DialogActivity.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
@@ -125,11 +125,12 @@
     <AndroidResource Include="Resources\drawable-xxxhdpi\pause.png" />
     <AndroidResource Include="Resources\drawable-xxxhdpi\turn_left.png" />
     <AndroidResource Include="Resources\drawable-xxxhdpi\turn_right.png" />
-    <AndroidResource Include="Resources\layout\Home.axml" />
     <AndroidResource Include="Resources\layout\GameMulti.axml" />
-    <AndroidResource Include="Resources\layout\BluetoothDevices.axml" />
-    <AndroidResource Include="Resources\layout\AlertDialog.axml" />
     <AndroidResource Include="Resources\layout\Settings.axml" />
+    <AndroidResource Include="Resources\layout\GameSingle.axml" />
+    <AndroidResource Include="Resources\layout\Menu.axml" />
+    <AndroidResource Include="Resources\layout\BluetoothConnection.axml" />
+    <AndroidResource Include="Resources\layout\Dialog.axml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Code-Model\" />

@@ -2,6 +2,8 @@
 using System.Timers;
 
 using Android.App;
+using Android.Graphics;
+using Android.Graphics.Drawables;
 using Android.Content;
 using Android.Widget;
 using Android.OS;
@@ -45,6 +47,12 @@ namespace Tetrim
 				Finish();
 			}
 
+			// Creation of the model
+			_player2 = new Player();
+
+			// And the view
+			_player2View = new PlayerView(_player2);
+
 			// Set our view from the "main" layout resource
 			SetContentView(Resource.Layout.GameMulti);
 
@@ -60,7 +68,7 @@ namespace Tetrim
 			TextView player2rows = FindViewById<TextView> (Resource.Id.player2rows);
 			_player2View.SetViews(player2name, player2score, player2level, player2rows);
 
-			ViewProposedPiece viewProposed = FindViewById<ViewProposedPiece>(Resource.Id.ProposedPiecesView);
+			ViewProposedPiece viewProposed = FindViewById<ViewProposedPiece>(Resource.Id.player2piece);
 			viewProposed.SetPlayer(_player1);
 
 			// Hook on network event
@@ -178,6 +186,65 @@ namespace Tetrim
 		//--------------------------------------------------------------
 		// PROTECTED METHODES
 		//--------------------------------------------------------------
+		protected override void initializeUI()
+		{
+			base.initializeUI();
+			
+			setPlayerName(Resource.Id.player2name, false);
+			setPlayerStat(Resource.Id.player2score, false, false);
+			setPlayerStat(Resource.Id.player2rows, false, false);
+			setPlayerStat(Resource.Id.player2level, false, false);
+			setPlayerStat(Resource.Id.score2, false, true);
+			setPlayerStat(Resource.Id.rows2, false, true);
+			setPlayerStat(Resource.Id.level2, false, true);
+			setPlayerStat(Resource.Id.piece2, false, true);
+
+			ViewProposedPiece proposedPiecesView = FindViewById<ViewProposedPiece>(Resource.Id.player2piece);
+			proposedPiecesView.SetBackgroundColor(Utils.getAndroidColor(TetrisColor.Red));
+			
+			setBackground();
+		}
+
+		private void setBackground()
+		{
+			LinearLayout player2layout = FindViewById<LinearLayout>(Resource.Id.player2layout);
+			// Create image
+			Bitmap player2background = Bitmap.CreateBitmap(player2layout.Width, player2layout.Height, Bitmap.Config.Argb8888);
+			Canvas backCanvas = new Canvas(player2background);
+
+			// Background fill paint
+			Paint fillBackPaint = new Paint();
+			fillBackPaint.Color = Utils.Player2Background;
+			fillBackPaint.AntiAlias = true;
+
+			// Background stroke paint
+			// TODO : same width as buttons and set layout margins
+			int strokeBorderWidth = Utils.GetPixelsFromDP(BaseContext, 10);
+			Paint strokeBackPaint = new Paint();
+			strokeBackPaint.Color = Utils.getAndroidColor(TetrisColor.Red);
+			strokeBackPaint.SetStyle(Paint.Style.Stroke);
+			strokeBackPaint.StrokeWidth = strokeBorderWidth;
+			strokeBackPaint.AntiAlias = true;
+
+			// Get rectangle
+			Rect local = new Rect();
+			player2layout.GetLocalVisibleRect(local);
+			RectF bounds = new RectF(local);
+			bounds.Left += strokeBorderWidth/2;
+			bounds.Bottom -= strokeBorderWidth/2;
+			bounds.Top -= strokeBorderWidth;
+			bounds.Right += strokeBorderWidth;
+
+			// Actually draw background
+			int radiusIn = Utils.GetPixelsFromDP(BaseContext, 7);
+			int radiusOut = Utils.GetPixelsFromDP(BaseContext, 5);
+			backCanvas.DrawRoundRect(bounds, radiusOut, radiusOut, strokeBackPaint);
+			backCanvas.DrawRoundRect(bounds, radiusIn, radiusIn, fillBackPaint);
+
+			// Use it as background
+			player2layout.SetBackgroundDrawable(new BitmapDrawable(player2background));
+		}
+		
 		// Pause the game, display a pop-up and send a message to the remote device if asked
 		protected override int pauseGame(bool requestFromUser)
 		{
@@ -312,7 +379,7 @@ namespace Tetrim
 			UpdateOpponentView(message);
 			if(message[Constants.SizeMessagePiecePut - 1] == 1)
 			{
-				FindViewById<ViewProposedPiece>(Resource.Id.ProposedPiecesView).ChangeProposedPiece();
+				FindViewById<ViewProposedPiece>(Resource.Id.player2piece).ChangeProposedPiece();
 			}
 
 			return 0;

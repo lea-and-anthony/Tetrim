@@ -21,6 +21,12 @@ namespace Tetrim
 			RequestUserName = 5,
 		};
 
+
+		//public static Color Player1Background = Color.ParseColor("#ff00171a");
+		//public static Color Player2Background = Color.ParseColor("#ff250000");
+		public static Color Player1Background = Color.ParseColor("#ff000000");
+		public static Color Player2Background = Color.ParseColor("#ff000000");
+
 		public static Typeface TextFont;
 		public static Typeface TitleFont;
 		public static Typeface ArrowFont;
@@ -237,46 +243,46 @@ namespace Tetrim
 
 		public static Intent CreateUserNameDialogNoCancel(Activity activity, Android.Content.Res.Resources resources)
 		{
-			CustomDialogBuilder builder = new CustomDialogBuilder(activity.BaseContext);
+			DialogBuilder builder = new DialogBuilder(activity.BaseContext);
 			builder.Title = resources.GetString(Resource.String.askName);
 			builder.Message = resources.GetString(Resource.String.askName);
-			builder.ContentType = CustomDialogBuilder.DialogContentType.EditText;
-			builder.RequestCode = CustomDialogBuilder.DialogRequestCode.Text;
+			builder.ContentType = DialogBuilder.DialogContentType.EditText;
+			builder.RequestCode = DialogBuilder.DialogRequestCode.Text;
 			builder.PositiveText = resources.GetString(Resource.String.ok);
 			builder.PositiveAction += delegate {
 				User.Instance.SetName(builder.ReturnText);
 			};
-			CustomDialog.Builder = builder;
-			return new Intent(activity, typeof(CustomDialog));
+			DialogActivity.Builder = builder;
+			return new Intent(activity, typeof(DialogActivity));
 		}
 
 		public static Intent CreateUserNameDialog(Activity activity, Android.Content.Res.Resources resources)
 		{
-			CustomDialogBuilder builder = new CustomDialogBuilder(activity.BaseContext);
+			DialogBuilder builder = new DialogBuilder(activity.BaseContext);
 			builder.Title = resources.GetString(Resource.String.askName);
 			builder.Message = resources.GetString(Resource.String.askName);
-			builder.ContentType = CustomDialogBuilder.DialogContentType.EditText;
-			builder.RequestCode = CustomDialogBuilder.DialogRequestCode.Text;
+			builder.ContentType = DialogBuilder.DialogContentType.EditText;
+			builder.RequestCode = DialogBuilder.DialogRequestCode.Text;
 			builder.NegativeText = resources.GetString(Resource.String.cancel);
 			builder.PositiveText = resources.GetString(Resource.String.ok);
 			builder.PositiveAction += delegate {
 				User.Instance.SetName(builder.ReturnText);
 			};
-			CustomDialog.Builder = builder;
-			return new Intent(activity, typeof(CustomDialog));
+			DialogActivity.Builder = builder;
+			return new Intent(activity, typeof(DialogActivity));
 		}
 
 		public static Intent CreateMakeSureDialog(Activity activity, Android.Content.Res.Resources resources, string message, EventHandler posAction)
 		{
-			CustomDialogBuilder builder = new CustomDialogBuilder(activity.BaseContext);
-			builder.ContentType = CustomDialogBuilder.DialogContentType.TextView;
-			builder.RequestCode = CustomDialogBuilder.DialogRequestCode.PosOrNeg;
+			DialogBuilder builder = new DialogBuilder(activity.BaseContext);
+			builder.ContentType = DialogBuilder.DialogContentType.TextView;
+			builder.RequestCode = DialogBuilder.DialogRequestCode.PosOrNeg;
 			builder.Message = message;
 			builder.NegativeText = resources.GetString(Resource.String.noDialog);
 			builder.PositiveText = resources.GetString(Resource.String.yesDialog);
 			builder.PositiveAction += posAction;
-			CustomDialog.Builder = builder;
-			return new Intent(activity, typeof(CustomDialog));
+			DialogActivity.Builder = builder;
+			return new Intent(activity, typeof(DialogActivity));
 		}
 
 		public static Intent CreateGameOverDialogSingle(Activity activity, Android.Content.Res.Resources resources, int score)
@@ -314,12 +320,12 @@ namespace Tetrim
 			}
 
 			// Create the builder
-			CustomDialogBuilder builder = new CustomDialogBuilder(activity.BaseContext);
+			DialogBuilder builder = new DialogBuilder(activity.BaseContext);
 			builder.Content.Add(titleText);
 			builder.Content.Add(scoreText);
 			builder.Content.Add(highScoreText);
-			builder.ContentType = CustomDialogBuilder.DialogContentType.None;
-			builder.RequestCode = CustomDialogBuilder.DialogRequestCode.PosOrNeg;
+			builder.ContentType = DialogBuilder.DialogContentType.None;
+			builder.RequestCode = DialogBuilder.DialogRequestCode.PosOrNeg;
 			builder.PositiveText = resources.GetString(Resource.String.playAgain);
 			builder.PositiveAction += delegate {
 				MenuActivity.startGame(activity, Utils.RequestCode.RequestGameOnePlayer);
@@ -331,8 +337,8 @@ namespace Tetrim
 			};
 
 			// Create the dialog
-			CustomDialog.Builder = builder;
-			return new Intent(activity, typeof(CustomDialog));
+			DialogActivity.Builder = builder;
+			return new Intent(activity, typeof(DialogActivity));
 		}
 
 		public static Intent CreateGameOverDialogMulti(Activity activity, Android.Content.Res.Resources resources, bool hasWon)
@@ -351,11 +357,11 @@ namespace Tetrim
 			text.SetTextColor(Utils.getAndroidColor(hasWon ? TetrisColor.Green : TetrisColor.Red));
 
 			// Create the builder
-			CustomDialogBuilder builder = new CustomDialogBuilder(activity.BaseContext);
+			DialogBuilder builder = new DialogBuilder(activity.BaseContext);
 			builder.Content.Add(titleText);
 			builder.Content.Add(text);
-			builder.ContentType = CustomDialogBuilder.DialogContentType.None;
-			builder.RequestCode = CustomDialogBuilder.DialogRequestCode.PosOrNeg;
+			builder.ContentType = DialogBuilder.DialogContentType.None;
+			builder.RequestCode = DialogBuilder.DialogRequestCode.PosOrNeg;
 			builder.PositiveText = resources.GetString(Resource.String.playAgain);
 			builder.PositiveAction += delegate {
 				MenuActivity.startGame(activity, Utils.RequestCode.RequestGameOnePlayer);
@@ -367,8 +373,8 @@ namespace Tetrim
 			};
 
 			// Create the dialog
-			CustomDialog.Builder = builder;
-			return new Intent(activity, typeof(CustomDialog));
+			DialogActivity.Builder = builder;
+			return new Intent(activity, typeof(DialogActivity));
 		}
 	}
 }

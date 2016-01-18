@@ -76,10 +76,10 @@ namespace Tetrim
 			}
 				
 			// Draw the background
-			canvas.DrawRect(0, 0, Width, Height, BackgroundPaint);
+			//canvas.DrawRect(0, 0, Width, Height, BackgroundPaint);
 
 			// Draw the border
-			canvas.DrawRect(StrokeWidthBorder/2, 0, Width, Height - StrokeWidthBorder/2, BorderPaint);
+			//canvas.DrawRect(StrokeWidthBorder/2, 0, Width, Height - StrokeWidthBorder/2, BorderPaint);
 
 			if(_nextPiece != null && _player != null)
 			{

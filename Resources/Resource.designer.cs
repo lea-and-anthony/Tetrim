@@ -81,239 +81,260 @@ namespace Tetrim
 		public partial class Id
 		{
 			
-			// aapt resource value: 0x7f050032
-			public const int NextPieceView = 2131034162;
+			// aapt resource value: 0x7f050024
+			public const int OpponentGridView = 2131034148;
 			
-			// aapt resource value: 0x7f05001d
-			public const int OpponentGridView = 2131034141;
+			// aapt resource value: 0x7f050037
+			public const int PlayerGridView = 2131034167;
 			
-			// aapt resource value: 0x7f050030
-			public const int PlayerGridView = 2131034160;
-			
-			// aapt resource value: 0x7f050038
-			public const int ProposedPiecesView = 2131034168;
-			
-			// aapt resource value: 0x7f050000
-			public const int alertContainer = 2131034112;
-			
-			// aapt resource value: 0x7f050002
-			public const int alertContent = 2131034114;
-			
-			// aapt resource value: 0x7f050001
-			public const int alertTitle = 2131034113;
-			
-			// aapt resource value: 0x7f050049
-			public const int backButton = 2131034185;
-			
-			// aapt resource value: 0x7f050003
-			public const int buttonLayout = 2131034115;
-			
-			// aapt resource value: 0x7f05002f
-			public const int buttonMoveDown = 2131034159;
-			
-			// aapt resource value: 0x7f050036
-			public const int buttonMoveFoot = 2131034166;
-			
-			// aapt resource value: 0x7f05002e
-			public const int buttonMoveLeft = 2131034158;
-			
-			// aapt resource value: 0x7f050035
-			public const int buttonMoveRight = 2131034165;
-			
-			// aapt resource value: 0x7f05002d
-			public const int buttonTurnLeft = 2131034157;
-			
-			// aapt resource value: 0x7f050034
-			public const int buttonTurnRight = 2131034164;
-			
-			// aapt resource value: 0x7f05004c
-			public const int changeNameButton = 2131034188;
-			
-			// aapt resource value: 0x7f05004b
-			public const int deleteFriendsButton = 2131034187;
-			
-			// aapt resource value: 0x7f05004d
-			public const int deleteHighScoresButton = 2131034189;
-			
-			// aapt resource value: 0x7f05000c
-			public const int devicesLayout = 2131034124;
-			
-			// aapt resource value: 0x7f05001c
-			public const int enemyGrid = 2131034140;
-			
-			// aapt resource value: 0x7f05001e
-			public const int enemyStatsLayout = 2131034142;
-			
-			// aapt resource value: 0x7f050047
-			public const int exitButton = 2131034183;
+			// aapt resource value: 0x7f050007
+			public const int alertContainer = 2131034119;
 			
 			// aapt resource value: 0x7f050009
-			public const int friendsDevices = 2131034121;
+			public const int alertContent = 2131034121;
 			
-			// aapt resource value: 0x7f05002b
-			public const int gridButtonLayout = 2131034155;
+			// aapt resource value: 0x7f050008
+			public const int alertTitle = 2131034120;
 			
-			// aapt resource value: 0x7f05002c
-			public const int layoutButtonsLeft = 2131034156;
+			// aapt resource value: 0x7f050050
+			public const int backButton = 2131034192;
+			
+			// aapt resource value: 0x7f05000a
+			public const int buttonLayout = 2131034122;
+			
+			// aapt resource value: 0x7f050036
+			public const int buttonMoveDown = 2131034166;
+			
+			// aapt resource value: 0x7f05003b
+			public const int buttonMoveFoot = 2131034171;
+			
+			// aapt resource value: 0x7f050035
+			public const int buttonMoveLeft = 2131034165;
+			
+			// aapt resource value: 0x7f05003a
+			public const int buttonMoveRight = 2131034170;
+			
+			// aapt resource value: 0x7f050034
+			public const int buttonTurnLeft = 2131034164;
+			
+			// aapt resource value: 0x7f050039
+			public const int buttonTurnRight = 2131034169;
+			
+			// aapt resource value: 0x7f050053
+			public const int changeNameButton = 2131034195;
+			
+			// aapt resource value: 0x7f05003c
+			public const int column1 = 2131034172;
+			
+			// aapt resource value: 0x7f05003d
+			public const int column2 = 2131034173;
+			
+			// aapt resource value: 0x7f050052
+			public const int deleteFriendsButton = 2131034194;
+			
+			// aapt resource value: 0x7f050054
+			public const int deleteHighScoresButton = 2131034196;
+			
+			// aapt resource value: 0x7f050006
+			public const int devicesLayout = 2131034118;
+			
+			// aapt resource value: 0x7f050023
+			public const int enemyGrid = 2131034147;
+			
+			// aapt resource value: 0x7f05004e
+			public const int exitButton = 2131034190;
+			
+			// aapt resource value: 0x7f050003
+			public const int friendsDevices = 2131034115;
+			
+			// aapt resource value: 0x7f050032
+			public const int gridButtonLayout = 2131034162;
 			
 			// aapt resource value: 0x7f050033
-			public const int layoutButtonsRight = 2131034163;
+			public const int layoutButtonsLeft = 2131034163;
+			
+			// aapt resource value: 0x7f050038
+			public const int layoutButtonsRight = 2131034168;
 			
 			// aapt resource value: 0x7f05000d
-			public const int layoutGameMulti = 2131034125;
+			public const int layoutGame = 2131034125;
 			
-			// aapt resource value: 0x7f050031
-			public const int layoutRightGrid = 2131034161;
+			// aapt resource value: 0x7f05003e
+			public const int layoutLeftGrid = 2131034174;
+			
+			// aapt resource value: 0x7f05003f
+			public const int layoutRightGrid = 2131034175;
 			
 			// aapt resource value: 0x7f05001a
 			public const int level1 = 2131034138;
 			
-			// aapt resource value: 0x7f050029
-			public const int level2 = 2131034153;
+			// aapt resource value: 0x7f05002d
+			public const int level2 = 2131034157;
 			
-			// aapt resource value: 0x7f050043
-			public const int linearLayout1 = 2131034179;
+			// aapt resource value: 0x7f05004a
+			public const int linearLayout1 = 2131034186;
 			
-			// aapt resource value: 0x7f050021
-			public const int linearLayout10 = 2131034145;
+			// aapt resource value: 0x7f050002
+			public const int linearLayout2 = 2131034114;
 			
-			// aapt resource value: 0x7f050024
-			public const int linearLayout11 = 2131034148;
+			// aapt resource value: 0x7f050041
+			public const int linearLayout3 = 2131034177;
 			
-			// aapt resource value: 0x7f050016
-			public const int linearLayout13 = 2131034134;
-			
-			// aapt resource value: 0x7f050019
-			public const int linearLayout14 = 2131034137;
-			
-			// aapt resource value: 0x7f050025
-			public const int linearLayout15 = 2131034149;
-			
-			// aapt resource value: 0x7f050028
-			public const int linearLayout16 = 2131034152;
-			
-			// aapt resource value: 0x7f050008
-			public const int linearLayout2 = 2131034120;
-			
-			// aapt resource value: 0x7f05003a
-			public const int linearLayout3 = 2131034170;
-			
-			// aapt resource value: 0x7f050010
-			public const int linearLayout6 = 2131034128;
-			
-			// aapt resource value: 0x7f050012
-			public const int linearLayout7 = 2131034130;
-			
-			// aapt resource value: 0x7f050015
-			public const int linearLayout8 = 2131034133;
-			
-			// aapt resource value: 0x7f05001f
-			public const int linearLayout9 = 2131034143;
-			
-			// aapt resource value: 0x7f050039
-			public const int menuContainer = 2131034169;
-			
-			// aapt resource value: 0x7f05000f
-			public const int myStatsLayout = 2131034127;
-			
-			// aapt resource value: 0x7f050004
-			public const int negativeButton = 2131034116;
+			// aapt resource value: 0x7f050040
+			public const int menuContainer = 2131034176;
 			
 			// aapt resource value: 0x7f05000b
-			public const int newDevices = 2131034123;
+			public const int negativeButton = 2131034123;
 			
-			// aapt resource value: 0x7f05000a
-			public const int pairedDevices = 2131034122;
+			// aapt resource value: 0x7f050005
+			public const int newDevices = 2131034117;
 			
-			// aapt resource value: 0x7f050037
-			public const int piecesLayout = 2131034167;
+			// aapt resource value: 0x7f050004
+			public const int pairedDevices = 2131034116;
+			
+			// aapt resource value: 0x7f05001d
+			public const int piece1 = 2131034141;
+			
+			// aapt resource value: 0x7f050030
+			public const int piece2 = 2131034160;
+			
+			// aapt resource value: 0x7f05000f
+			public const int player1layout = 2131034127;
 			
 			// aapt resource value: 0x7f05001b
 			public const int player1level = 2131034139;
 			
+			// aapt resource value: 0x7f050019
+			public const int player1levelLayout = 2131034137;
+			
 			// aapt resource value: 0x7f050011
 			public const int player1name = 2131034129;
+			
+			// aapt resource value: 0x7f050010
+			public const int player1nameLayout = 2131034128;
+			
+			// aapt resource value: 0x7f05001e
+			public const int player1piece = 2131034142;
+			
+			// aapt resource value: 0x7f05001c
+			public const int player1pieceLayout = 2131034140;
 			
 			// aapt resource value: 0x7f050018
 			public const int player1rows = 2131034136;
 			
+			// aapt resource value: 0x7f050016
+			public const int player1rowsLayout = 2131034134;
+			
+			// aapt resource value: 0x7f050015
+			public const int player1rowsLevelLayout = 2131034133;
+			
 			// aapt resource value: 0x7f050014
 			public const int player1score = 2131034132;
 			
-			// aapt resource value: 0x7f05002a
-			public const int player2level = 2131034154;
+			// aapt resource value: 0x7f050012
+			public const int player1scoreLayout = 2131034130;
 			
 			// aapt resource value: 0x7f050020
-			public const int player2name = 2131034144;
+			public const int player2column1 = 2131034144;
 			
-			// aapt resource value: 0x7f050027
-			public const int player2rows = 2131034151;
+			// aapt resource value: 0x7f050025
+			public const int player2column2 = 2131034149;
 			
-			// aapt resource value: 0x7f050023
-			public const int player2score = 2131034147;
+			// aapt resource value: 0x7f05001f
+			public const int player2layout = 2131034143;
 			
-			// aapt resource value: 0x7f050005
-			public const int positiveButton = 2131034117;
+			// aapt resource value: 0x7f05002e
+			public const int player2level = 2131034158;
 			
-			// aapt resource value: 0x7f050048
-			public const int relativeLayout1 = 2131034184;
+			// aapt resource value: 0x7f05002c
+			public const int player2levelLayout = 2131034156;
 			
-			// aapt resource value: 0x7f050006
-			public const int root = 2131034118;
+			// aapt resource value: 0x7f050022
+			public const int player2name = 2131034146;
+			
+			// aapt resource value: 0x7f050021
+			public const int player2nameLayout = 2131034145;
+			
+			// aapt resource value: 0x7f050031
+			public const int player2piece = 2131034161;
+			
+			// aapt resource value: 0x7f05002f
+			public const int player2pieceLayout = 2131034159;
+			
+			// aapt resource value: 0x7f05002b
+			public const int player2rows = 2131034155;
+			
+			// aapt resource value: 0x7f050029
+			public const int player2rowsLayout = 2131034153;
+			
+			// aapt resource value: 0x7f050028
+			public const int player2score = 2131034152;
+			
+			// aapt resource value: 0x7f050026
+			public const int player2scoreLayout = 2131034150;
+			
+			// aapt resource value: 0x7f05000e
+			public const int playersLayout = 2131034126;
+			
+			// aapt resource value: 0x7f05000c
+			public const int positiveButton = 2131034124;
+			
+			// aapt resource value: 0x7f05004f
+			public const int relativeLayout1 = 2131034191;
+			
+			// aapt resource value: 0x7f050000
+			public const int root = 2131034112;
 			
 			// aapt resource value: 0x7f050017
 			public const int rows1 = 2131034135;
 			
-			// aapt resource value: 0x7f050026
-			public const int rows2 = 2131034150;
+			// aapt resource value: 0x7f05002a
+			public const int rows2 = 2131034154;
 			
 			// aapt resource value: 0x7f050013
 			public const int score1 = 2131034131;
 			
-			// aapt resource value: 0x7f050022
-			public const int score2 = 2131034146;
+			// aapt resource value: 0x7f050027
+			public const int score2 = 2131034151;
 			
-			// aapt resource value: 0x7f050007
-			public const int selectDeviceText = 2131034119;
+			// aapt resource value: 0x7f050001
+			public const int selectDeviceText = 2131034113;
 			
-			// aapt resource value: 0x7f050046
-			public const int settingsButton = 2131034182;
+			// aapt resource value: 0x7f05004d
+			public const int settingsButton = 2131034189;
 			
-			// aapt resource value: 0x7f05004a
-			public const int settingsTitle = 2131034186;
+			// aapt resource value: 0x7f050051
+			public const int settingsTitle = 2131034193;
 			
-			// aapt resource value: 0x7f050044
-			public const int singlePlayerButton = 2131034180;
-			
-			// aapt resource value: 0x7f05000e
-			public const int statsLayout = 2131034126;
-			
-			// aapt resource value: 0x7f05003e
-			public const int titleE = 2131034174;
-			
-			// aapt resource value: 0x7f050041
-			public const int titleI = 2131034177;
-			
-			// aapt resource value: 0x7f05003c
-			public const int titleLayout = 2131034172;
-			
-			// aapt resource value: 0x7f050042
-			public const int titleM = 2131034178;
-			
-			// aapt resource value: 0x7f050040
-			public const int titleR = 2131034176;
-			
-			// aapt resource value: 0x7f05003d
-			public const int titleT = 2131034173;
-			
-			// aapt resource value: 0x7f05003f
-			public const int titleT2 = 2131034175;
+			// aapt resource value: 0x7f05004b
+			public const int singlePlayerButton = 2131034187;
 			
 			// aapt resource value: 0x7f050045
-			public const int twoPlayersButton = 2131034181;
+			public const int titleE = 2131034181;
 			
-			// aapt resource value: 0x7f05003b
-			public const int userNameText = 2131034171;
+			// aapt resource value: 0x7f050048
+			public const int titleI = 2131034184;
+			
+			// aapt resource value: 0x7f050043
+			public const int titleLayout = 2131034179;
+			
+			// aapt resource value: 0x7f050049
+			public const int titleM = 2131034185;
+			
+			// aapt resource value: 0x7f050047
+			public const int titleR = 2131034183;
+			
+			// aapt resource value: 0x7f050044
+			public const int titleT = 2131034180;
+			
+			// aapt resource value: 0x7f050046
+			public const int titleT2 = 2131034182;
+			
+			// aapt resource value: 0x7f05004c
+			public const int twoPlayersButton = 2131034188;
+			
+			// aapt resource value: 0x7f050042
+			public const int userNameText = 2131034178;
 			
 			static Id()
 			{
@@ -329,19 +350,22 @@ namespace Tetrim
 		{
 			
 			// aapt resource value: 0x7f030000
-			public const int AlertDialog = 2130903040;
+			public const int BluetoothConnection = 2130903040;
 			
 			// aapt resource value: 0x7f030001
-			public const int BluetoothDevices = 2130903041;
+			public const int Dialog = 2130903041;
 			
 			// aapt resource value: 0x7f030002
 			public const int GameMulti = 2130903042;
 			
 			// aapt resource value: 0x7f030003
-			public const int Home = 2130903043;
+			public const int GameSingle = 2130903043;
 			
 			// aapt resource value: 0x7f030004
-			public const int Settings = 2130903044;
+			public const int Menu = 2130903044;
+			
+			// aapt resource value: 0x7f030005
+			public const int Settings = 2130903045;
 			
 			static Layout()
 			{

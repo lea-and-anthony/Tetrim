@@ -33,7 +33,7 @@ namespace Tetrim
 			base.OnCreate(bundle);
 
 			// Set our view from the home layout resource
-			SetContentView(Resource.Layout.Home);
+			SetContentView(Resource.Layout.Menu);
 
 			#if DEBUG
 			Log.Debug(Tag, "onCreate()");

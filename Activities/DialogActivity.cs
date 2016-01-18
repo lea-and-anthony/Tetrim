@@ -14,7 +14,7 @@ using Android.Widget;
 namespace Tetrim
 {
 	[Activity(Label = "", Icon = "@drawable/icon", Theme = "@android:style/Theme.Dialog", ScreenOrientation = Android.Content.PM.ScreenOrientation.Portrait)]		
-	public class CustomDialog : Activity, ViewTreeObserver.IOnGlobalLayoutListener
+	public class DialogActivity : Activity, ViewTreeObserver.IOnGlobalLayoutListener
 	{
 		//--------------------------------------------------------------
 		// CONSTANTS
@@ -35,7 +35,7 @@ namespace Tetrim
 		EditText _field;
 		ButtonStroked _positiveButton, _negativeButton;
 
-		public static CustomDialogBuilder Builder;
+		public static DialogBuilder Builder;
 
 		//--------------------------------------------------------------
 		// EVENT CATCHING METHODES
@@ -46,7 +46,7 @@ namespace Tetrim
 
 			RequestWindowFeature(WindowFeatures.NoTitle);
 			Window.SetBackgroundDrawable(new ColorDrawable(Android.Graphics.Color.Transparent));
-			SetContentView(Resource.Layout.AlertDialog);
+			SetContentView(Resource.Layout.Dialog);
 
 			_root = FindViewById<LinearLayout>(Resource.Id.alertContainer);
 			_root.SetPadding(Builder.StrokeBorderWidth, Builder.StrokeBorderWidth, Builder.StrokeBorderWidth, Builder.StrokeBorderWidth);
@@ -75,7 +75,7 @@ namespace Tetrim
 			_content = FindViewById<LinearLayout>(Resource.Id.alertContent);
 			switch (Builder.ContentType)
 			{
-			case CustomDialogBuilder.DialogContentType.TextView:
+			case DialogBuilder.DialogContentType.TextView:
 				if(!String.IsNullOrEmpty(Builder.Message))
 				{
 					_message = new TextView(this.BaseContext);
@@ -85,14 +85,14 @@ namespace Tetrim
 					_content.AddView(_message, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MatchParent, LinearLayout.LayoutParams.WrapContent));
 				}
 				break;
-			case CustomDialogBuilder.DialogContentType.EditText:
+			case DialogBuilder.DialogContentType.EditText:
 				_field = new EditText(this.BaseContext);
 				_field.SetTypeface(niceFont, TypefaceStyle.Normal);
 				_field.Hint = Builder.Message;
 				_field.TextSize = Utils.GetPixelsFromDP(this.BaseContext, 7);
 				_content.AddView(_field, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MatchParent, LinearLayout.LayoutParams.WrapContent));
 				break;
-			case CustomDialogBuilder.DialogContentType.None:
+			case DialogBuilder.DialogContentType.None:
 				foreach(View view in Builder.Content)
 				{
 					_content.AddView(view, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MatchParent, LinearLayout.LayoutParams.WrapContent));
@@ -145,19 +145,19 @@ namespace Tetrim
 				button.Text = text;
 				button.TextSize = Utils.GetPixelsFromDP(BaseContext, 20);
 				button.Click += delegate {
-					Builder.ReturnText = (Builder.RequestCode == CustomDialogBuilder.DialogRequestCode.Text ) ? _field.Text : null;
+					Builder.ReturnText = (Builder.RequestCode == DialogBuilder.DialogRequestCode.Text ) ? _field.Text : null;
 				};
 				button.Click += action;
 				button.Click += delegate {
 					Intent intent = new Intent();
 					switch(Builder.RequestCode)
 					{
-					case CustomDialogBuilder.DialogRequestCode.PosOrNeg:
+					case DialogBuilder.DialogRequestCode.PosOrNeg:
 						intent.PutExtra(Builder.RequestCode.ToString(), answer);
 						SetResult(Android.App.Result.Ok, intent);
 						Finish();
 						break;
-					case CustomDialogBuilder.DialogRequestCode.Text:
+					case DialogBuilder.DialogRequestCode.Text:
 						if(answer)
 						{
 							if(!String.IsNullOrEmpty(_field.Text))
