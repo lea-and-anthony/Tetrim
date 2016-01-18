@@ -16,6 +16,7 @@ namespace Tetrim
 		private Player _player; // Instance of the player to whom the pieces are proposed
 		private PieceView[] _proposedPieces = new PieceView[Constants.NbProposedPiece]; // Array of the views of the proposed pieces
 		private int _selectedPiece = 0; // Selected piece by the player
+		private int _nbPieceByLine = 0;
 
 		private int _blockSize = 0; // Size of the blocks in pixels according to the screen resolution
 		private Dictionary<TetrisColor, Bitmap> _blockImages = new Dictionary<TetrisColor, Bitmap>(); // Images of the blocks
@@ -25,6 +26,7 @@ namespace Tetrim
 		//--------------------------------------------------------------
 		public ViewProposedPiece(Context context, IAttributeSet attrs) : base(context, attrs)
 		{
+			_nbPieceByLine = (int)Math.Ceiling(Constants.NbProposedPiece*1.0/Constants.NbLinePropPiece);
 		}
 
 		//--------------------------------------------------------------
@@ -88,7 +90,7 @@ namespace Tetrim
 			if(_blockSize == 0)
 			{
 				// Calculate the size of the block, Space for each piece set to 5 blocks (except for the last one)
-				_blockSize = Math.Min(Math.Abs(canvas.ClipBounds.Right - canvas.ClipBounds.Left)/((int)Math.Ceiling(Constants.NbProposedPiece*1.0/Constants.NbLinePropPiece)*5),
+				_blockSize = Math.Min(Math.Abs(canvas.ClipBounds.Right - canvas.ClipBounds.Left)/(_nbPieceByLine*5),
 					Math.Abs(canvas.ClipBounds.Top - canvas.ClipBounds.Bottom)/(Constants.NbLinePropPiece*4));
 
 				// Create the blocks images with the right size
@@ -97,8 +99,6 @@ namespace Tetrim
 					_blockImages.Add(color, BlockView.CreateImage(_blockSize, color));
 				}
 			}
-
-			int nbPieceByLine = (int)Math.Ceiling(Constants.NbProposedPiece*1.0/Constants.NbLinePropPiece);
 
 			// Draw the pieces and highlight the selected one
 			for(int i = 0; i < Constants.NbProposedPiece; i++)
@@ -109,7 +109,11 @@ namespace Tetrim
 					// TODO : change the way we highlight a piece
 					if(i == _selectedPiece)
 					{
-						RectF rect = new RectF(i * _blockSize * 5, 0, (i + 1) * _blockSize * 5, _blockSize * 4);
+						RectF rect = new RectF((i % _nbPieceByLine) * _blockSize * 5, 
+												(_blockSize * 4) * (i / _nbPieceByLine), 
+												((i % _nbPieceByLine) + 1) * _blockSize * 5, 
+												(_blockSize * 4) * (1 + i / _nbPieceByLine));
+						
 						Paint paint = new Paint {AntiAlias = true, Color = Color.AntiqueWhite};
 						canvas.DrawRoundRect(rect, 10, 10, paint);
 					}
@@ -119,8 +123,8 @@ namespace Tetrim
 
 					// Draw each piece
 					_proposedPieces[i].Draw(canvas, _blockSize, _blockImages, 
-											(i%nbPieceByLine)*_blockSize*5 + (_blockSize*5 - xSize) / 2, 
-											(i/nbPieceByLine)*_blockSize*4 + (_blockSize*4 - ySize) / 2);
+											(i % _nbPieceByLine) * _blockSize * 5 + (_blockSize * 5 - xSize) / 2, 
+											(i / _nbPieceByLine) * _blockSize * 4 + (_blockSize * 4 - ySize) / 2);
 				}
 			}
 		}
@@ -131,7 +135,7 @@ namespace Tetrim
 
 			// Get the touch position
 			int x = ((int) e.GetX())/(_blockSize*5);
-			int y = ((int) e.GetY())/(_blockSize*5);
+			int y = ((int) e.GetY())/(_blockSize*4);
 
 			// Lower the value if it is too high
 			if(x >= Constants.NbProposedPiece/Constants.NbLinePropPiece)
@@ -144,7 +148,12 @@ namespace Tetrim
 			}
 
 			// Get the piece number
-			int i = x + y*(Constants.NbProposedPiece/Constants.NbLinePropPiece);
+			int i = x + y * _nbPieceByLine;
+
+			if(i >= Constants.NbProposedPiece)
+			{
+				i = Constants.NbProposedPiece - 1;
+			}
 
 			// Select the piece
 			selectPiece(i);
