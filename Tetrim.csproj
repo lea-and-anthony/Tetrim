@@ -56,7 +56,6 @@
     <Compile Include="Code-View\PieceView.cs" />
     <Compile Include="Code-View\Utils.cs" />
     <Compile Include="Code-View\PlayerView.cs" />
-    <Compile Include="Code-View\ViewProposedPiece.cs" />
     <Compile Include="Activities\MenuActivity.cs" />
     <Compile Include="Network\Network.cs" />
     <Compile Include="Network\Bluetooth\BluetoothManager.cs" />
@@ -77,6 +76,7 @@
     <Compile Include="Activities\GameActivity.cs" />
     <Compile Include="Code-View\DialogBuilder.cs" />
     <Compile Include="Activities\DialogActivity.cs" />
+    <Compile Include="Code-View\ProposedPieceView.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />

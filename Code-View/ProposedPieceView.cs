@@ -9,7 +9,7 @@ using Android.Runtime;
 
 namespace Tetrim
 {
-	public class ViewProposedPiece : View
+	public class ProposedPieceView : View
 	{
 		//--------------------------------------------------------------
 		// ATTRIBUTES
@@ -29,7 +29,7 @@ namespace Tetrim
 		{
 		}*/
 
-		public ViewProposedPiece(Context context, IAttributeSet attrs) : base(context, attrs)
+		public ProposedPieceView(Context context, IAttributeSet attrs) : base(context, attrs)
 		{
 			_nbPieceByLine = (int)Math.Ceiling(Constants.NbProposedPiece*1.0/Constants.NbLinePropPiece);
 		}
@@ -129,7 +129,7 @@ namespace Tetrim
 					// Draw each piece
 					_proposedPieces[i].Draw(canvas, _blockSize, _blockImages, 
 											(i % _nbPieceByLine) * _blockSize * 5 + (_blockSize * 5 - xSize) / 2, 
-											(i / _nbPieceByLine) * _blockSize * 4 + (_blockSize * 4 - ySize) / 2);
+											Height - ((i / _nbPieceByLine + 1) * _blockSize * 4 - (_blockSize * 4 - ySize) / 2));
 				}
 			}
 		}

@@ -68,7 +68,7 @@ namespace Tetrim
 			TextView player2rows = FindViewById<TextView> (Resource.Id.player2rows);
 			_player2View.SetViews(player2name, player2score, player2level, player2rows);
 
-			ViewProposedPiece viewProposed = FindViewById<ViewProposedPiece>(Resource.Id.player2piece);
+			ProposedPieceView viewProposed = FindViewById<ProposedPieceView>(Resource.Id.player2piece);
 			viewProposed.SetPlayer(_player1);
 
 			// Hook on network event
@@ -199,7 +199,7 @@ namespace Tetrim
 			setPlayerStat(Resource.Id.level2, false, true);
 			setPlayerStat(Resource.Id.piece2, false, true);
 
-			ViewProposedPiece proposedPiecesView = FindViewById<ViewProposedPiece>(Resource.Id.player2piece);
+			ProposedPieceView proposedPiecesView = FindViewById<ProposedPieceView>(Resource.Id.player2piece);
 			proposedPiecesView.SetBackgroundColor(Utils.getAndroidColor(TetrisColor.Red));
 			
 			setBackground();
@@ -379,7 +379,7 @@ namespace Tetrim
 			UpdateOpponentView(message);
 			if(message[Constants.SizeMessagePiecePut - 1] == 1)
 			{
-				FindViewById<ViewProposedPiece>(Resource.Id.player2piece).ChangeProposedPiece();
+				FindViewById<ProposedPieceView>(Resource.Id.player2piece).ChangeProposedPiece();
 			}
 
 			return 0;
