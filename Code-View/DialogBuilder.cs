@@ -7,7 +7,7 @@ using Android.Views;
 
 namespace Tetrim
 {
-	public class CustomDialogBuilder
+	public class DialogBuilder
 	{
 		//--------------------------------------------------------------
 		// CONSTANTS
@@ -88,7 +88,7 @@ namespace Tetrim
 		//--------------------------------------------------------------
 		// CONSTRUCTORS
 		//--------------------------------------------------------------
-		public CustomDialogBuilder (Context context)
+		public DialogBuilder (Context context)
 		{
 			_context = context;
 

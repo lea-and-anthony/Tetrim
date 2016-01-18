@@ -4,7 +4,7 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:keepScreenOn="true"
-    android:id="@+id/layoutGameMulti"
+    android:id="@+id/layoutGame"
     android:weightSum="100"
     android:paddingTop="1dp"
     android:paddingRight="1dp"

@@ -9,6 +9,10 @@ namespace Tetrim
 		// ATTRIBUTES
 		//--------------------------------------------------------------
 		private Player _player; // Instance of the player to display
+		private TextView _playerName = null;
+		private TextView _playerScore = null;
+		private TextView _playerLevel = null;
+		private TextView _playerRows = null;
 		public GridView _gridView = null; // View of the player's grid
 
 		//--------------------------------------------------------------
@@ -23,13 +27,26 @@ namespace Tetrim
 		//--------------------------------------------------------------
 		// METHODES
 		//--------------------------------------------------------------
-		public void Draw(TextView playerName, TextView playerScore, TextView playerLevel, TextView playerRows)
+		// All the parameters must be different from null
+		public void SetViews(TextView playerName, TextView playerScore, TextView playerLevel, TextView playerRows)
 		{
-			// Write the text
-			playerName.Text = _player._name;
-			playerScore.Text = _player._score.ToString();
-			playerLevel.Text = _player._level.ToString();
-			playerRows.Text = _player._removedRows.ToString();
+			_playerName = playerName;
+			_playerScore = playerScore;
+			_playerLevel = playerLevel;
+			_playerRows = playerRows;
+		}
+
+		public void Draw()
+		{
+			// Only need to test for one of the 4 because we set them together
+			if(_playerName != null)
+			{
+				// Write the text
+				_playerName.Text = _player._name;
+				_playerScore.Text = _player._score.ToString();
+				_playerLevel.Text = _player._level.ToString();
+				_playerRows.Text = _player._removedRows.ToString();
+			}
 		}
 
 		public void Update()

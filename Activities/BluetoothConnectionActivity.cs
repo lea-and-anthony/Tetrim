@@ -70,7 +70,7 @@ namespace Tetrim
 
 			// Setup the window
 			RequestWindowFeature(WindowFeatures.IndeterminateProgress);
-			SetContentView(Resource.Layout.BluetoothDevices);
+			SetContentView(Resource.Layout.BluetoothConnection);
 
 			// Set result CANCELED incase the user backs out
 			SetResult(Result.Canceled);
