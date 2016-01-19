@@ -298,10 +298,7 @@ namespace Tetrim
 
 		public byte[] getMessageNextPiece()
 		{
-			byte[] bytes = new byte[Constants.SizeMessageNextPiece];
-			bytes[0] = Constants.IdMessageNextPiece;
-			bytes[1] = (byte) _shape;
-			bytes[2] = (byte) _angle;
+			byte[] bytes = {Constants.IdMessageNextPiece, (byte) _shape, (byte) _angle};
 			return bytes;
 		}
 

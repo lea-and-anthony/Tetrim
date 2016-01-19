@@ -1,17 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-	<string name="app_name">Tetrim</string>
-
-    <!-- Font Arrows -->
-    <string name="right_arrow">a</string>
-    <string name="left_arrow">b</string>
-    <string name="down_arrow">c</string>
-    <string name="up_arrow">d</string>
-    <string name="bottom_arrow">e</string>
-    <string name="turn_right_arrow">f</string>
-    <string name="turn_left_arrow">g</string>
-
     <!-- Menu -->
     <string name="welcome">Welcome !</string>
     <string name="welcomeUser">Welcome %1$s !</string>
@@ -47,30 +36,30 @@
     <string name="gameOver">GAME OVER</string>
 
     <!-- Prompt Name Dialog -->
-    <string name="askName">What is your name ?</string>
+    <string name="askName">Quel est ton nom ?</string>
 
     <!-- Pause Dialog -->
 	<string name="Pause_title">Pause</string>
-    <string name="Pause">Resume game ?</string>
+    <string name="Pause">Voulez-vous reprendre ?</string>
 
     <!-- Bluetooth -->
-	<string name="BTNotAvailable">Bluetooth not available</string>
-	<string name="BTNotEnabled">Bluetooth not enabled</string>
-	<string name="ConnectionLost">Connection lost</string>
-	<string name="ConnectionImpossible">Connection failed</string>
-	<string name="connection_back">Connection back. Resume game ?</string>
-    <string name="retry_connection">Reconnection failed. Try again ?</string>
+	<string name="BTNotAvailable">Bluetooth non disponible</string>
+	<string name="BTNotEnabled">Bluetooth non activé</string>
+	<string name="ConnectionLost">Connexion interrompue</string>
+	<string name="ConnectionImpossible">Connection échouée</string>
+	<string name="connection_back">Connxion rétablie. Reprendre la partie ?</string>
+    <string name="retry_connection">Reconnexion échouée. Réessayer ?</string>
 
     <!--  BluetoothConnectionActivity -->
-    <string name="scanning">Scanning...</string>
-    <string name="none_friend">No friend device</string>
-    <string name="none_paired">No paired device</string>
-    <string name="none_found">No device found</string>
-    <string name="game_request_title">Game Request</string>
-    <string name="game_request">Do you want to play with {0} ?</string>
-    <string name="wrong_version_title">Wrong Version Number</string>
-    <string name="wrong_version">You and your opponent do not have the same version of the game.</string>
-	<string name="waiting_for_opponent">Waiting for your opponent...</string>
+    <string name="scanning">En train de scanner...</string>
+    <string name="none_friend">Aucun appareil ami</string>
+    <string name="none_paired">Aucun appareil appairé</string>
+    <string name="none_found">Aucun appareil trouvé</string>
+    <string name="game_request_title">Proposition de partie</string>
+    <string name="game_request">Veux-tu jouer avec {0} ?</string>
+    <string name="wrong_version_title">Mauvaise version</string>
+    <string name="wrong_version">Toi et ton adversaire n\'avez pas la même versio du jeu.</string>
+	<string name="waiting_for_opponent">Attente de l\'adversaire...</string>
 
-    <string name="reconnect_activity">Reconnection</string>
+    <string name="reconnect_activity">Reconnexion</string>
 </resources>

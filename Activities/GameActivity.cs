@@ -157,12 +157,12 @@ namespace Tetrim
 			nextPieceView.SetBackgroundColor(Utils.getAndroidColor(TetrisColor.Cyan));
 
 			// Set the buttons
-			Utils.SetArrowButton(FindViewById<ButtonStroked>(Resource.Id.buttonMoveLeft), TetrisColor.Green, difference);
-			Utils.SetArrowButton(FindViewById<ButtonStroked>(Resource.Id.buttonMoveRight), TetrisColor.Green, difference);
-			Utils.SetArrowButton(FindViewById<ButtonStroked>(Resource.Id.buttonTurnLeft), TetrisColor.Cyan, difference);
-			Utils.SetArrowButton(FindViewById<ButtonStroked>(Resource.Id.buttonTurnRight), TetrisColor.Cyan, difference);
-			Utils.SetArrowButton(FindViewById<ButtonStroked>(Resource.Id.buttonMoveDown), TetrisColor.Red, difference);
-			Utils.SetArrowButton(FindViewById<ButtonStroked>(Resource.Id.buttonMoveFoot), TetrisColor.Red, difference);
+			UtilsUI.SetArrowButton(FindViewById<ButtonStroked>(Resource.Id.buttonMoveLeft), TetrisColor.Green, difference);
+			UtilsUI.SetArrowButton(FindViewById<ButtonStroked>(Resource.Id.buttonMoveRight), TetrisColor.Green, difference);
+			UtilsUI.SetArrowButton(FindViewById<ButtonStroked>(Resource.Id.buttonTurnLeft), TetrisColor.Cyan, difference);
+			UtilsUI.SetArrowButton(FindViewById<ButtonStroked>(Resource.Id.buttonTurnRight), TetrisColor.Cyan, difference);
+			UtilsUI.SetArrowButton(FindViewById<ButtonStroked>(Resource.Id.buttonMoveDown), TetrisColor.Red, difference);
+			UtilsUI.SetArrowButton(FindViewById<ButtonStroked>(Resource.Id.buttonMoveFoot), TetrisColor.Red, difference);
 
 			// Reset the weight sum of the layout containing the grid and the buttons because
 			// now we have set the size it is useless and it will allow the layout to actualize
@@ -173,16 +173,16 @@ namespace Tetrim
 		protected void setPlayerStat(int id, bool me, bool isTitle)
 		{
 			TextView textView = FindViewById<TextView>(id);
-			Utils.SetTextFont(textView);
+			UtilsUI.SetTextFont(textView);
 			textView.SetBackgroundColor(Utils.getAndroidColor(me ? TetrisColor.Cyan : TetrisColor.Red));
-			textView.SetTextColor(!isTitle ? (me ? Utils.Player1Background : Utils.Player2Background)
+			textView.SetTextColor(!isTitle ? (me ? UtilsUI.Player1Background : UtilsUI.Player2Background)
 				: Utils.getAndroidDarkColor(me ? TetrisColor.Cyan : TetrisColor.Red));
 		}
 
 		protected void setPlayerName(int id, bool me)
 		{
 			TextView textView = FindViewById<TextView>(id);
-			Utils.SetTextFont(textView);
+			UtilsUI.SetTextFont(textView);
 			textView.SetTextColor(Utils.getAndroidColor(me ? TetrisColor.Cyan : TetrisColor.Red));
 		}
 

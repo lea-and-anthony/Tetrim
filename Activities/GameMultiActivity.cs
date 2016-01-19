@@ -120,7 +120,7 @@ namespace Tetrim
 		protected override void OnTimerElapsed(object source, ElapsedEventArgs e)
 		{
 			bool newNextPiece = _player1._grid._isNextPieceModified;
-			byte[] messageBuffer = new byte[Constants.SizeMessagePiece - 1];
+			byte[] messageBuffer = new byte[Constants.SizeMessage[Constants.IdMessagePiece] - 1];
 			messageBuffer = _player1._grid._fallingPiece.getMessage(messageBuffer, 0);
 
 			bool isSamePiece = _player1._grid.MovePieceDown(_player1);
@@ -135,7 +135,7 @@ namespace Tetrim
 			{
 				_gameTimer.Stop();
 				//Utils.PopUpEndEvent += endGame;
-				Intent intent = Utils.CreateGameOverDialogMulti(this, Resources, false);
+				Intent intent = UtilsDialog.CreateGameOverDialogMulti(this, Resources, false);
 				StartActivity(intent);
 			}
 
@@ -161,7 +161,7 @@ namespace Tetrim
 			_gameTimer.Stop();
 			//Utils.PopUpEndEvent += endGame;
 			//RunOnUiThread(() => Utils.ShowAlert (Resource.String.game_over_win_title, Resource.String.game_over_win, this));
-			Intent intent = Utils.CreateGameOverDialogMulti(this, Resources, true);
+			Intent intent = UtilsDialog.CreateGameOverDialogMulti(this, Resources, true);
 			StartActivity(intent);
 			return 0;
 		}
@@ -214,7 +214,7 @@ namespace Tetrim
 
 			// Background fill paint
 			Paint fillBackPaint = new Paint();
-			fillBackPaint.Color = Utils.Player2Background;
+			fillBackPaint.Color = UtilsUI.Player2Background;
 			fillBackPaint.AntiAlias = true;
 
 			// Background stroke paint
@@ -256,14 +256,14 @@ namespace Tetrim
 			// We need to pause the other game if it is not it which stop us
 			if(requestFromUser)
 			{
-				byte[] message = new byte[Constants.SizeMessagePause];
-				message[0] = Constants.IdMessagePause;
+				byte[] message = {Constants.IdMessagePause};
 				Network.Instance.CommunicationWay.Write(message);
 			}
 
-			Utils.PopUpEndEvent += resumeGame;
-			// TODO : change dialog
-			Utils.ShowAlert(Resource.String.Pause_title, Resource.String.Pause, this);
+			UtilsDialog.PopUpEndEvent += resumeGame;
+			Intent intent = UtilsDialog.CreateBluetoothDialogNoCancel(this, Resources, Resource.String.Pause);
+			StartActivity(intent);
+			//Utils.ShowAlert(Resource.String.Pause_title, Resource.String.Pause, this);
 
 			return 0;
 		}
@@ -345,8 +345,7 @@ namespace Tetrim
 			// If it is a 2 player game we need to resume the other game if it is not it which resume us
 			if(sendRequestToOverPlayer)
 			{
-				byte[] message = new byte[Constants.SizeMessageResume];
-				message[0] = Constants.IdMessageResume;
+				byte[] message = {Constants.IdMessageResume};
 				Network.Instance.CommunicationWay.Write(message);
 			}
 
@@ -377,7 +376,7 @@ namespace Tetrim
 		private int OpponentPiecePut(byte[] message)
 		{
 			UpdateOpponentView(message);
-			if(message[Constants.SizeMessagePiecePut - 1] == 1)
+			if(message[Constants.SizeMessage[Constants.IdMessagePiecePut] - 1] == 1)
 			{
 				FindViewById<ProposedPieceView>(Resource.Id.player2piece).ChangeProposedPiece();
 			}
@@ -410,19 +409,19 @@ namespace Tetrim
 			// If it is a new piece, we send the old piece and the new one
 			else
 			{
-				byte[] message = new byte[Constants.SizeMessagePiecePut];
+				byte[] message = new byte[Constants.SizeMessage[Constants.IdMessagePiecePut]];
 				message[0] = Constants.IdMessagePiecePut;
-				for(int i = 0; i < Constants.SizeMessagePiece - 1; i++)
+				for(int i = 0; i < Constants.SizeMessage[Constants.IdMessagePiece] - 1; i++)
 				{
 					message[i+1] = messageBuffer[i];
 				}
-				message = _player1._grid.getMessagePiece(message, Constants.SizeMessagePiece);
+				message = _player1._grid.getMessagePiece(message, Constants.SizeMessage[Constants.IdMessagePiece]);
 
 				// We say if we used the piece sent by the opponent or not (if he didn't send one)
 				if(newNextPiece)
-					message[Constants.SizeMessagePiecePut-1] = 1;
+					message[Constants.SizeMessage[Constants.IdMessagePiecePut]-1] = 1;
 				else
-					message[Constants.SizeMessagePiecePut-1] = 0;
+					message[Constants.SizeMessage[Constants.IdMessagePiecePut]-1] = 0;
 
 				Network.Instance.CommunicationWay.Write(message);
 			}

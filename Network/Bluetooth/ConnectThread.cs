@@ -100,6 +100,10 @@ namespace Tetrim
 					_service.Connected(_socket, _device);
 				}
 			}
+			else
+			{
+				Log.Error(BluetoothManager.Tag, "ERROR: Could not start the Connect thread because _socket = null");
+			}
 
 			_end = true;
 

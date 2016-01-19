@@ -29,31 +29,35 @@ namespace Tetrim
 		public const int ScoreMoveDown = 1;
 		public const int ScoreMoveBottom = 2;
 
-		public const byte IdMessagePiece = 1;
-		public const byte IdMessageGrid = 2;
-		public const byte IdMessageStart = 3;
-		public const byte IdMessageRestart = 4;
-		public const byte IdMessagePause = 5;
-		public const byte IdMessageResume = 6;
-		public const byte IdMessagePiecePut = 7;
-		public const byte IdMessageNextPiece = 8;
-		public const byte IdMessageEnd = 9;
-		public const byte IdMessageScore = 10;
+		public const byte IdMessagePiece = 0;
+		public const byte IdMessageGrid = 1;
+		public const byte IdMessageStart = 2;
+		public const byte IdMessageRestart = 3;
+		public const byte IdMessagePause = 4;
+		public const byte IdMessageResume = 5;
+		public const byte IdMessagePiecePut = 6;
+		public const byte IdMessageNextPiece = 7;
+		public const byte IdMessageEnd = 8;
+		public const byte IdMessageScore = 9;
+		public const byte MaxIdMessage = 10;
 
-		// All the messages begin by the Id
-		public const uint SizeMessagePiece = 2+1+1 + 1;
-		public const uint SizeMessagePiecePut = 2*SizeMessagePiece + 1 - 1; // Contains the old piece and the new piece + a boolean saying if we used the piece sent
-		public const uint SizeMessageGrid = GridSizeX*GridSizeY+SizeMessagePiece;
-		public const uint SizeMessageNextPiece = 1 + 2;
-		public const uint SizeMessagePause = 1;
-		public const uint SizeMessageResume = 1;
-		public const uint SizeMessageEnd = 1 + sizeof(int) + 2*sizeof(uint); // score, level and nb removed row
-		public const uint SizeMessageScore = 1 + sizeof(int) + 2*sizeof(uint); // score, level and nb removed row
+		// All the messages begin by the Id so size += 1
+		private const uint sizeMessagePiece = 2+1+1 + 1;
+		public static readonly uint[] SizeMessage = {sizeMessagePiece,
+											GridSizeX*GridSizeY+sizeMessagePiece,
+											1 + 1,
+											1,
+											1,
+											1,
+											2*sizeMessagePiece - 1 + 1,
+											1 + 2,
+											1 + sizeof(int) + 2*sizeof(uint), // score, level and nb removed row
+											1 + sizeof(int) + 2*sizeof(uint)};
 		public const uint SizeMaxBluetoothMessage = 512;
 
-		public const byte NumVersion1 = 1;
-		public const byte NumVersion2 = 0;
+		public const byte NumVersion = 2;
 
+		// ProposedPieceView
 		public const int NbProposedPiece = 4;
 		public const int NbLinePropPiece = 2;
 	}

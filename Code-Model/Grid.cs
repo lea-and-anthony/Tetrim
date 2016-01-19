@@ -98,6 +98,11 @@ namespace Tetrim
 
 		public void AddPieceToMap (Player player)
 		{
+			AddPieceToMap(player, true);
+		}
+
+		public void AddPieceToMap (Player player, bool changeScore)
+		{
 			int minY = _fallingPiece._blocks[0]._y;
 			int maxY = _fallingPiece._blocks[0]._y;
 			for (int i = 0; i < Constants.BlockPerPiece; i++)
@@ -113,7 +118,7 @@ namespace Tetrim
 				}
 			}
 			int nbRemovedRows = RemoveFullRows(minY, maxY);
-			if (nbRemovedRows != 0)
+			if (nbRemovedRows != 0 && changeScore)
 			{
 				player.UpdatePlayerRemoveRow(nbRemovedRows);
 			}

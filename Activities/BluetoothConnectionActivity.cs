@@ -418,7 +418,7 @@ namespace Tetrim
 		{
 			// We have recieve a demand to start the game
 			// We verify that the two player have the same version of the application
-			if(message[1] == Constants.NumVersion1 && message[2] == Constants.NumVersion2)
+			if(message[1] == Constants.NumVersion)
 			{
 				// The 2 players have the same version, we can launch the game if we are ready
 				if(_state == Network.StartState.WAITING_FOR_OPPONENT)
@@ -436,7 +436,9 @@ namespace Tetrim
 			}
 			else
 			{
-				Utils.ShowAlert(Resource.String.wrong_version_title, Resource.String.wrong_version, this);
+				//Utils.ShowAlert(Resource.String.wrong_version_title, Resource.String.wrong_version, this);
+				Intent intent = UtilsDialog.CreateBluetoothDialogNoCancel(this, Resources, Resource.String.wrong_version);
+				StartActivity(intent);
 				Network.Instance.CommunicationWay.Start(); // We restart the connection
 			}
 			return 0;
@@ -444,7 +446,7 @@ namespace Tetrim
 
 		public int SendStartGameMessage()
 		{
-			byte[] message = {Constants.IdMessageStart, Constants.NumVersion1, Constants.NumVersion2};
+			byte[] message = {Constants.IdMessageStart, Constants.NumVersion};
 			// We notify the opponent that we are ready
 			Network.Instance.CommunicationWay.Write(message);
 

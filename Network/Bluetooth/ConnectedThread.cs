@@ -56,20 +56,48 @@ namespace Tetrim
 			Log.Info(BluetoothManager.Tag, "BEGIN ConnectedThread");
 			Name = "ConnectedThread";
 			byte[] buffer = new byte[Constants.SizeMaxBluetoothMessage];
-			int bytes;
+			int totalBytes = 0, bytes;
 
 			// Keep listening to the InputStream while connected
 			while(_continue)
 			{
 				try
 				{
-					// Read from the InputStream
-					bytes = _inStream.Read(buffer, 0, buffer.Length);
-
-					if(_continue)
+					do
 					{
-						// Send the obtained bytes to the UI Activity
-						_service.ObtainMessage((int) BluetoothManager.MessageType.Read, bytes, -1, buffer).SendToTarget();
+						// Read from the InputStream
+						bytes = _inStream.Read(buffer, totalBytes, buffer.Length - totalBytes);
+						totalBytes += bytes;
+					} while(_continue && bytes > 0 && buffer[0] < Constants.MaxIdMessage && totalBytes < Constants.SizeMessage[buffer[0]]);
+
+					if(_continue && bytes > 0)
+					{
+						// All the message sent on the network follow the convention: id of the message followed by the message itself
+						// So here we are going to check if we have one message or several message before sending them to the activity
+						if(buffer[0] < Constants.MaxIdMessage)
+						{
+							while(totalBytes >= Constants.SizeMessage[buffer[0]])
+							{
+								int sizeMessage = (int) Constants.SizeMessage[buffer[0]];
+								totalBytes -= sizeMessage;
+
+								// Send the obtained bytes to the UI Activity
+								_service.ObtainMessage((int) BluetoothManager.MessageType.Read, sizeMessage, -1, buffer).SendToTarget();
+
+								// Offset of the data to remove the message we just sent
+								int offset = sizeMessage;
+								for(int i = 0; i < totalBytes; i++)
+								{
+									buffer[i] = buffer[i + offset];
+								}
+							}
+						}
+						else
+						{
+							// We received a message that we don't understand so we flush it
+							Log.Error(BluetoothManager.Tag, "ERROR : Received a message with Id:" + buffer[0]);
+							totalBytes = 0;
+						}
 					}
 				}
 				catch(Java.IO.IOException e)

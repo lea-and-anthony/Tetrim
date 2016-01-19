@@ -51,6 +51,13 @@ namespace Tetrim
 			Log.Debug(BluetoothManager.Tag, "BEGIN AcceptThread " + this.ToString());
 			#endif
 
+			if(_serverSocket == null)
+			{
+				Log.Error(BluetoothManager.Tag, "ERROR: Could not start the accept thread because _serverSocket = null");
+				_end = true;
+				return;
+			}
+
 			Name = "AcceptThread";
 			BluetoothSocket socket = null;
 

@@ -77,6 +77,8 @@
     <Compile Include="Code-View\DialogBuilder.cs" />
     <Compile Include="Activities\DialogActivity.cs" />
     <Compile Include="Code-View\ProposedPieceView.cs" />
+    <Compile Include="Code-View\UtilsDialog.cs" />
+    <Compile Include="Code-View\UtilsUI.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
@@ -131,6 +133,7 @@
     <AndroidResource Include="Resources\layout\Menu.axml" />
     <AndroidResource Include="Resources\layout\BluetoothConnection.axml" />
     <AndroidResource Include="Resources\layout\Dialog.axml" />
+    <AndroidResource Include="Resources\values-fr\StringsNotToUse.xml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Code-Model\" />
@@ -138,6 +141,7 @@
     <Folder Include="Network\" />
     <Folder Include="Activities\" />
     <Folder Include="Network\Bluetooth\" />
+    <Folder Include="Resources\values-fr\" />
   </ItemGroup>
   <ItemGroup>
     <AndroidAsset Include="Assets\Blox.ttf" />

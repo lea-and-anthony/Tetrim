@@ -271,7 +271,7 @@ namespace Tetrim
 			setState(State.None);
 
 			// Send a message to display an error alert
-			_handler.ObtainMessage((int) MessageType.Alert, Resource.String.ConnectionImpossibleTitle,
+			_handler.ObtainMessage((int) MessageType.Alert, Resource.String.ConnectionImpossible,
 				Resource.String.ConnectionImpossible, null).SendToTarget ();
 		}
 

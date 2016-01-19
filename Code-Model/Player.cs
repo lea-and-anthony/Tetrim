@@ -102,7 +102,7 @@ namespace Tetrim
 		// Network message to indicate the new position of the piece
 		public byte[] getMessagePiece()
 		{
-			byte[] bytesMessage = new byte[Constants.SizeMessagePiece];
+			byte[] bytesMessage = new byte[Constants.SizeMessage[Constants.IdMessagePiece]];
 			bytesMessage [0] = Constants.IdMessagePiece;
 			bytesMessage = _grid.getMessagePiece(bytesMessage, 1);
 			return bytesMessage;
@@ -112,7 +112,7 @@ namespace Tetrim
 		// each time a piece is placed)
 		public byte[] getMessageGrid()
 		{
-			byte[] bytesMessage = new byte[Constants.SizeMessageGrid];
+			byte[] bytesMessage = new byte[Constants.SizeMessage[Constants.IdMessageGrid]];
 			bytesMessage [0] = Constants.IdMessageGrid;
 			bytesMessage = _grid.getMessageGrid(bytesMessage, 1);
 			return bytesMessage;
@@ -124,7 +124,7 @@ namespace Tetrim
 		{
 			if(message[0] == Constants.IdMessageGrid)
 			{
-				if(message.Length < Constants.SizeMessageGrid)
+				if(message.Length < Constants.SizeMessage[Constants.IdMessageGrid])
 					return 0;
 
 				// The message contains the entire grid
@@ -133,7 +133,7 @@ namespace Tetrim
 			}
 			else if(message[0] == Constants.IdMessagePiece)
 			{
-				if(message.Length < Constants.SizeMessagePiece)
+				if(message.Length < Constants.SizeMessage[Constants.IdMessagePiece])
 					return 0;
 
 				// The message contains only the position of the piece
@@ -141,21 +141,21 @@ namespace Tetrim
 			}
 			else if(message[0] == Constants.IdMessagePiecePut)
 			{
-				if(message.Length < Constants.SizeMessagePiecePut)
+				if(message.Length < Constants.SizeMessage[Constants.IdMessagePiecePut])
 					return 0;
 
 				// The message contains the position of the piece
 				// we need to put in the grid and the new piece
 				_grid.interpretPiece(message, 1);
-				_grid.AddPieceToMap(this);
-				_grid.interpretPiece(message, Constants.SizeMessagePiece);
+				_grid.AddPieceToMap(this, false);
+				_grid.interpretPiece(message, Constants.SizeMessage[Constants.IdMessagePiece]);
 				_grid.UpdateShadowPiece();
 
 				return 2;
 			}
 			else if(message[0] == Constants.IdMessageNextPiece)
 			{
-				if(message.Length < Constants.SizeMessageNextPiece)
+				if(message.Length < Constants.SizeMessage[Constants.IdMessageNextPiece])
 					return 0;
 				
 				_grid.interpretNextPiece(message, 1);
@@ -166,7 +166,7 @@ namespace Tetrim
 
 		public bool InterpretScoreMessage(byte[] message)
 		{
-			if(message.Length < Constants.SizeMessageScore || message[0] != Constants.IdMessageScore)
+			if(message.Length < Constants.SizeMessage[Constants.IdMessageScore] || message[0] != Constants.IdMessageScore)
 				return false;
 
 			_score = BitConverter.ToInt32(message, 1);
@@ -182,7 +182,7 @@ namespace Tetrim
 
 		public byte[] GetScoreMessage()
 		{
-			byte[] message = new byte[Constants.SizeMessageScore];
+			byte[] message = new byte[Constants.SizeMessage[Constants.IdMessageScore]];
 
 			message[0] = Constants.IdMessageScore;
 			completeScoreInMessage(ref message, 1);
@@ -192,7 +192,7 @@ namespace Tetrim
 
 		public byte[] GetEndMessage()
 		{
-			byte[] message = new byte[Constants.SizeMessageEnd];
+			byte[] message = new byte[Constants.SizeMessage[Constants.IdMessageEnd]];
 
 			message[0] = Constants.IdMessageEnd;
 			completeScoreInMessage(ref message, 1);

@@ -37,34 +37,34 @@ namespace Tetrim
 			Log.Debug(Tag, "onCreate()");
 			#endif
 
-			Utils.SetTextFont(FindViewById<TextView>(Resource.Id.settingsTitle));
+			UtilsUI.SetTextFont(FindViewById<TextView>(Resource.Id.settingsTitle));
 
 			ButtonStroked backButton = FindViewById<ButtonStroked>(Resource.Id.backButton);
-			Utils.SetIconButtonWithHeight(backButton, TetrisColor.Orange);
+			UtilsUI.SetIconButtonWithHeight(backButton, TetrisColor.Orange);
 			backButton.Click += delegate {
 				Finish();
 			};
 
 			ButtonStroked deleteFriendsButton = FindViewById<ButtonStroked>(Resource.Id.deleteFriendsButton);
-			Utils.SetMenuButtonWithHeight(deleteFriendsButton, TetrisColor.Red);
+			UtilsUI.SetMenuButtonWithHeight(deleteFriendsButton, TetrisColor.Red);
 			deleteFriendsButton.Click += delegate {
-				Intent intent = Utils.CreateMakeSureDialog(this, Resources,
+				Intent intent = UtilsDialog.CreateMakeSureDialog(this, Resources,
 					Resources.GetString(Resource.String.askSureDeleteFriends),
 					delegate {User.Instance.ClearFriends();});
 				StartActivity(intent);
 			};
 
 			ButtonStroked changeNameButton = FindViewById<ButtonStroked>(Resource.Id.changeNameButton);
-			Utils.SetMenuButtonWithHeight(changeNameButton, TetrisColor.Cyan);
+			UtilsUI.SetMenuButtonWithHeight(changeNameButton, TetrisColor.Cyan);
 			changeNameButton.Click += delegate {
-				Intent intent = Utils.CreateUserNameDialog(this, Resources);
+				Intent intent = UtilsDialog.CreateUserNameDialog(this, Resources);
 				StartActivity(intent);
 			};
 
 			ButtonStroked deleteHighScoresButton = FindViewById<ButtonStroked>(Resource.Id.deleteHighScoresButton);
-			Utils.SetMenuButtonWithHeight(deleteHighScoresButton, TetrisColor.Yellow);
+			UtilsUI.SetMenuButtonWithHeight(deleteHighScoresButton, TetrisColor.Yellow);
 			deleteHighScoresButton.Click += delegate {
-				Intent intent = Utils.CreateMakeSureDialog(this, Resources,
+				Intent intent = UtilsDialog.CreateMakeSureDialog(this, Resources,
 					Resources.GetString(Resource.String.askSureDeleteHighScore),
 					delegate {User.Instance.ClearHighScore();});
 				StartActivity(intent);

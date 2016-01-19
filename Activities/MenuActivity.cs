@@ -45,48 +45,47 @@ namespace Tetrim
 			// Retrieve the user's name
 			if(!User.Instance.IsUserStored)
 			{
-				Intent intent = Utils.CreateUserNameDialogNoCancel(this, Resources);
-				StartActivityForResult(intent, (int)Utils.RequestCode.RequestUserName);
+				Intent intent = UtilsDialog.CreateUserNameDialogNoCancel(this, Resources);
+				StartActivity(intent);
 			}
 
 			// Retrieve the fonts
-			Utils.TextFont = Typeface.CreateFromAsset(Assets,"Foo.ttf");
-			Utils.TitleFont = Typeface.CreateFromAsset(Assets,"Blox.ttf");
-			Utils.ArrowFont = Typeface.CreateFromAsset(Assets,"Arrows.otf");
+			UtilsUI.TextFont = Typeface.CreateFromAsset(Assets,"Foo.ttf");
+			UtilsUI.TitleFont = Typeface.CreateFromAsset(Assets,"Blox.ttf");
+			UtilsUI.ArrowFont = Typeface.CreateFromAsset(Assets,"Arrows.otf");
 
 			// Set the title
-			Utils.SetTitleTextView(FindViewById<TextView>(Resource.Id.titleT), TetrisColor.Red);
-			Utils.SetTitleTextView(FindViewById<TextView>(Resource.Id.titleE), TetrisColor.Orange);
-			Utils.SetTitleTextView(FindViewById<TextView>(Resource.Id.titleT2), TetrisColor.Yellow);
-			Utils.SetTitleTextView(FindViewById<TextView>(Resource.Id.titleR), TetrisColor.Green);
-			Utils.SetTitleTextView(FindViewById<TextView>(Resource.Id.titleI), TetrisColor.Cyan);
-			Utils.SetTitleTextView(FindViewById<TextView>(Resource.Id.titleM), TetrisColor.Pink);
+			UtilsUI.SetTitleTextView(FindViewById<TextView>(Resource.Id.titleT), TetrisColor.Red);
+			UtilsUI.SetTitleTextView(FindViewById<TextView>(Resource.Id.titleE), TetrisColor.Orange);
+			UtilsUI.SetTitleTextView(FindViewById<TextView>(Resource.Id.titleT2), TetrisColor.Yellow);
+			UtilsUI.SetTitleTextView(FindViewById<TextView>(Resource.Id.titleR), TetrisColor.Green);
+			UtilsUI.SetTitleTextView(FindViewById<TextView>(Resource.Id.titleI), TetrisColor.Cyan);
+			UtilsUI.SetTitleTextView(FindViewById<TextView>(Resource.Id.titleM), TetrisColor.Pink);
 
 			// Set the user name
 			_userNameText = FindViewById<TextView>(Resource.Id.userNameText);
-			_userNameText.SetTypeface(Utils.TextFont, TypefaceStyle.Normal);
+			_userNameText.SetTypeface(UtilsUI.TextFont, TypefaceStyle.Normal);
 			_userNameText.Text = Resources.GetString(Resource.String.welcomeUser, User.Instance.UserName);
 
 			// Single player button
 			ButtonStroked singlePlayerButton = FindViewById<ButtonStroked>(Resource.Id.singlePlayerButton);
-			Utils.SetMenuButton(singlePlayerButton, TetrisColor.Red);
+			UtilsUI.SetMenuButton(singlePlayerButton, TetrisColor.Red);
 			singlePlayerButton.Click += delegate {
 				startGame(this, Utils.RequestCode.RequestGameOnePlayer);
 			};
 
 			// Two players button
 			ButtonStroked twoPlayersButton = FindViewById<ButtonStroked>(Resource.Id.twoPlayersButton);
-			Utils.SetMenuButton(twoPlayersButton, TetrisColor.Cyan);
+			UtilsUI.SetMenuButton(twoPlayersButton, TetrisColor.Cyan);
 			twoPlayersButton.Click += delegate {
 				// Start the bluetooth connection
 				var bluetoothConnectionActivity = new Intent(this, typeof(BluetoothConnectionActivity));
 				StartActivity(bluetoothConnectionActivity);
-				// TODO : add another connection mode
 			};
 
 			// Settings button
 			ButtonStroked settingsButton = FindViewById<ButtonStroked>(Resource.Id.settingsButton);
-			Utils.SetMenuButton(settingsButton, TetrisColor.Green);
+			UtilsUI.SetMenuButton(settingsButton, TetrisColor.Green);
 			settingsButton.Click += delegate {  
 				var settingsActivity = new Intent(this, typeof(SettingsActivity));
 				StartActivity(settingsActivity);
@@ -94,7 +93,7 @@ namespace Tetrim
 
 			// Exit button
 			ButtonStroked exitButton = FindViewById<ButtonStroked>(Resource.Id.exitButton);
-			Utils.SetMenuButton(exitButton, TetrisColor.Yellow);
+			UtilsUI.SetMenuButton(exitButton, TetrisColor.Yellow);
 			exitButton.Click += delegate {
 				System.Diagnostics.Process.GetCurrentProcess().CloseMainWindow();
 			};
@@ -117,7 +116,7 @@ namespace Tetrim
 		{
 			// The view is completely loaded now, so getMeasuredWidth() won't return 0
 			ButtonStroked settingsButton = FindViewById<ButtonStroked>(Resource.Id.settingsButton);
-			Utils.MenuButtonHeight = settingsButton.Height;
+			UtilsUI.MenuButtonHeight = settingsButton.Height;
 
 			// Destroy the onGlobalLayout afterwards, otherwise it keeps changing
 			// the sizes non-stop, even though it's already done

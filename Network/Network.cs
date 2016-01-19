@@ -108,8 +108,10 @@ namespace Tetrim
 				Log.Debug(Tag, "display of the alert");
 				#endif
 
-				Utils.PopUpEndEvent += activity.Finish;
-				Utils.ShowAlert(Resource.String.BTNotAvailableTitle, Resource.String.BTNotAvailable, activity);
+				UtilsDialog.PopUpEndEvent += activity.Finish;
+				Intent intent = UtilsDialog.CreateBluetoothDialogNoCancel(activity, activity.Resources, Resource.String.BTNotAvailable);
+				activity.StartActivity(intent);
+				//Utils.ShowAlert(Resource.String.BTNotAvailableTitle, Resource.String.BTNotAvailable, activity);
 				return ResultEnabling.NoMedium;
 			}
 
@@ -152,7 +154,9 @@ namespace Tetrim
 					#if DEBUG
 					Log.Debug(Tag, "Bluetooth not enabled");
 					#endif
-					Utils.ShowAlert(Resource.String.BTNotEnabledTitle, Resource.String.BTNotEnabled, activity);
+					Intent intent = UtilsDialog.CreateBluetoothDialogNoCancel(activity, activity.Resources, Resource.String.BTNotEnabled);
+					activity.StartActivity(intent);
+					//Utils.ShowAlert(Resource.String.BTNotEnabledTitle, Resource.String.BTNotEnabled, activity);
 				}
 			}
 			return false;

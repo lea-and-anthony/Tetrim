@@ -24,9 +24,8 @@ namespace Tetrim
 		//--------------------------------------------------------------
 		public static byte[] _messageFail { get; set; }
 		private string _deviceAddress = string.Empty;
-		private AlertDialog.Builder _builder = null;
-		private AlertDialog _alertDialog = null;
 		private bool _connectingOccured = false;
+		private bool isDialogDisplayed = false;
 		private Network.StartState _state = Network.StartState.NONE;
 
 		//--------------------------------------------------------------
@@ -101,22 +100,16 @@ namespace Tetrim
 				Network.Instance.CommunicationWay.Write(_messageFail);
 			}
 
-			if(_alertDialog != null)
+			if(isDialogDisplayed)
 			{
-				_alertDialog.Dismiss();
-				_alertDialog = null;
+				DialogActivity.CloseAllDialog.Invoke();
+				isDialogDisplayed = false;
 			}
 
 			// Now we display a pop-up asking if we want to continue the game
-			AlertDialog.Builder builder = new AlertDialog.Builder(this);
-			builder.SetTitle(Resource.String.connection_back_title);
-			builder.SetMessage(Resource.String.connection_back);
-			builder.SetCancelable(false);
-			builder.SetPositiveButton(Android.Resource.String.Yes, delegate{sendRestart();});
-			builder.SetNegativeButton(Android.Resource.String.No, delegate{Finish();});
-
-			AlertDialog alert = builder.Create();
-			alert.Show();
+			Intent intent = UtilsDialog.CreateYesNoDialogNoCancel(this, Resources, -1, Resource.String.connection_back,
+				delegate {sendRestart();}, delegate {Finish();});
+			StartActivity(intent);
 
 			return 0;
 		}
@@ -132,20 +125,12 @@ namespace Tetrim
 				// Reset result and asking if we retry or finish this Activity
 				SetResult(Result.Canceled, null);
 
-				if(_builder == null)
+				if(!isDialogDisplayed)
 				{
-					_builder = new AlertDialog.Builder(this);
-					_builder.SetTitle(Resource.String.retry_connection_title);
-					_builder.SetMessage(Resource.String.retry_connection);
-					_builder.SetCancelable(false);
-					_builder.SetPositiveButton(Android.Resource.String.Yes, delegate{_alertDialog = null; restartBluetooth();});
-					_builder.SetNegativeButton(Android.Resource.String.No, delegate{_alertDialog = null; Finish();});
-				}
-
-				if(_alertDialog == null)
-				{
-					_alertDialog = _builder.Create();
-					_alertDialog.Show();
+					isDialogDisplayed = true;
+					Intent intent = UtilsDialog.CreateYesNoDialogNoCancel(this, Resources, -1, Resource.String.retry_connection,
+						delegate{isDialogDisplayed = false; restartBluetooth();}, delegate{isDialogDisplayed = false; Finish();});
+					StartActivity(intent);
 				}
 				_connectingOccured = false;
 			}

@@ -26,6 +26,8 @@ namespace Tetrim
 			Text
 		}
 
+		public delegate void StandardDelegate();
+
 		//--------------------------------------------------------------
 		// ATTRIBUTES
 		//--------------------------------------------------------------
@@ -36,6 +38,7 @@ namespace Tetrim
 		ButtonStroked _positiveButton, _negativeButton;
 
 		public static DialogBuilder Builder;
+		public static StandardDelegate CloseAllDialog = null;
 
 		//--------------------------------------------------------------
 		// EVENT CATCHING METHODES
@@ -134,6 +137,14 @@ namespace Tetrim
 
 			CreateButton(_positiveButton, TetrisColor.Green, Builder.PositiveText, Builder.PositiveAction, true);
 			CreateButton(_negativeButton, TetrisColor.Orange, Builder.NegativeText, Builder.NegativeAction, false);
+
+			CloseAllDialog += Finish;
+		}
+
+		protected override void OnDestroy()
+		{
+			base.OnDestroy();
+			CloseAllDialog -= Finish;
 		}
 
 		private void CreateButton(ButtonStroked button, TetrisColor color, string text, EventHandler action, bool answer)
@@ -195,6 +206,10 @@ namespace Tetrim
 			_buttonLayout.SetMinimumHeight(_positiveButton.Height);
 
 			// Initialize background
+			// TODO : sometimes bug because "width and height must be > 0"
+			if(_root.Width <= 0 || _root.Height <= 0)
+				return;
+
 			Bitmap backgroundImage = Bitmap.CreateBitmap(_root.Width, _root.Height, Bitmap.Config.Argb8888);
 			Canvas canvas = new Canvas(backgroundImage);
 
@@ -234,6 +249,6 @@ namespace Tetrim
 		{
 			_negativeButton.Text = text;
 			_negativeButton.Click += action;
-		}
+   		}
 	}
 }

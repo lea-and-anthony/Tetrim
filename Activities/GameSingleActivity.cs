@@ -38,7 +38,7 @@ namespace Tetrim
 			{
 				_gameTimer.Stop();
 				//Utils.PopUpEndEvent += endGame;
-				Intent intent = Utils.CreateGameOverDialogSingle(this, Resources, _player1._score);
+				Intent intent = UtilsDialog.CreateGameOverDialogSingle(this, Resources, _player1._score);
 				User.Instance.AddHighScore(_player1._score);
 				StartActivity(intent);
 			}
@@ -54,9 +54,10 @@ namespace Tetrim
 		{
 			_gameTimer.Stop();
 
-			Utils.PopUpEndEvent += resumeGame;
-			// TODO : change dialog
-			Utils.ShowAlert(Resource.String.Pause_title, Resource.String.Pause, this);
+			UtilsDialog.PopUpEndEvent += resumeGame;
+			Intent intent = UtilsDialog.CreateBluetoothDialogNoCancel(this, Resources, Resource.String.Pause);
+			StartActivity(intent);
+			//Utils.ShowAlert(Resource.String.Pause_title, Resource.String.Pause, this);
 
 			return 0;
 		}
