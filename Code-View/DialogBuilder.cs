@@ -33,7 +33,7 @@ namespace Tetrim
 		public EventHandler PositiveAction, NegativeAction;
 		public string Title, Message;
 		public string PositiveText, NegativeText;
-		public string ReturnText;
+		public static string ReturnText;
 		public List<View> Content = new List<View>();
 
 		public Color StrokeColor = Utils.getAndroidDarkColor(TetrisColor.Blue);

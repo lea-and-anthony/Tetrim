@@ -96,6 +96,8 @@ namespace Tetrim
 				Network.Instance.CommunicationWay.Write(_player1.GetEndMessage());
 			}
 
+			Network.Instance.EraseAllEvent();
+
 			base.OnDestroy();
 		}
 
@@ -136,14 +138,14 @@ namespace Tetrim
 
 			if (_player1._grid.isGameOver())
 			{
-				_gameTimer.Stop();
 				lock (_locker)
 				{
+					_gameTimer.Stop();
 					if(!_gameOver)
 					{
 						_gameOver = true;
 						//Utils.PopUpEndEvent += endGame;
-						Intent intent = UtilsDialog.CreateGameOverDialogMulti(this, Resources, false);
+						Intent intent = UtilsDialog.CreateGameOverDialogMulti(this, false);
 						StartActivity(intent);
 					}
 				}
@@ -168,15 +170,15 @@ namespace Tetrim
 
 		private int OnReceiveEndMessage(byte[] message)
 		{
-			_gameTimer.Stop();
 			lock (_locker)
 			{
+				if(_gameTimer != null)
+					_gameTimer.Stop();
+				
 				if(!_gameOver)
 				{
 					_gameOver = true;
-					//Utils.PopUpEndEvent += endGame;
-					//RunOnUiThread(() => Utils.ShowAlert (Resource.String.game_over_win_title, Resource.String.game_over_win, this));
-					Intent intent = UtilsDialog.CreateGameOverDialogMulti(this, Resources, true);
+					Intent intent = UtilsDialog.CreateGameOverDialogMulti(this, true);
 					StartActivity(intent);
 				}
 			}
@@ -198,6 +200,18 @@ namespace Tetrim
 			StartActivityForResult(serverIntent,(int) Utils.RequestCode.RequestReconnect);
 
 			return 0;
+		}
+
+		//--------------------------------------------------------------
+		// PUBLIC METHODES
+		//--------------------------------------------------------------
+		// Resume the game if it is us who asked for the pause
+		public override void ResumeGame()
+		{
+			if(_originPause == StopOrigin.MyPause)
+			{
+				resumeGame(true);
+			}
 		}
 
 		//--------------------------------------------------------------
@@ -283,21 +297,10 @@ namespace Tetrim
 				Network.Instance.CommunicationWay.Write(message);
 			}
 
-			UtilsDialog.PopUpEndEvent += resumeGame;
-			Intent intent = UtilsDialog.CreateBluetoothDialogNoCancel(this, Resources, Resource.String.Pause);
+			Intent intent = UtilsDialog.CreatePauseGameDialog(this);
 			StartActivity(intent);
-			//Utils.ShowAlert(Resource.String.Pause_title, Resource.String.Pause, this);
 
 			return 0;
-		}
-
-		// Resume the game if it is us who asked for the pause
-		protected override void resumeGame()
-		{
-			if(_originPause == StopOrigin.MyPause)
-			{
-				resumeGame(true);
-			}
 		}
 
 		protected override void moveLeftButtonPressed(object sender, EventArgs e)

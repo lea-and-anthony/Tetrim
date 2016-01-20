@@ -133,7 +133,6 @@
     <AndroidResource Include="Resources\layout\Menu.axml" />
     <AndroidResource Include="Resources\layout\BluetoothConnection.axml" />
     <AndroidResource Include="Resources\layout\Dialog.axml" />
-    <AndroidResource Include="Resources\values-fr\StringsNotToUse.xml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Code-Model\" />
@@ -141,7 +140,6 @@
     <Folder Include="Network\" />
     <Folder Include="Activities\" />
     <Folder Include="Network\Bluetooth\" />
-    <Folder Include="Resources\values-fr\" />
   </ItemGroup>
   <ItemGroup>
     <AndroidAsset Include="Assets\Blox.ttf" />

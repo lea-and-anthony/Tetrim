@@ -1,6 +1,7 @@
 ﻿using System;
 
 using Android.App;
+using Android.Bluetooth;
 using Android.Content;
 using Android.Graphics;
 using Android.Views;
@@ -90,6 +91,103 @@ namespace Tetrim
 			button.LayoutParameters.Width = MenuButtonHeight*2/3;
 			button.LayoutParameters.Height = MenuButtonHeight*2/3;
 			SetIconButton(button, color, UtilsUI.TextFont, button.LayoutParameters.Height);
+		}
+
+		public static void SetDialogButton(DialogActivity activity, ButtonStroked button, EditText field, TetrisColor color, string text, EventHandler action, bool answer)
+		{
+			if(!String.IsNullOrEmpty(text))
+			{
+				button.StrokeColor = Utils.getAndroidDarkColor(color);
+				button.FillColor = Utils.getAndroidColor(color);
+				button.Text = text;
+				button.TextSize = Utils.GetPixelsFromDP(activity.BaseContext, 20);
+				button.Click += delegate {
+					DialogBuilder.ReturnText = (DialogActivity.Builder.RequestCode == DialogBuilder.DialogRequestCode.Text ) ? field.Text : null;
+				};
+				button.Click += action;
+				button.Click += delegate {
+					Intent intent = new Intent();
+					switch(DialogActivity.Builder.RequestCode)
+					{
+					case DialogBuilder.DialogRequestCode.PosOrNeg:
+						intent.PutExtra(DialogActivity.Builder.RequestCode.ToString(), answer);
+						activity.SetResult(Result.Ok, intent);
+						activity.Finish();
+						break;
+					case DialogBuilder.DialogRequestCode.Text:
+						if(answer)
+						{
+							if(!String.IsNullOrEmpty(field.Text))
+							{
+								intent.PutExtra(DialogActivity.Builder.RequestCode.ToString(), field.Text);
+								activity.SetResult(Result.Ok, intent);
+								activity.Finish();
+							}
+						}
+						else
+						{
+							activity.SetResult(Result.Canceled);
+							activity.Finish();
+						}
+						break;
+					default:
+						break;
+					}
+				};
+			}
+		}
+
+		public static ButtonStroked CreateDeviceButton(BluetoothConnectionActivity activity, BluetoothDevice device, TetrisColor color, int minHeight, int defaultText)
+		{
+			ButtonStroked button = new ButtonStroked(activity.BaseContext);
+			button.SetMinimumHeight(minHeight);
+			button.StrokeColor = Utils.getAndroidColor(color);
+			button.FillColor = Utils.getAndroidDarkColor(color);
+			button.Gravity = GravityFlags.Left;
+			int padding = Utils.GetPixelsFromDP(activity.BaseContext, 20);
+			button.SetPadding(padding, padding, padding, padding);
+			button.StrokeBorderWidth = 7;
+			button.StrokeTextWidth = 5;
+			button.RadiusIn = 7;
+			button.RadiusOut = 5;
+			button.IsTextStroked = false;
+			button.Shape = ButtonStroked.ButtonShape.BottomTop;
+			if(device != null)
+			{
+				button.Tag = device.Address;
+				button.Text = device.Name;
+				button.Click += delegate {
+					activity.DeviceListClick(button);
+				};
+			}
+			else
+			{
+				button.Text = activity.Resources.GetString(defaultText);
+				button.Enabled = false;
+			}
+			return button;
+		}
+
+		public static void SetDeviceMenuButton(Activity activity, ref ButtonStroked button, int id, TetrisColor color)
+		{
+			button = activity.FindViewById<ButtonStroked>(id);
+			button.StrokeColor = Utils.getAndroidDarkColor(color);
+			button.FillColor = Utils.getAndroidColor(color);
+		}
+
+		public static void SetDeviceMenuLayout(Activity activity, ref LinearLayout layout, int nbDevices)
+		{
+			layout = new LinearLayout(activity.BaseContext);
+			layout.WeightSum = nbDevices;
+			layout.Orientation = Orientation.Vertical;
+		}
+
+		public static LinearLayout.LayoutParams CreateDeviceLayoutParams(Activity activity, int marginPixel)
+		{
+			LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MatchParent, 0, 1);
+			int margin = Utils.GetPixelsFromDP(activity.BaseContext, marginPixel);
+			//lp.SetMargins(margin, margin, margin, margin);
+			return lp;
 		}
 	}
 }

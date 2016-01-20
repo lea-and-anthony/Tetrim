@@ -73,7 +73,7 @@ namespace Tetrim
 				if(_gameTimer.Enabled)
 					pauseGame(true);
 				else
-					resumeGame();
+					ResumeGame();
 			}
 		}
 
@@ -82,7 +82,7 @@ namespace Tetrim
 		//--------------------------------------------------------------
 		protected abstract void OnTimerElapsed(object source, ElapsedEventArgs e);
 		protected abstract int pauseGame(bool requestFromUser);
-		protected abstract void resumeGame();
+		public abstract void ResumeGame();
 		protected abstract void moveLeftButtonPressed(object sender, EventArgs e);
 		protected abstract void moveRightButtonPressed(object sender, EventArgs e);
 		protected abstract void turnLeftButtonPressed(object sender, EventArgs e);
