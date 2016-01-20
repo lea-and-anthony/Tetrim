@@ -107,7 +107,7 @@ namespace Tetrim
 			}
 
 			// Now we display a pop-up asking if we want to continue the game
-			Intent intent = UtilsDialog.CreateYesNoDialogNoCancel(this, Resources, -1, Resource.String.connection_back,
+			Intent intent = DialogActivity.CreateYesNoDialog(this, -1, Resource.String.connection_back,
 				delegate {sendRestart();}, delegate {Finish();});
 			StartActivity(intent);
 
@@ -128,7 +128,7 @@ namespace Tetrim
 				if(!isDialogDisplayed)
 				{
 					isDialogDisplayed = true;
-					Intent intent = UtilsDialog.CreateYesNoDialogNoCancel(this, Resources, -1, Resource.String.retry_connection,
+					Intent intent = DialogActivity.CreateYesNoDialog(this, -1, Resource.String.retry_connection,
 						delegate{isDialogDisplayed = false; restartBluetooth();}, delegate{isDialogDisplayed = false; Finish();});
 					StartActivity(intent);
 				}

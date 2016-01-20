@@ -48,25 +48,23 @@ namespace Tetrim
 			ButtonStroked deleteFriendsButton = FindViewById<ButtonStroked>(Resource.Id.deleteFriendsButton);
 			UtilsUI.SetMenuButtonWithHeight(deleteFriendsButton, TetrisColor.Red);
 			deleteFriendsButton.Click += delegate {
-				Intent intent = UtilsDialog.CreateMakeSureDialog(this, Resources,
-					Resources.GetString(Resource.String.askSureDeleteFriends),
-					delegate {User.Instance.ClearFriends();});
+				Intent intent = DialogActivity.CreateYesNoDialog(this, -1,	Resource.String.askSureDeleteFriends,
+					delegate {User.Instance.ClearFriends();}, null);
 				StartActivity(intent);
 			};
 
 			ButtonStroked changeNameButton = FindViewById<ButtonStroked>(Resource.Id.changeNameButton);
 			UtilsUI.SetMenuButtonWithHeight(changeNameButton, TetrisColor.Cyan);
 			changeNameButton.Click += delegate {
-				Intent intent = UtilsDialog.CreateUserNameDialog(this, Resources);
+				Intent intent = UtilsDialog.CreateUserNameDialog(this);
 				StartActivity(intent);
 			};
 
 			ButtonStroked deleteHighScoresButton = FindViewById<ButtonStroked>(Resource.Id.deleteHighScoresButton);
 			UtilsUI.SetMenuButtonWithHeight(deleteHighScoresButton, TetrisColor.Yellow);
 			deleteHighScoresButton.Click += delegate {
-				Intent intent = UtilsDialog.CreateMakeSureDialog(this, Resources,
-					Resources.GetString(Resource.String.askSureDeleteHighScore),
-					delegate {User.Instance.ClearHighScore();});
+				Intent intent = DialogActivity.CreateYesNoDialog(this, -1, Resource.String.askSureDeleteHighScore,
+					delegate {User.Instance.ClearHighScore();}, null);
 				StartActivity(intent);
 			};
 		}

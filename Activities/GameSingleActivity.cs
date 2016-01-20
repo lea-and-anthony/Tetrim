@@ -38,7 +38,7 @@ namespace Tetrim
 			{
 				_gameTimer.Stop();
 				//Utils.PopUpEndEvent += endGame;
-				Intent intent = UtilsDialog.CreateGameOverDialogSingle(this, Resources, _player1._score);
+				Intent intent = UtilsDialog.CreateGameOverDialogSingle(this, _player1._score);
 				User.Instance.AddHighScore(_player1._score);
 				StartActivity(intent);
 			}
@@ -47,6 +47,17 @@ namespace Tetrim
 			FindViewById(Resource.Id.PlayerGridView).PostInvalidate();
 		}
 		//--------------------------------------------------------------
+		// PUBLIC METHODES
+		//--------------------------------------------------------------
+		// Resume the game by restarting the timer
+		public override void ResumeGame()
+		{
+			_gameTimer.AutoReset = true;
+			_gameTimer.Interval = getTimerLapse();
+			_gameTimer.Start();
+		}
+
+		//--------------------------------------------------------------
 		// PROTECTED METHODES
 		//--------------------------------------------------------------
 		// Pause the game and display a pop-up
@@ -54,20 +65,10 @@ namespace Tetrim
 		{
 			_gameTimer.Stop();
 
-			UtilsDialog.PopUpEndEvent += resumeGame;
-			Intent intent = UtilsDialog.CreateBluetoothDialogNoCancel(this, Resources, Resource.String.Pause);
+			Intent intent = UtilsDialog.CreatePauseGameDialog(this);
 			StartActivity(intent);
-			//Utils.ShowAlert(Resource.String.Pause_title, Resource.String.Pause, this);
 
 			return 0;
-		}
-
-		// Resume the game by restarting the timer
-		protected override void resumeGame()
-		{
-			_gameTimer.AutoReset = true;
-			_gameTimer.Interval = getTimerLapse();
-			_gameTimer.Start();
 		}
 
 		protected override void moveLeftButtonPressed(object sender, EventArgs e)

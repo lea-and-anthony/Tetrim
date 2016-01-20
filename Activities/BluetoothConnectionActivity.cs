@@ -55,14 +55,15 @@ namespace Tetrim
 		private Network.StartState _state = Network.StartState.NONE;
 		private bool _isConnectionInitiator = false;
 		private string _opponentName = String.Empty;
-		private AlertDialog _currentDialog = null;
+		private Intent _currentDialog = null;
 		private Menu _menuSelected = Menu.PAIRED;
 		private ScrollView _devicesLayout;
 		private LinearLayout _friendsDevicesLayout, _pairedDevicesLayout, _newDevicesLayout;
 		private ButtonStroked _friendsDevicesButton, _pairedDevicesButton, _newDevicesButton;
+		private ProgressBar _progressBar;
 
 		//--------------------------------------------------------------
-		// METHODES OVERRIDE
+		// EVENT CATCHING OVERRIDE
 		//--------------------------------------------------------------
 		protected override void OnCreate(Bundle bundle)
 		{
@@ -80,26 +81,25 @@ namespace Tetrim
 			selectDeviceText.SetTypeface(niceFont, TypefaceStyle.Normal);
 
 			// Initialize the buttons
-			SetupMenuButton(ref _friendsDevicesButton, Resource.Id.friendsDevices, FriendsDeviceColor);
+			UtilsUI.SetDeviceMenuButton(this, ref _friendsDevicesButton, Resource.Id.friendsDevices, FriendsDeviceColor);
 			_friendsDevicesButton.Click +=(sender, e) => {
 				SwitchMenu(Menu.FRIENDS);
 			};
-			SetupMenuButton(ref _pairedDevicesButton, Resource.Id.pairedDevices, PairedDeviceColor);
+			UtilsUI.SetDeviceMenuButton(this, ref _pairedDevicesButton, Resource.Id.pairedDevices, PairedDeviceColor);
 			_pairedDevicesButton.Click +=(sender, e) => {
 				SwitchMenu(Menu.PAIRED);
 			};
-			SetupMenuButton(ref _newDevicesButton, Resource.Id.newDevices, NewDeviceColor);
+			UtilsUI.SetDeviceMenuButton(this, ref _newDevicesButton, Resource.Id.newDevices, NewDeviceColor);
 			_newDevicesButton.Click +=(sender, e) => {
 				SwitchMenu(Menu.NEW);
 				startDiscovery();
-				// TODO: display a waiting animation here
 			};
 
 			// Create the layouts
 			_devicesLayout = FindViewById<ScrollView>(Resource.Id.devicesLayout);
-			SetupLayout(ref _friendsDevicesLayout, FriendsDeviceColor);
-			SetupLayout(ref _pairedDevicesLayout, PairedDeviceColor);
-			SetupLayout(ref _newDevicesLayout, NewDeviceColor);
+			UtilsUI.SetDeviceMenuLayout(this, ref _friendsDevicesLayout, NbDevices);
+			UtilsUI.SetDeviceMenuLayout(this, ref _pairedDevicesLayout, NbDevices);
+			UtilsUI.SetDeviceMenuLayout(this, ref _newDevicesLayout, NbDevices);
 			SwitchMenu(Menu.FRIENDS);
 
 			// Test if the view is created so we can resize the buttons
@@ -140,116 +140,6 @@ namespace Tetrim
 			// Destroy the onGlobalLayout afterwards, otherwise it keeps changing
 			// the sizes non-stop, even though it's already done
 			_devicesLayout.ViewTreeObserver.RemoveGlobalOnLayoutListener(this);
-		}
-
-		private void SetupMenuButton(ref ButtonStroked button, int id, TetrisColor color)
-		{
-			button = FindViewById<ButtonStroked>(id);
-			button.StrokeColor = Utils.getAndroidDarkColor(color);
-			button.FillColor = Utils.getAndroidColor(color);
-		}
-
-		private void SetupLayout(ref LinearLayout layout, TetrisColor color)
-		{
-			layout = new LinearLayout(this.BaseContext);
-			layout.WeightSum = NbDevices;
-			//layout.SetBackgroundColor(Utils.getAndroidDarkColor(color));
-			layout.Orientation = Orientation.Vertical;
-		}
-
-		public void AddNewDevice(BluetoothDevice device)
-		{
-			_newDevices.Add(device);
-			ButtonStroked newDeviceButton = CreateButton(device, NewDeviceColor);
-			LinearLayout.LayoutParams lp = CreateLayoutParams();
-			_newDevicesLayout.AddView(newDeviceButton, lp);
-		}
-
-		public void AddFriendDevice(BluetoothDevice device)
-		{
-			_newDevices.Add(device);
-			ButtonStroked friendsDeviceButton = CreateButton(device, FriendsDeviceColor);
-			LinearLayout.LayoutParams lp = CreateLayoutParams();
-			_friendsDevicesLayout.AddView(friendsDeviceButton, lp);
-		}
-
-		public void AddPairedDevice(BluetoothDevice device)
-		{
-			_pairedDevices.Add(device);
-			ButtonStroked pairedDeviceButton = CreateButton(device, PairedDeviceColor);
-			LinearLayout.LayoutParams lp = CreateLayoutParams();
-			_pairedDevicesLayout.AddView(pairedDeviceButton, lp);
-		}
-
-		private ButtonStroked CreateButton(BluetoothDevice device, TetrisColor color)
-		{
-			ButtonStroked button = new ButtonStroked(this.BaseContext);
-			button.SetMinimumHeight((int)(_devicesLayout.Height*1f/NbDevices));
-			button.Tag = device.Address;
-			button.Text = device.Name;
-			button.StrokeColor = Utils.getAndroidColor(color);
-			button.FillColor = Utils.getAndroidDarkColor(color);
-			button.Gravity = GravityFlags.Left;
-			int padding = Utils.GetPixelsFromDP(this.BaseContext, 20);
-			button.SetPadding(padding, padding, padding, padding);
-			button.StrokeBorderWidth = 7;
-			button.StrokeTextWidth = 5;
-			button.RadiusIn = 7;
-			button.RadiusOut = 5;
-			button.IsTextStroked = false;
-			button.Shape = ButtonStroked.ButtonShape.BottomTop;
-			button.Click += delegate {
-				deviceListClick(button);
-			};
-			return button;
-		}
-
-		private LinearLayout.LayoutParams CreateLayoutParams()
-		{
-			LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MatchParent, 0, 1);
-			int margin = Utils.GetPixelsFromDP(this.BaseContext, 5);
-			//lp.SetMargins(margin, margin, margin, margin);
-			return lp;
-		}
-
-		private void SwitchMenu(Menu chosenMenu)
-		{
-			this._menuSelected = chosenMenu;
-			switch(this._menuSelected)
-			{
-			case Menu.FRIENDS:
-				DisableMenuCategory(_pairedDevicesLayout, _pairedDevicesButton);
-				DisableMenuCategory(_newDevicesLayout, _newDevicesButton);
-				EnableMenuCategory(_friendsDevicesLayout, _friendsDevicesButton);
-				//_devicesLayout.SetBackgroundColor(Utils.getAndroidDarkColor(FriendsDeviceColor));
-				break;
-			case Menu.PAIRED:
-				DisableMenuCategory(_friendsDevicesLayout, _friendsDevicesButton);
-				DisableMenuCategory(_newDevicesLayout, _newDevicesButton);
-				EnableMenuCategory(_pairedDevicesLayout, _pairedDevicesButton);
-				//_devicesLayout.SetBackgroundColor(Utils.getAndroidDarkColor(PairedDeviceColor));
-				break;
-			case Menu.NEW:
-				DisableMenuCategory(_friendsDevicesLayout, _friendsDevicesButton);
-				DisableMenuCategory(_pairedDevicesLayout, _pairedDevicesButton);
-				EnableMenuCategory(_newDevicesLayout, _newDevicesButton);
-				//_devicesLayout.SetBackgroundColor(Utils.getAndroidDarkColor(NewDeviceColor));
-				break;
-			}
-		}
-
-		private void EnableMenuCategory(LinearLayout layout, ButtonStroked button)
-		{
-			_devicesLayout.AddView(layout, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MatchParent, LinearLayout.LayoutParams.WrapContent));
-			button.Selected = true;
-			button.Clickable = false;
-		}
-
-		private void DisableMenuCategory(LinearLayout layout, ButtonStroked button)
-		{
-			_devicesLayout.RemoveView(layout);
-			button.Selected = false;
-			button.Clickable = true;
 		}
 
 		protected override void OnResume ()
@@ -305,18 +195,89 @@ namespace Tetrim
 			}
 		}
 
-		public void CancelConnection()
+		//--------------------------------------------------------------
+		// DEVICES
+		//--------------------------------------------------------------
+		public void AddNewDevice(BluetoothDevice device)
 		{
-			if(_currentDialog != null)
-				_currentDialog.Dismiss();
-
-			_currentDialog = null;
-			_state = Network.StartState.NONE;
-			Network.Instance.CommunicationWay.Start();
+			if(device != null)
+			{
+				_newDevices.Add(device);
+			}
+			ButtonStroked newDeviceButton = UtilsUI.CreateDeviceButton(this, device, NewDeviceColor, (int)(_devicesLayout.Height*1f/NbDevices), Resource.String.none_found);
+			LinearLayout.LayoutParams lp = UtilsUI.CreateDeviceLayoutParams(this, 5);
+			_newDevicesLayout.AddView(newDeviceButton, _newDevicesLayout.ChildCount - 2, lp);
 		}
 
+		public void AddFriendDevice(BluetoothDevice device)
+		{
+			if(device != null)
+			{
+				_friendsDevices.Add(device);
+			}
+			ButtonStroked friendsDeviceButton = UtilsUI.CreateDeviceButton(this, device, FriendsDeviceColor, (int)(_devicesLayout.Height*1f/NbDevices), Resource.String.none_friend);
+			LinearLayout.LayoutParams lp = UtilsUI.CreateDeviceLayoutParams(this, 5);
+			_friendsDevicesLayout.AddView(friendsDeviceButton, lp);
+		}
+
+		public void AddPairedDevice(BluetoothDevice device)
+		{
+			if(device != null)
+			{
+				_pairedDevices.Add(device);
+			}
+			ButtonStroked pairedDeviceButton = UtilsUI.CreateDeviceButton(this, device, PairedDeviceColor, (int)(_devicesLayout.Height*1f/NbDevices), Resource.String.none_paired);
+			LinearLayout.LayoutParams lp = UtilsUI.CreateDeviceLayoutParams(this, 5);
+			_pairedDevicesLayout.AddView(pairedDeviceButton, lp);
+   		}
+
 		//--------------------------------------------------------------
-		// EVENT METHODES
+		// MENU BEHAVIOUR
+		//--------------------------------------------------------------
+		private void SwitchMenu(Menu chosenMenu)
+		{
+			this._menuSelected = chosenMenu;
+			switch(this._menuSelected)
+			{
+			case Menu.FRIENDS:
+				DisableMenuCategory(_pairedDevicesLayout, _pairedDevicesButton);
+				DisableMenuCategory(_newDevicesLayout, _newDevicesButton);
+				_newDevicesLayout.RemoveAllViews();
+				EnableMenuCategory(_friendsDevicesLayout, _friendsDevicesButton);
+				//_devicesLayout.SetBackgroundColor(Utils.getAndroidDarkColor(FriendsDeviceColor));
+				break;
+			case Menu.PAIRED:
+				DisableMenuCategory(_friendsDevicesLayout, _friendsDevicesButton);
+				DisableMenuCategory(_newDevicesLayout, _newDevicesButton);
+				_newDevicesLayout.RemoveAllViews();
+				EnableMenuCategory(_pairedDevicesLayout, _pairedDevicesButton);
+				//_devicesLayout.SetBackgroundColor(Utils.getAndroidDarkColor(PairedDeviceColor));
+				break;
+			case Menu.NEW:
+				DisableMenuCategory(_friendsDevicesLayout, _friendsDevicesButton);
+				DisableMenuCategory(_pairedDevicesLayout, _pairedDevicesButton);
+				EnableMenuCategory(_newDevicesLayout, _newDevicesButton);
+				//_devicesLayout.SetBackgroundColor(Utils.getAndroidDarkColor(NewDeviceColor));
+				break;
+			}
+		}
+
+		private void EnableMenuCategory(LinearLayout layout, ButtonStroked button)
+		{
+			_devicesLayout.AddView(layout, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MatchParent, LinearLayout.LayoutParams.WrapContent));
+			button.Selected = true;
+			button.Clickable = false;
+		}
+
+		private void DisableMenuCategory(LinearLayout layout, ButtonStroked button)
+		{
+			_devicesLayout.RemoveView(layout);
+			button.Selected = false;
+			button.Clickable = true;
+        }
+
+		//--------------------------------------------------------------
+		// NETWORK METHODES
 		//--------------------------------------------------------------
 		public int WriteMessageEventReceived(byte[] writeBuf)
 		{
@@ -376,19 +337,15 @@ namespace Tetrim
 			{
 				if(_currentDialog != null)
 				{
-					_currentDialog.Dismiss();
+					DialogActivity.CloseAllDialog.Invoke();
 					_currentDialog = null;
 				}
 
 				// Display a pop-up asking if we want to play now that we are connected
-				AlertDialog.Builder builder = new AlertDialog.Builder(this);
-				builder.SetTitle(Resource.String.game_request_title);
-				builder.SetMessage(String.Format(Resources.GetString(Resource.String.game_request), _opponentName));
-				builder.SetCancelable(false);
-				builder.SetPositiveButton(Android.Resource.String.Yes, delegate{SendStartGameMessage(); _currentDialog = null;});
-				builder.SetNegativeButton(Android.Resource.String.No, delegate{CancelConnection();});
-				_currentDialog = builder.Create();
-				_currentDialog.Show();
+				_currentDialog = DialogActivity.CreateYesNoDialog(this, Resources.GetString(Resource.String.game_request_title),
+					String.Format(Resources.GetString(Resource.String.game_request), _opponentName),
+					delegate{_currentDialog = null; SendStartGameMessage();}, delegate{_currentDialog = null; CancelConnection();});
+				StartActivity(_currentDialog);
 			}
 
 			return 0;
@@ -403,7 +360,7 @@ namespace Tetrim
 			if(_currentDialog != null)
 			{
 				// if the connection fail we remove the pop-up and restart the bluetooth
-				_currentDialog.Dismiss();
+				DialogActivity.CloseAllDialog.Invoke();
 				_currentDialog = null;
 				Network.Instance.CommunicationWay.Start();
 			}
@@ -425,20 +382,19 @@ namespace Tetrim
 				{
 					if(_currentDialog != null)
 					{
-						_currentDialog.Dismiss();
+						DialogActivity.CloseAllDialog.Invoke();
 						_currentDialog = null;
 					}
 					User.Instance.AddFriend(Network.Instance.CommunicationWay._deviceAddress);
-					MenuActivity.startGame(this, Utils.RequestCode.RequestGameTwoPlayer);// We launch the game (change view and everything)
+					MenuActivity.startGame(this, Utils.RequestCode.RequestGameTwoPlayer); // We launch the game (change view and everything)
 				}
 				else
 					_state = Network.StartState.OPPONENT_READY;
 			}
 			else
 			{
-				//Utils.ShowAlert(Resource.String.wrong_version_title, Resource.String.wrong_version, this);
-				Intent intent = UtilsDialog.CreateBluetoothDialogNoCancel(this, Resources, Resource.String.wrong_version);
-				StartActivity(intent);
+				_currentDialog = UtilsDialog.CreateBluetoothDialogNoCancel(this, Resource.String.wrong_version);
+				StartActivity(_currentDialog);
 				Network.Instance.CommunicationWay.Start(); // We restart the connection
 			}
 			return 0;
@@ -467,10 +423,51 @@ namespace Tetrim
 
 		public void FinishDiscovery()
 		{
-			// TODO : Indicate the end of discovery
+			// Remove the progress bar
+			_newDevicesLayout.RemoveView(_progressBar);
 
-			// TODO : display if no device found
-			// Resource.String.none_found
+			// Display if no device found
+			AddNewDevice(null);
+		}
+
+		public void CancelConnection()
+		{
+			#if DEBUG
+			Log.Debug(Tag, "CancelConnection()");
+			#endif
+
+			if(_currentDialog != null)
+			{
+				DialogActivity.CloseAllDialog.Invoke();
+				_currentDialog = null;
+			}
+
+			_state = Network.StartState.NONE;
+			Network.Instance.CommunicationWay.Start();
+		}
+
+		// The on-click listener for all devices in the ListViews
+		public void DeviceListClick(ButtonStroked sender)
+		{
+			if(_bluetoothAdapter.IsDiscovering)
+			{
+				// Cancel discovery because it's costly and we're about to connect
+				_bluetoothAdapter.CancelDiscovery();
+			}
+
+			// Get the device MAC address, which is the last 17 chars in the View
+			//string info = (sender).Text;
+			string address = (sender).Tag.ToString();
+
+			if(Network.Instance.Enabled())
+			{
+				displayWaitingDialog(Resource.String.waiting_for_opponent);
+
+				// Get the BLuetoothDevice object
+				BluetoothDevice device = BluetoothAdapter.DefaultAdapter.GetRemoteDevice(address);
+				// Attempt to connect to the device
+				Network.Instance.CommunicationWay.Connect(device);
+			}
 		}
 
 		//--------------------------------------------------------------
@@ -500,8 +497,12 @@ namespace Tetrim
 			}
 			else
 			{
-				// TODO : display if no device found
-				// Resource.String.none_paired
+				AddPairedDevice(null);
+			}
+
+			if(_friendsDevices.Count == 0)
+			{
+				AddFriendDevice(null);
 			}
 		}
 
@@ -509,15 +510,13 @@ namespace Tetrim
 		{
 			if(_currentDialog != null)
 			{
-				_currentDialog.Dismiss();
+				DialogActivity.CloseAllDialog.Invoke();
 				_currentDialog = null;
 			}
-			AlertDialog.Builder builder = new AlertDialog.Builder(this);
-			builder.SetMessage(idMessage);
-			builder.SetCancelable(false);
-			builder.SetNegativeButton(Android.Resource.String.Cancel, delegate{CancelConnection();});
-			_currentDialog = builder.Create();
-			_currentDialog.Show();
+
+			_currentDialog = DialogActivity.CreateYesNoDialog(this, -1, idMessage,
+				Resource.String.cancel, -1, delegate{CancelConnection();}, null);
+			StartActivity(_currentDialog);
 		}
 
 		// Start device discover with the BluetoothAdapter
@@ -527,6 +526,12 @@ namespace Tetrim
 			Log.Debug(Tag, "doDiscovery()");
 			#endif
 
+			_progressBar = new ProgressBar(BaseContext);
+			_progressBar.Indeterminate = true;
+			int padding = Utils.GetPixelsFromDP(BaseContext, 15);
+			_progressBar.SetPadding(padding, padding, padding, padding);
+			_newDevicesLayout.AddView(_progressBar, LinearLayout.LayoutParams.MatchParent, (int)(_devicesLayout.Height*1f/NbDevices));
+
 			// If we're already discovering, stop it
 			if(_bluetoothAdapter.IsDiscovering)
 			{
@@ -535,31 +540,7 @@ namespace Tetrim
 
 			// Request discover from BluetoothAdapter
 			_bluetoothAdapter.StartDiscovery();
-		}
-
-		// The on-click listener for all devices in the ListViews
-		private void deviceListClick(ButtonStroked sender)
-		{
-			if(_bluetoothAdapter.IsDiscovering)
-			{
-				// Cancel discovery because it's costly and we're about to connect
-				_bluetoothAdapter.CancelDiscovery();
-			}
-
-			// Get the device MAC address, which is the last 17 chars in the View
-			//string info = (sender).Text;
-			string address = (sender).Tag.ToString();
-
-			if(Network.Instance.Enabled())
-			{
-				displayWaitingDialog(Resource.String.waiting_for_opponent);
-
-				// Get the BLuetoothDevice object
-				BluetoothDevice device = BluetoothAdapter.DefaultAdapter.GetRemoteDevice(address);
-				// Attempt to connect to the device
-				Network.Instance.CommunicationWay.Connect(device);
-			}
-		}
+   		}
 	}
 }
 

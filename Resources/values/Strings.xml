@@ -50,8 +50,8 @@
     <string name="askName">What is your name ?</string>
 
     <!-- Pause Dialog -->
-	<string name="Pause_title">Pause</string>
-    <string name="Pause">Resume game ?</string>
+	<string name="pause">PAUSE</string>
+    <string name="resume">Resume</string>
 
     <!-- Bluetooth -->
 	<string name="BTNotAvailable">Bluetooth not available</string>

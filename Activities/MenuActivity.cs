@@ -45,7 +45,7 @@ namespace Tetrim
 			// Retrieve the user's name
 			if(!User.Instance.IsUserStored)
 			{
-				Intent intent = UtilsDialog.CreateUserNameDialogNoCancel(this, Resources);
+				Intent intent = UtilsDialog.CreateUserNameDialogNoCancel(this);
 				StartActivity(intent);
 			}
 

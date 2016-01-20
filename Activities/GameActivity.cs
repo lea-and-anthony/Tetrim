@@ -73,7 +73,7 @@ namespace Tetrim
 				if(_gameTimer.Enabled)
 					pauseGame(true);
 				else
-					resumeGame();
+					ResumeGame();
 			}
 		}
 
@@ -82,7 +82,7 @@ namespace Tetrim
 		//--------------------------------------------------------------
 		protected abstract void OnTimerElapsed(object source, ElapsedEventArgs e);
 		protected abstract int pauseGame(bool requestFromUser);
-		protected abstract void resumeGame();
+		public abstract void ResumeGame();
 		protected abstract void moveLeftButtonPressed(object sender, EventArgs e);
 		protected abstract void moveRightButtonPressed(object sender, EventArgs e);
 		protected abstract void turnLeftButtonPressed(object sender, EventArgs e);
@@ -147,8 +147,9 @@ namespace Tetrim
 
 			// Change the size of the components to center them
 			GridView myGrid = FindViewById<GridView>(Resource.Id.PlayerGridView);
-			Point size = GridView.CalculateUseSize(myGrid.MeasuredWidth, myGrid.MeasuredHeight);
-			int difference = (myGrid.MeasuredWidth - size.X) / 2;
+			Point size = GridView.CalculateUseSize(myGrid.Width, myGrid.Height);
+			//int difference = 0;
+			int difference = (myGrid.Width - size.X) / 2;
 			myGrid.LayoutParameters = new LinearLayout.LayoutParams(size.X, size.Y);
 
 			// Change the size of the components to center them

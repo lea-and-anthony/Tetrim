@@ -109,9 +109,8 @@ namespace Tetrim
 				#endif
 
 				UtilsDialog.PopUpEndEvent += activity.Finish;
-				Intent intent = UtilsDialog.CreateBluetoothDialogNoCancel(activity, activity.Resources, Resource.String.BTNotAvailable);
+				Intent intent = UtilsDialog.CreateBluetoothDialogNoCancel(activity, Resource.String.BTNotAvailable);
 				activity.StartActivity(intent);
-				//Utils.ShowAlert(Resource.String.BTNotAvailableTitle, Resource.String.BTNotAvailable, activity);
 				return ResultEnabling.NoMedium;
 			}
 
@@ -154,9 +153,8 @@ namespace Tetrim
 					#if DEBUG
 					Log.Debug(Tag, "Bluetooth not enabled");
 					#endif
-					Intent intent = UtilsDialog.CreateBluetoothDialogNoCancel(activity, activity.Resources, Resource.String.BTNotEnabled);
+					Intent intent = UtilsDialog.CreateBluetoothDialogNoCancel(activity, Resource.String.BTNotEnabled);
 					activity.StartActivity(intent);
-					//Utils.ShowAlert(Resource.String.BTNotEnabledTitle, Resource.String.BTNotEnabled, activity);
 				}
 			}
 			return false;

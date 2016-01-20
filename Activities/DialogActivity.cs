@@ -1,8 +1,5 @@
 ﻿using System;
 
-using Android.Runtime;
-using Android.Util;
-
 using Android.Content;
 using Android.Graphics;
 using Android.Graphics.Drawables;
@@ -135,61 +132,22 @@ namespace Tetrim
 				_negativeButton.LayoutParameters = lpNeg;
 			}
 
-			CreateButton(_positiveButton, TetrisColor.Green, Builder.PositiveText, Builder.PositiveAction, true);
-			CreateButton(_negativeButton, TetrisColor.Orange, Builder.NegativeText, Builder.NegativeAction, false);
+			UtilsUI.SetDialogButton(this, _positiveButton, _field, TetrisColor.Green, Builder.PositiveText, Builder.PositiveAction, true);
+			UtilsUI.SetDialogButton(this, _negativeButton, _field, TetrisColor.Orange, Builder.NegativeText, Builder.NegativeAction, false);
 
 			CloseAllDialog += Finish;
+		}
+
+		public override void OnBackPressed ()
+		{
+			// Do nothing = not cancelable
 		}
 
 		protected override void OnDestroy()
 		{
 			base.OnDestroy();
 			CloseAllDialog -= Finish;
-		}
-
-		private void CreateButton(ButtonStroked button, TetrisColor color, string text, EventHandler action, bool answer)
-		{
-			if(!String.IsNullOrEmpty(text))
-			{
-				button.StrokeColor = Utils.getAndroidDarkColor(color);
-				button.FillColor = Utils.getAndroidColor(color);
-				button.Text = text;
-				button.TextSize = Utils.GetPixelsFromDP(BaseContext, 20);
-				button.Click += delegate {
-					Builder.ReturnText = (Builder.RequestCode == DialogBuilder.DialogRequestCode.Text ) ? _field.Text : null;
-				};
-				button.Click += action;
-				button.Click += delegate {
-					Intent intent = new Intent();
-					switch(Builder.RequestCode)
-					{
-					case DialogBuilder.DialogRequestCode.PosOrNeg:
-						intent.PutExtra(Builder.RequestCode.ToString(), answer);
-						SetResult(Android.App.Result.Ok, intent);
-						Finish();
-						break;
-					case DialogBuilder.DialogRequestCode.Text:
-						if(answer)
-						{
-							if(!String.IsNullOrEmpty(_field.Text))
-							{
-								intent.PutExtra(Builder.RequestCode.ToString(), _field.Text);
-								SetResult(Android.App.Result.Ok, intent);
-								Finish();
-							}
-						}
-						else
-						{
-							SetResult(Android.App.Result.Canceled);
-							Finish();
-						}
-						break;
-					default:
-						break;
-					}
-				};
-			}
-		}
+   		}
 
 		public void OnGlobalLayout()
 		{
@@ -199,8 +157,11 @@ namespace Tetrim
 			// Destroy the onGlobalLayout afterwards, otherwise it keeps changing
 			// the sizes non-stop, even though it's already done
 			_root.ViewTreeObserver.RemoveGlobalOnLayoutListener(this);
-		}
+   		}
 
+		//--------------------------------------------------------------
+		// PROTECTED METHODES
+		//--------------------------------------------------------------
 		protected void InitializeUI()
 		{
 			_buttonLayout.SetMinimumHeight(_positiveButton.Height);
@@ -239,16 +200,111 @@ namespace Tetrim
 			_root.SetBackgroundDrawable(new BitmapDrawable(backgroundImage));
 		}
 
-		public void SetPositiveButton(string text, EventHandler action)
+		protected static Intent InitializeDialog(Activity activity, DialogBuilder builder, string posText, string negText, EventHandler posAction, EventHandler negAction)
 		{
-			_positiveButton.Text = text;
-			_positiveButton.Click += action;
+			if(!String.IsNullOrEmpty(posText))
+			{
+				builder.PositiveText = posText;
+			}
+			if(posAction != null)
+			{
+				builder.PositiveAction += posAction;
+			}
+			if(!String.IsNullOrEmpty(negText))
+			{
+				builder.NegativeText = negText;
+			}
+			if(negAction != null)
+			{
+				builder.NegativeAction += negAction;
+			}
+			DialogActivity.Builder = builder;
+			return new Intent(activity, typeof(DialogActivity));
 		}
 
-		public void SetNegativeButton(string text, EventHandler action)
+		protected static string parseId(Activity activity, int id)
 		{
-			_negativeButton.Text = text;
-			_negativeButton.Click += action;
-   		}
+			return (id != -1) ? activity.Resources.GetString(id) : String.Empty;
+		}
+
+		//--------------------------------------------------------------
+		// PUBLIC METHODES
+		//--------------------------------------------------------------
+		public static Intent CreateYesDialog(Activity activity, int titleId, int messageId, EventHandler posAction, EventHandler negAction)
+		{
+			return CreateYesNoDialog(activity, titleId, messageId, -1, -1, posAction, negAction);
+		}
+
+		public static Intent CreateYesDialog(Activity activity, string title, string message, EventHandler posAction, EventHandler negAction)
+		{
+			return CreateYesNoDialog(activity, title, message, String.Empty, String.Empty, posAction, negAction);
+		}
+
+		public static Intent CreateYesNoDialog(Activity activity, int titleId, int messageId, EventHandler posAction, EventHandler negAction)
+		{
+			return CreateYesNoDialog(activity, titleId, messageId, Resource.String.yesDialog, Resource.String.noDialog, posAction, negAction);
+		}
+
+		public static Intent CreateYesNoDialog(Activity activity, string title, string message, EventHandler posAction, EventHandler negAction)
+		{
+			return CreateYesNoDialog(activity, title, message,
+				activity.Resources.GetString(Resource.String.yesDialog), activity.Resources.GetString(Resource.String.noDialog), posAction, negAction);
+		}
+
+		public static Intent CreateYesNoDialog(Activity activity, int titleId, int messageId, int posTextId, int negTextId, EventHandler posAction, EventHandler negAction)
+		{
+			return CreateBasicDialog(activity, DialogBuilder.DialogRequestCode.PosOrNeg, DialogBuilder.DialogContentType.TextView, titleId, messageId, posTextId, negTextId, posAction, negAction);
+		}
+
+		public static Intent CreateYesNoDialog(Activity activity, string title, string message, string posText, string negText, EventHandler posAction, EventHandler negAction)
+		{
+			return CreateBasicDialog(activity, DialogBuilder.DialogRequestCode.PosOrNeg, DialogBuilder.DialogContentType.TextView, title, message, posText, negText, posAction, negAction);
+		}
+
+		public static Intent CreateTextPromptDialog(Activity activity, int titleId, int messageId, int posTextId, int negTextId, EventHandler posAction, EventHandler negAction)
+		{
+			return CreateBasicDialog(activity, DialogBuilder.DialogRequestCode.Text, DialogBuilder.DialogContentType.EditText, titleId, messageId, posTextId, negTextId, posAction, negAction);
+		}
+
+		public static Intent CreateBasicDialog(Activity activity, DialogBuilder.DialogRequestCode request, DialogBuilder.DialogContentType type, int titleId, int messageId, int posTextId, int negTextId, EventHandler posAction, EventHandler negAction)
+		{
+			string title = parseId(activity, titleId);
+			string message = parseId(activity, messageId);
+			string posText = parseId(activity, posTextId);
+			string negText = parseId(activity, negTextId);
+			return CreateBasicDialog(activity, request, type, title, message, posText, negText, posAction, negAction);
+		}
+
+		public static Intent CreateBasicDialog(Activity activity, DialogBuilder.DialogRequestCode request, DialogBuilder.DialogContentType type, string title, string message, string posText, string negText, EventHandler posAction, EventHandler negAction)
+		{
+			DialogBuilder builder = new DialogBuilder(activity.BaseContext);
+			builder.RequestCode = request;
+			builder.ContentType = type;
+			if(!String.IsNullOrEmpty(title))
+			{
+				builder.Title = title;
+			}
+			if(!String.IsNullOrEmpty(message))
+			{
+				builder.Message = message;
+			}
+			return InitializeDialog(activity, builder, posText, negText, posAction, negAction);
+		}
+
+		public static Intent CreateCustomDialog(Activity activity, View[] content, int posTextId, int negTextId, EventHandler posAction, EventHandler negAction)
+		{
+			string posText = parseId(activity, posTextId);
+			string negText = parseId(activity, negTextId);
+			return CreateCustomDialog(activity, content, posText, negText, posAction, negAction);
+		}
+
+		public static Intent CreateCustomDialog(Activity activity, View[] content, string posText, string negText, EventHandler posAction, EventHandler negAction)
+		{
+			DialogBuilder builder = new DialogBuilder(activity.BaseContext);
+			builder.ContentType = DialogBuilder.DialogContentType.None;
+			builder.RequestCode = DialogBuilder.DialogRequestCode.PosOrNeg;
+			builder.Content.AddRange(content);
+			return InitializeDialog(activity, builder, posText, negText, posAction, negAction);
+		}
 	}
 }

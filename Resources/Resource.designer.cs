@@ -392,12 +392,6 @@ namespace Tetrim
 			// aapt resource value: 0x7f040025
 			public const int ConnectionLost = 2130968613;
 			
-			// aapt resource value: 0x7f040022
-			public const int Pause = 2130968610;
-			
-			// aapt resource value: 0x7f040021
-			public const int Pause_title = 2130968609;
-			
 			// aapt resource value: 0x7f040000
 			public const int app_name = 2130968576;
 			
@@ -473,6 +467,9 @@ namespace Tetrim
 			// aapt resource value: 0x7f04000a
 			public const int onePlayer = 2130968586;
 			
+			// aapt resource value: 0x7f040021
+			public const int pause = 2130968609;
+			
 			// aapt resource value: 0x7f040018
 			public const int playAgain = 2130968600;
 			
@@ -490,6 +487,9 @@ namespace Tetrim
 			
 			// aapt resource value: 0x7f040032
 			public const int reconnect_activity = 2130968626;
+			
+			// aapt resource value: 0x7f040022
+			public const int resume = 2130968610;
 			
 			// aapt resource value: 0x7f040028
 			public const int retry_connection = 2130968616;

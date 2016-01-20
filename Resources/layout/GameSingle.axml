@@ -18,7 +18,9 @@
         android:paddingRight="3dp"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="20">
+        android:layout_weight="25"
+        android:paddingTop="5dp"
+        android:paddingLeft="3dp">
         <LinearLayout
             android:orientation="vertical"
             android:minWidth="25px"
@@ -44,7 +46,9 @@
                 android:id="@+id/player1pieceLayout"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="66">
+                android:layout_weight="66"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp">
                 <TextView
                     android:text="Next piece"
                     android:textAppearance="?android:attr/textAppearanceSmall"
@@ -83,7 +87,9 @@
                 android:id="@+id/player1scoreLayout"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="50">
+                android:layout_weight="50"
+                android:paddingRight="5dp"
+                android:paddingLeft="5dp">
                 <TextView
                     android:text="Score"
                     android:textAppearance="?android:attr/textAppearanceSmall"
@@ -117,7 +123,8 @@
                 android:weightSum="100"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="50">
+                android:layout_weight="50"
+                android:paddingTop="5dp">
                 <LinearLayout
                     android:orientation="vertical"
                     android:minWidth="25px"
@@ -125,7 +132,9 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:id="@+id/player1rowsLayout"
-                    android:layout_weight="50">
+                    android:layout_weight="50"
+                    android:paddingRight="5dp"
+                    android:paddingLeft="5dp">
                     <TextView
                         android:text="Rows"
                         android:textAppearance="?android:attr/textAppearanceSmall"
@@ -160,7 +169,9 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:id="@+id/player1levelLayout"
-                    android:layout_weight="50">
+                    android:layout_weight="50"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp">
                     <TextView
                         android:text="Level"
                         android:textAppearance="?android:attr/textAppearanceSmall"
@@ -196,9 +207,10 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:id="@+id/gridButtonLayout"
-        android:layout_weight="80"
+        android:layout_weight="75"
         android:weightSum="100"
-        android:paddingTop="3dp">
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp">
         <RelativeLayout
             android:orientation="vertical"
             android:layout_width="0dp"
