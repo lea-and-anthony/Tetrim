@@ -87,6 +87,9 @@ namespace Tetrim
 		//--------------------------------------------------------------
 		// EVENT METHODES
 		//--------------------------------------------------------------
+		// Draw every proposed piece in the accorded space
+		// each piece have the space for 5 blocks to draw itself on the width
+		// On the Height, each piece have 4 blocks to draw itself and there is one pixel to separate each one of them (because there is less space on the height)
 		protected override void OnDraw(Canvas canvas)
 		{
 			base.OnDraw(canvas);
@@ -96,7 +99,7 @@ namespace Tetrim
 			{
 				// Calculate the size of the block, Space for each piece set to 5 blocks (except for the last one)
 				_blockSize = Math.Min(Math.Abs(canvas.ClipBounds.Right - canvas.ClipBounds.Left)/(_nbPieceByLine*5),
-					Math.Abs(canvas.ClipBounds.Top - canvas.ClipBounds.Bottom)/(Constants.NbLinePropPiece*4));
+					Math.Abs(canvas.ClipBounds.Top - canvas.ClipBounds.Bottom)/(Constants.NbLinePropPiece*5));
 
 				// Create the blocks images with the right size
 				foreach(TetrisColor color in Enum.GetValues(typeof(TetrisColor)))
@@ -115,21 +118,23 @@ namespace Tetrim
 					if(i == _selectedPiece)
 					{
 						RectF rect = new RectF((i % _nbPieceByLine) * _blockSize * 5, 
-												(_blockSize * 4) * (i / _nbPieceByLine), 
+												(_blockSize * 5) * (i / _nbPieceByLine), 
 												((i % _nbPieceByLine) + 1) * _blockSize * 5, 
-												(_blockSize * 4) * (1 + i / _nbPieceByLine));
+												(_blockSize * 5) * (1 + i / _nbPieceByLine));
 						
 						Paint paint = new Paint {AntiAlias = true, Color = Color.AntiqueWhite};
-						canvas.DrawRoundRect(rect, 10, 10, paint);
+						canvas.DrawRoundRect(rect, Constants.RadiusHighlight, Constants.RadiusHighlight, paint);
 					}
 					float xSize = 0;
 					float ySize = 0;
 					_proposedPieces[i].GetDrawnSize(_blockSize, ref xSize, ref ySize);
 
 					// Draw each piece
+					int supposedHeight = Math.Abs(canvas.ClipBounds.Bottom - canvas.ClipBounds.Top);
 					_proposedPieces[i].Draw(canvas, _blockSize, _blockImages, 
 											(i % _nbPieceByLine) * _blockSize * 5 + (_blockSize * 5 - xSize) / 2, 
-											Height - ((i / _nbPieceByLine + 1) * _blockSize * 4 - (_blockSize * 4 - ySize) / 2));
+											supposedHeight - ((i / _nbPieceByLine + 1) * _blockSize * 5 - (_blockSize * 5 - ySize) / 2), 
+											false);
 				}
 			}
 		}
@@ -139,8 +144,8 @@ namespace Tetrim
 			bool returnValue = base.OnTouchEvent(e);
 
 			// Get the touch position
-			int x = ((int) e.GetX())/(_blockSize*5);
-			int y = ((int) e.GetY())/(_blockSize*4);
+			int x = ((int) e.GetX())/(_blockSize * 5);
+			int y = ((int) e.GetY())/(_blockSize * 5);
 
 			// Lower the value if it is too high
 			if(x >= Constants.NbProposedPiece/Constants.NbLinePropPiece)

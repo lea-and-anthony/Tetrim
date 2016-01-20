@@ -147,8 +147,8 @@ namespace Tetrim
 
 			// Change the size of the components to center them
 			GridView myGrid = FindViewById<GridView>(Resource.Id.PlayerGridView);
-			Point size = GridView.CalculateUseSize(myGrid.MeasuredWidth, myGrid.MeasuredHeight);
-			int difference = (myGrid.MeasuredWidth - size.X) / 2;
+			Point size = GridView.CalculateUseSize(myGrid.Width, myGrid.Height);
+			int difference = (myGrid.Width - size.X) / 2;
 			myGrid.LayoutParameters = new LinearLayout.LayoutParams(size.X, size.Y);
 
 			// Change the size of the components to center them

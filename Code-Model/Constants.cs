@@ -60,6 +60,7 @@ namespace Tetrim
 		// ProposedPieceView
 		public const int NbProposedPiece = 4;
 		public const int NbLinePropPiece = 2;
+		public const int RadiusHighlight = 10;
 	}
 
 	public enum Shape

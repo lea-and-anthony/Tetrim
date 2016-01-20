@@ -238,7 +238,8 @@
                     <Tetrim.GridView
                         android:id="@+id/OpponentGridView"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent" />
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center_horizontal" />
                 </LinearLayout>
             </LinearLayout>
             <LinearLayout

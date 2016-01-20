@@ -8,6 +8,7 @@ using Android.Content;
 using Android.Widget;
 using Android.OS;
 using Android.Util;
+using Android.Views;
 
 namespace Tetrim
 {
@@ -33,6 +34,8 @@ namespace Tetrim
 
 		private StopOrigin _originPause = StopOrigin.None;
 		private bool endMessageSent = false;
+		private bool _gameOver = false;
+		private readonly object _locker = new object ();
 
 		//--------------------------------------------------------------
 		// EVENT CATCHING METHODES
@@ -134,9 +137,16 @@ namespace Tetrim
 			if (_player1._grid.isGameOver())
 			{
 				_gameTimer.Stop();
-				//Utils.PopUpEndEvent += endGame;
-				Intent intent = UtilsDialog.CreateGameOverDialogMulti(this, Resources, false);
-				StartActivity(intent);
+				lock (_locker)
+				{
+					if(!_gameOver)
+					{
+						_gameOver = true;
+						//Utils.PopUpEndEvent += endGame;
+						Intent intent = UtilsDialog.CreateGameOverDialogMulti(this, Resources, false);
+						StartActivity(intent);
+					}
+				}
 			}
 
 			//  Network
@@ -159,10 +169,17 @@ namespace Tetrim
 		private int OnReceiveEndMessage(byte[] message)
 		{
 			_gameTimer.Stop();
-			//Utils.PopUpEndEvent += endGame;
-			//RunOnUiThread(() => Utils.ShowAlert (Resource.String.game_over_win_title, Resource.String.game_over_win, this));
-			Intent intent = UtilsDialog.CreateGameOverDialogMulti(this, Resources, true);
-			StartActivity(intent);
+			lock (_locker)
+			{
+				if(!_gameOver)
+				{
+					_gameOver = true;
+					//Utils.PopUpEndEvent += endGame;
+					//RunOnUiThread(() => Utils.ShowAlert (Resource.String.game_over_win_title, Resource.String.game_over_win, this));
+					Intent intent = UtilsDialog.CreateGameOverDialogMulti(this, Resources, true);
+					StartActivity(intent);
+				}
+			}
 			return 0;
 		}
 
@@ -201,7 +218,13 @@ namespace Tetrim
 
 			ProposedPieceView proposedPiecesView = FindViewById<ProposedPieceView>(Resource.Id.player2piece);
 			proposedPiecesView.SetBackgroundColor(Utils.getAndroidColor(TetrisColor.Red));
-			
+
+			// Center the opponent grid
+			Point size = GridView.CalculateUseSize(_player2View._gridView.MeasuredWidth, _player2View._gridView.MeasuredHeight);
+			LinearLayout.LayoutParams newLayoutParams = new LinearLayout.LayoutParams(size.X, size.Y);
+			newLayoutParams.Gravity = GravityFlags.CenterHorizontal;
+			_player2View._gridView.LayoutParameters = newLayoutParams;
+
 			setBackground();
 		}
 

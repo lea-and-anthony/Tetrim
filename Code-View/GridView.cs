@@ -15,9 +15,9 @@ namespace Tetrim
 		// CONSTANTS
 		//--------------------------------------------------------------
 		// Width of the line around the grid
-		private const float StrokeWidthBorder = 5;
+		private const int StrokeWidthBorder = 4;
 
-		// Transparency of the quartering o f the grid, between 0 and 255
+		// Transparency of the quartering of the grid, between 0 and 255
 		private const int QuarteringAlpha = 50;
 
 		// Colors used for the paints of the grid
@@ -63,15 +63,14 @@ namespace Tetrim
 		//--------------------------------------------------------------
 		public static int CalculateBlockSize(Rect rect)
 		{
-			
-			return Math.Min(Math.Abs(rect.Right - rect.Left)/Constants.GridSizeX,
-				Math.Abs(rect.Top - rect.Bottom)/Constants.GridSizeY);
+			return Math.Min((Math.Abs(rect.Right - rect.Left) - 2*StrokeWidthBorder)/Constants.GridSizeX,
+				(Math.Abs(rect.Top - rect.Bottom) - 2*StrokeWidthBorder)/Constants.GridSizeY);
 		}
 
 		public static Point CalculateUseSize(int width, int height)
 		{
 			int blockSize = CalculateBlockSize(new Rect(0, 0, width, height));
-			return new Point(blockSize * Constants.GridSizeX + (int) StrokeWidthBorder, blockSize * Constants.GridSizeY + (int) StrokeWidthBorder);
+			return new Point(blockSize * Constants.GridSizeX + 2 * StrokeWidthBorder, blockSize * Constants.GridSizeY + 2 * StrokeWidthBorder);
 		}
 
 		//--------------------------------------------------------------
@@ -99,8 +98,8 @@ namespace Tetrim
 			canvas.DrawBitmap(_bitmapBuffer, 0, 0, null);
 
 			// Draw the pieces
-			_shadowPieceView.Draw(canvas, _blockSize, _blockImages);
-			_fallingPieceView.Draw(canvas, _blockSize, _blockImages);
+			_shadowPieceView.Draw(canvas, _blockSize, _blockImages, StrokeWidthBorder, StrokeWidthBorder);
+			_fallingPieceView.Draw(canvas, _blockSize, _blockImages, StrokeWidthBorder, StrokeWidthBorder);
 
 			// Now we can change the view
 			_mutexView.ReleaseMutex();
@@ -167,7 +166,11 @@ namespace Tetrim
 			if(_grid == null)
 				return; // if the gridView haven't been initialized, we stop
 
-			_bitmapBuffer = Bitmap.CreateBitmap(Width, Height, Bitmap.Config.Argb8888);
+			if(_bitmapBuffer == null)
+			{
+				_bitmapBuffer = Bitmap.CreateBitmap(Width, Height, Bitmap.Config.Argb8888);
+			}
+
 			Canvas bitmapCanvas = new Canvas(_bitmapBuffer);
 
 			// If it is the first draw, calculate the size of the block according to the size of the canvas
@@ -186,25 +189,28 @@ namespace Tetrim
 			}
 
 			// Calculate the boundaries of the grid
-			float left = _blockSize*Constants.GridSizeXmin;
-			float top = Height - _blockSize*Constants.GridSizeYmin;
-			float right = _blockSize*(Constants.GridSizeXmax+1);
-			float bottom = Height - _blockSize*(Constants.GridSizeYmax+1);
+			float left = _blockSize*Constants.GridSizeXmin + StrokeWidthBorder;
+			float top = _blockSize*Constants.GridSizeYmin + StrokeWidthBorder; // the O point is in the left hand corner
+			float right = _blockSize*(Constants.GridSizeXmax+1) + StrokeWidthBorder;
+			float bottom = _blockSize*(Constants.GridSizeYmax+1) + StrokeWidthBorder;
 
 			// Draw the background
 			bitmapCanvas.DrawRect(left, top, right, bottom, BackgroundPaint);
 
-			// Draw the border
-			bitmapCanvas.DrawRect(left + StrokeWidthBorder/2, top, right, bottom - StrokeWidthBorder/2, BorderPaint);
+			// Draw the borders
+			bitmapCanvas.DrawLine(StrokeWidthBorder / 2, top - StrokeWidthBorder, StrokeWidthBorder / 2, bottom + 2 * StrokeWidthBorder, BorderPaint);
+			bitmapCanvas.DrawLine(right + StrokeWidthBorder / 2, top - StrokeWidthBorder, right + StrokeWidthBorder / 2, bottom + 2 * StrokeWidthBorder, BorderPaint);
+			bitmapCanvas.DrawLine(left - StrokeWidthBorder, StrokeWidthBorder / 2, right + 2 * StrokeWidthBorder, StrokeWidthBorder / 2, BorderPaint);
+			bitmapCanvas.DrawLine(left - StrokeWidthBorder, bottom + StrokeWidthBorder / 2, right + 2 * StrokeWidthBorder, bottom + StrokeWidthBorder / 2, BorderPaint);
 
 			// Draw the vertical quartering
-			for(float x = left ; x < right ; x += _blockSize)
+			for(float x = left + _blockSize; x < right ; x += _blockSize)
 			{
 				bitmapCanvas.DrawLine(x, top, x, bottom, GridPaint);
 			}
 
 			// Draw the horizontal quartering
-			for(float y = bottom ; y < top ; y += _blockSize)
+			for(float y = top + _blockSize; y < bottom ; y += _blockSize)
 			{
 				bitmapCanvas.DrawLine(left, y, right, y, GridPaint);
 			}
@@ -214,7 +220,7 @@ namespace Tetrim
 			{
 				for (uint j = 0 ; j < _grid._map.GetLength(1) ; j++)
 				{
-					_mapView[i,j].Draw(bitmapCanvas, _blockSize, _blockImages);
+					_mapView[i,j].Draw(bitmapCanvas, _blockSize, _blockImages, StrokeWidthBorder, StrokeWidthBorder);
 				}
 			}
 		}

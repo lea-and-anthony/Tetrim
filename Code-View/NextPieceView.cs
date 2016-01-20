@@ -74,12 +74,6 @@ namespace Tetrim
 					_blockImages.Add(color, BlockView.CreateImage(_blockSize, color));
 				}
 			}
-				
-			// Draw the background
-			//canvas.DrawRect(0, 0, Width, Height, BackgroundPaint);
-
-			// Draw the border
-			//canvas.DrawRect(StrokeWidthBorder/2, 0, Width, Height - StrokeWidthBorder/2, BorderPaint);
 
 			if(_nextPiece != null && _player != null)
 			{
@@ -91,7 +85,7 @@ namespace Tetrim
 				float ySize = 0;
 				_nextPiece.GetDrawnSize(_blockSize, ref xSize, ref ySize);
 
-				_nextPiece.Draw(canvas, _blockSize, _blockImages, (Width - xSize) / 2, (Height - ySize) / 2);
+				_nextPiece.Draw(canvas, _blockSize, _blockImages, (Width - xSize) / 2, (Height - ySize) / 2, false);
 			}
 		}
 	}

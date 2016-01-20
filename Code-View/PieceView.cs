@@ -34,17 +34,17 @@ namespace Tetrim
 		//--------------------------------------------------------------
 		// PUBLIC METHODES
 		//--------------------------------------------------------------
-		public void Draw (Canvas canvas, float blockSize, Dictionary<TetrisColor, Bitmap> blockImages)
+		public void Draw (Canvas canvas, float blockSize, Dictionary<TetrisColor, Bitmap> blockImages, float xOffset, float yOffset)
 		{
-			Draw (canvas, blockSize, blockImages, -canvas.ClipBounds.Left, -canvas.ClipBounds.Top);
+			Draw(canvas, blockSize, blockImages, xOffset, yOffset, true);
 		}
 
-		public void Draw (Canvas canvas, float blockSize, Dictionary<TetrisColor, Bitmap> blockImages, float xOffset, float yOffset)
+		public void Draw (Canvas canvas, float blockSize, Dictionary<TetrisColor, Bitmap> blockImages, float xOffset, float yOffset, bool inGrid)
 		{
 			// Draw each block of the piece
 			for (uint i = 0 ; i < Constants.BlockPerPiece ; i++)
 			{
-				_blocksView[i].Draw(canvas, blockSize, blockImages, xOffset, yOffset);
+				_blocksView[i].Draw(canvas, blockSize, blockImages, xOffset, yOffset, inGrid);
 			}
 		}
 
@@ -61,6 +61,7 @@ namespace Tetrim
 			}
 		}
 
+		// set xSize and ySize to the x and y size of the block (this function suppose that the piece is in 0,0)
 		public void GetDrawnSize(float blockSize, ref float xSize, ref float ySize)
 		{
 			float currentXSize = 0;

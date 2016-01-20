@@ -45,6 +45,9 @@ namespace Tetrim
 		//--------------------------------------------------------------
 		public static Bitmap CreateImage(int blockSize, TetrisColor color)
 		{
+			if(color == TetrisColor.ColorMax)
+				return null;
+
 			// Create the image with its canvas to draw in it
 			Bitmap image = Bitmap.CreateBitmap(blockSize, blockSize, Bitmap.Config.Argb8888);
 			Canvas imageCanvas = new Canvas(image);
@@ -177,20 +180,21 @@ namespace Tetrim
 		//--------------------------------------------------------------
 		// PUBLIC METHODES
 		//--------------------------------------------------------------
-		public void Draw (Canvas canvas, float blockSize, Dictionary<TetrisColor, Bitmap> blockImages)
+		public void Draw (Canvas canvas, float blockSize, Dictionary<TetrisColor, Bitmap> blockImages, float xOffset, float yOffset)
 		{
-			Draw (canvas, blockSize, blockImages, 0, 0);
+			Draw(canvas, blockSize, blockImages, xOffset, yOffset, true);
 		}
 
-		public void Draw (Canvas canvas, float blockSize, Dictionary<TetrisColor, Bitmap> blockImages, float xOffset, float yOffset)
+		public void Draw (Canvas canvas, float blockSize, Dictionary<TetrisColor, Bitmap> blockImages, float xOffset, float yOffset, bool inGrid)
 		{
 			if (_block != null)
 			{
 				// Define the boundaries of the block
 				float left = blockSize*_block._x + xOffset;
-				float top = Math.Abs(canvas.ClipBounds.Top - canvas.ClipBounds.Bottom)-blockSize*(_block._y+1) - yOffset;
-				float right = blockSize*(_block._x+1) + xOffset;
-				float bottom = Math.Abs(canvas.ClipBounds.Top - canvas.ClipBounds.Bottom)-blockSize*_block._y - yOffset;
+				float right = left + blockSize;
+				float top = inGrid ? blockSize*(Constants.GridSizeYmax - _block._y) + yOffset :
+					Math.Abs(canvas.ClipBounds.Bottom - canvas.ClipBounds.Top) - blockSize*(_block._y + 1) - yOffset;
+				float bottom = top + blockSize;
 
 				// Draw the image inside the block
 				Paint paint = new Paint();
