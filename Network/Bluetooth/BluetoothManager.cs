@@ -31,7 +31,7 @@ namespace Tetrim
 		// CONSTANTS
 		//--------------------------------------------------------------
 		// Constants that indicate the current connection state
-		public enum State
+		public enum StateEnum
 		{
 			None = 0,			// we're doing nothing
 			Listen = 1,		// now listening for incoming connections
@@ -72,7 +72,7 @@ namespace Tetrim
 		private ConnectedThread _connectedThread;
 		private Handler _handler;
 		private AcceptThread _acceptThread;
-		private State _state;
+		private StateEnum _state;
 		private readonly object _locker = new object ();
 
 		//--------------------------------------------------------------
@@ -86,6 +86,24 @@ namespace Tetrim
 			}
 		}
 
+		/* Return true if the bluetooth is activated */
+		public bool Enabled
+		{
+			get
+			{
+				return _bluetoothAdapter != null && _bluetoothAdapter.State == Android.Bluetooth.State.On;
+			}
+		}
+
+		// Return the current connection state.
+		public StateEnum State
+		{
+			get
+			{
+				return _state;
+			}
+		}
+
 		//--------------------------------------------------------------
 		// CONSTRUCTORS
 		//--------------------------------------------------------------
@@ -94,13 +112,12 @@ namespace Tetrim
 			_deviceAddress = string.Empty;
 			_handler = new MyHandler ();
 			_bluetoothAdapter = BluetoothAdapter.DefaultAdapter;
-			_state = State.None;
+			_state = StateEnum.None;
 		}
 
 		//--------------------------------------------------------------
 		// THREAD METHODES
 		//--------------------------------------------------------------
-
 		// Start the service of receiving. Specifically start AcceptThread to begin a
 		// session in listening(server) mode. Called by the Activity onResume()
 		public void Start()
@@ -116,13 +133,16 @@ namespace Tetrim
 				_deviceAddress = string.Empty;
 
 				// Start the thread to listen on a BluetoothServerSocket
-				if (_acceptThread == null)
+				_acceptThread = new AcceptThread (this);
+				if(_acceptThread.CanStart)
 				{
-					_acceptThread = new AcceptThread (this);
 					_acceptThread.Start ();
+					setState (StateEnum.Listen);
 				}
-
-				setState (State.Listen);
+				else
+				{
+					setState(StateEnum.None);
+				}
 			}
 		}
 
@@ -139,7 +159,7 @@ namespace Tetrim
 				_deviceAddress = device.Address;
 
 				// Cancel any thread attempting to make a connection
-				if (_state == State.Connecting)
+				if (_state == StateEnum.Connecting)
 				{
 					if (_connectThread != null) {
 						_connectThread.Cancel ();
@@ -158,7 +178,7 @@ namespace Tetrim
 				_connectThread = new ConnectThread (device, this);
 				_connectThread.Start ();
 
-				setState (State.Connecting);
+				setState (StateEnum.Connecting);
 			}
 		}
 
@@ -203,7 +223,7 @@ namespace Tetrim
 				message.Data = bundle;
 				_handler.SendMessage (message);
 
-				setState (State.Connected);
+				setState (StateEnum.Connected);
 			}
 		}
 
@@ -219,22 +239,13 @@ namespace Tetrim
 				// Cancel all the threads
 				stopThreads();
 
-				setState (State.None);
+				setState (StateEnum.None);
 			}
 		}
 
 		//--------------------------------------------------------------
 		// PUBLIC METHODES
 		//--------------------------------------------------------------
-		/// Return the current connection state.
-		public State GetState ()
-		{
-			lock (_locker)
-			{
-				return _state;
-			}
-   		}
-
 		/// Write to the ConnectedThread in an unsynchronized manner
 		public void Write (byte[] @out)
 		{
@@ -244,7 +255,7 @@ namespace Tetrim
 			// Synchronize a copy of the ConnectedThread
 			lock (_locker)
 			{
-				if (_state != State.Connected)
+				if (_state != StateEnum.Connected)
 					return;
 				connectedThread = _connectedThread;
 			}
@@ -259,7 +270,7 @@ namespace Tetrim
 		/// Indicate that the connection was lost and notify the UI Activity.
 		public void ConnectionLost(byte[] message)
 		{
-			setState(State.None);
+			setState(StateEnum.None);
 
 			// We notify thanks to the handler the UI Activity
 			_handler.ObtainMessage((int) MessageType.ConnectionLost, -1, -1, message).SendToTarget ();
@@ -268,7 +279,7 @@ namespace Tetrim
 		/// Indicate that the connection attempt failed and notify the UI Activity.
 		public void ConnectionFailed()
 		{
-			setState(State.None);
+			setState(StateEnum.None);
 
 			// Send a message to display an error alert
 			_handler.ObtainMessage((int) MessageType.Alert, Resource.String.ConnectionImpossible,
@@ -285,7 +296,7 @@ namespace Tetrim
 		// PRIVATE METHODES
 		//--------------------------------------------------------------
 		/// Set the current state of the chat connection.
-		private void setState(State state)
+		private void setState(StateEnum state)
 		{
 			lock (_locker)
 			{

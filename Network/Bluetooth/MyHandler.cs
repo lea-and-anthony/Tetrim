@@ -23,14 +23,14 @@ namespace Tetrim
 			case (int) BluetoothManager.MessageType.StateChange:
 				switch(message.Arg1)
 				{
-				case (int) BluetoothManager.State.Connected:
+				case (int) BluetoothManager.StateEnum.Connected:
 					Network.Instance.NotifyStateConnected();
 					break;
-				case (int) BluetoothManager.State.Connecting:
+				case (int) BluetoothManager.StateEnum.Connecting:
 					Network.Instance.NotifyStateConnecting();
 					break;
-				case (int) BluetoothManager.State.Listen:
-				case (int) BluetoothManager.State.None:
+				case (int) BluetoothManager.StateEnum.Listen:
+				case (int) BluetoothManager.StateEnum.None:
 					Network.Instance.NotifyStateNone();
 					break;
 				}

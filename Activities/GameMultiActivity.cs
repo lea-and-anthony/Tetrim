@@ -44,7 +44,7 @@ namespace Tetrim
 		{
 			base.OnCreate(bundle);
 
-			if(!Network.Instance.Connected())
+			if(!Network.Instance.Connected)
 			{
 				// If we are trying to start a multi activity and we are not connected to someone, we stop
 				Finish();
@@ -91,7 +91,7 @@ namespace Tetrim
 		protected override void OnDestroy ()
 		{
 			// If we are still playing, we send the end message to the opponent
-			if (Network.Instance.Connected() && !endMessageSent)
+			if (Network.Instance.Connected && !endMessageSent)
 			{
 				Network.Instance.CommunicationWay.Write(_player1.GetEndMessage());
 			}

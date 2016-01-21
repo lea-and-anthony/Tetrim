@@ -145,7 +145,7 @@ namespace Tetrim
 		protected override void OnResume ()
 		{
 			base.OnResume ();
-			if (Network.Instance.WaitingForStart())
+			if (Network.Instance.WaitingForStart)
 			{
 				// Performing this check in onResume() covers the case in which Bluetooth was
 				// not enabled when the button was hit, so we were paused to enable it...
@@ -171,7 +171,7 @@ namespace Tetrim
 			UnregisterReceiver(_receiver);
 
 			// Stop the Bluetooth Manager
-			if (Network.Instance.Enabled())
+			if (Network.Instance.Enabled)
 				Network.Instance.CommunicationWay.Stop ();
 
 			#if DEBUG
@@ -189,6 +189,7 @@ namespace Tetrim
 				// We end this activity after the game so we come back on the menu screen
 				Finish();
 			}
+			// The request code is tested in ResultBluetoothActivation
 			if(Network.Instance.ResultBluetoothActivation(requestCode, resultCode, this))
 			{
 				actualizeView();
@@ -357,16 +358,28 @@ namespace Tetrim
 			Log.Debug(Tag, "State = none");
 			#endif
 
+			// To avoid infinite loop because this function can throw a StateNoneEvent
+			Network.Instance.StateNoneEvent -= StateNoneEventReceived;
+
 			if(_currentDialog != null)
 			{
 				// if the connection fail we remove the pop-up and restart the bluetooth
 				DialogActivity.CloseAllDialog.Invoke();
 				_currentDialog = null;
-				Network.Instance.CommunicationWay.Start();
+			}
+
+			Network.Instance.CommunicationWay.Start();
+
+			if(Network.Instance.CommunicationWay.State == BluetoothManager.StateEnum.None)
+			{
+				// if the bluetooth is still disabled, we need to stop
+				Finish();
 			}
 
 			_state = Network.StartState.NONE;
 			_isConnectionInitiator = false;
+
+			Network.Instance.StateNoneEvent += StateNoneEventReceived;
 
 			return 0;
    		}
@@ -459,7 +472,7 @@ namespace Tetrim
 			//string info = (sender).Text;
 			string address = (sender).Tag.ToString();
 
-			if(Network.Instance.Enabled())
+			if(Network.Instance.Enabled)
 			{
 				displayWaitingDialog(Resource.String.waiting_for_opponent);
 

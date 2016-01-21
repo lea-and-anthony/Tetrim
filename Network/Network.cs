@@ -88,6 +88,42 @@ namespace Tetrim
 			}
 		}
 
+		/* Return true if the bluetooth is activated (but not necessarily connected) */
+		public bool Enabled
+		{
+			get 
+			{
+				return _communicationWay != null && _communicationWay.Enabled;
+			}
+		}
+
+		/* Return true if the bluetooth is activated and connected to an other device */
+		public bool Connected
+		{
+			get 
+			{
+				return Enabled && _communicationWay.State == BluetoothManager.StateEnum.Connected;
+			}
+		}
+
+		/* Return true if the bluetooth is activated but no service is started */
+		public bool WaitingForStart
+		{
+			get 
+			{
+				return Enabled && _communicationWay.State == BluetoothManager.StateEnum.None;
+			}
+		}
+
+		/* Return true if the bluetooth is activated and waiting for an other device to start a connection */
+		public bool WaitingForConnection
+		{
+			get 
+			{
+				return Enabled && _communicationWay.State == BluetoothManager.StateEnum.Listen;
+			}
+		}
+
 		//--------------------------------------------------------------
 		// METHODES
 		//--------------------------------------------------------------
@@ -145,7 +181,7 @@ namespace Tetrim
 					// Bluetooth is now enabled
 					EnableBluetooth();
 					CommunicationWay.Start();
-					return Enabled();
+					return Enabled;
 				}
 				else
 				{
@@ -153,6 +189,7 @@ namespace Tetrim
 					#if DEBUG
 					Log.Debug(Tag, "Bluetooth not enabled");
 					#endif
+					UtilsDialog.PopUpEndEvent += activity.Finish;
 					Intent intent = UtilsDialog.CreateBluetoothDialogNoCancel(activity, Resource.String.BTNotEnabled);
 					activity.StartActivity(intent);
 				}
@@ -174,30 +211,6 @@ namespace Tetrim
 				_communicationWay.Stop();
 			}
 			_communicationWay = null;
-		}
-
-		/* Return true if the bluetooth is activated (but not necessarily connected) */
-		public bool Enabled()
-		{
-			return _communicationWay != null;
-		}
-
-		/* Return true if the bluetooth is activated and connected to an other device */
-		public bool Connected()
-		{
-			return Enabled() && _communicationWay.GetState() == BluetoothManager.State.Connected;
-		}
-
-		/* Return true if the bluetooth is activated but no service is started */
-		public bool WaitingForStart()
-		{
-			return Enabled() && _communicationWay.GetState() == BluetoothManager.State.None;
-		}
-
-		/* Return true if the bluetooth is activated and waiting for an other device to start a connection */
-		public bool WaitingForConnection()
-		{
-			return Enabled() && _communicationWay.GetState() == BluetoothManager.State.Listen;
 		}
 
 		public void InterpretMessage(byte[] message)

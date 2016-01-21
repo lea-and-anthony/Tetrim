@@ -130,7 +130,7 @@ namespace Tetrim
 		public static void startGame(Activity activity, Utils.RequestCode code)
 		{
 			Intent intent = null;
-			if(Network.Instance.Connected())
+			if(Network.Instance.Connected)
 			{
 				intent = new Intent(activity, typeof(GameMultiActivity));
 			}
