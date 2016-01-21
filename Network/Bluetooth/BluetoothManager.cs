@@ -216,12 +216,15 @@ namespace Tetrim
 				_connectedThread = new ConnectedThread (socket, this);
 				_connectedThread.Start ();
 
+				// TODO Remove if it works
+				/*
 				// Send the name of the connected device back to the UI Activity
 				Message message = _handler.ObtainMessage ((int)MessageType.DeviceName);
 				Bundle bundle = new Bundle ();
 				bundle.PutString (DeviceName, device.Name);
 				message.Data = bundle;
 				_handler.SendMessage (message);
+				*/
 
 				setState (StateEnum.Connected);
 			}

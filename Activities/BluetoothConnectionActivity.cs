@@ -16,10 +16,6 @@ using System.Collections.Generic;
 
 namespace Tetrim
 {
-	// This Activity appears as a dialog. It lists any paired devices and
-	// devices detected in the area after discovery. When a device is chosen
-	// by the user, the MAC address of the device is sent back to the parent
-	// Activity in the result Intent.
 	[Activity(Label = "Tetrim", Icon = "@drawable/icon", Theme = "@android:style/Theme.NoTitleBar.Fullscreen", ScreenOrientation = Android.Content.PM.ScreenOrientation.Portrait)]		
 	public class BluetoothConnectionActivity : Activity, ViewTreeObserver.IOnGlobalLayoutListener
 	{
@@ -32,10 +28,10 @@ namespace Tetrim
 		// Return Intent extra
 		public const string ExtraDeviceAddress = "device_address";
 
-		private int NbDevices = 6;
-		private TetrisColor FriendsDeviceColor = TetrisColor.Pink;
-		private TetrisColor PairedDeviceColor = TetrisColor.Green;
-		private TetrisColor NewDeviceColor = TetrisColor.Blue;
+		private const int NbDevices = 6;
+		private const TetrisColor FriendsDeviceColor = TetrisColor.Pink;
+		private const TetrisColor PairedDeviceColor = TetrisColor.Green;
+		private const TetrisColor NewDeviceColor = TetrisColor.Blue;
 
 		private enum Menu
 		{
@@ -413,7 +409,7 @@ namespace Tetrim
 			return 0;
 		}
 
-		public int SendStartGameMessage()
+		public void SendStartGameMessage()
 		{
 			byte[] message = {Constants.IdMessageStart, Constants.NumVersion};
 			// We notify the opponent that we are ready
@@ -424,8 +420,11 @@ namespace Tetrim
 				_state = Network.StartState.WAITING_FOR_OPPONENT;
 				displayWaitingDialog(Resource.String.waiting_for_opponent);
 			}
+		}
 
-			return 0;
+		public void SendNameMessage()
+		{
+
 		}
 
 		public int NameReceived(string name)

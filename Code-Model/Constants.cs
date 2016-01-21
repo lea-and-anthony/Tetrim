@@ -28,6 +28,7 @@ namespace Tetrim
 		public static int Score4Rows = 800;
 		public const int ScoreMoveDown = 1;
 		public const int ScoreMoveBottom = 2;
+		public const int MaxLengthName = 32; // TODO: prevent the user from entering long name
 
 		public const byte IdMessagePiece = 0;
 		public const byte IdMessageGrid = 1;
@@ -39,7 +40,8 @@ namespace Tetrim
 		public const byte IdMessageNextPiece = 7;
 		public const byte IdMessageEnd = 8;
 		public const byte IdMessageScore = 9;
-		public const byte MaxIdMessage = 10;
+		public const byte IdMessageName = 10;
+		public const byte MaxIdMessage = 11;
 
 		// All the messages begin by the Id so size += 1
 		private const uint sizeMessagePiece = 2+1+1 + 1;
@@ -52,7 +54,8 @@ namespace Tetrim
 											2*sizeMessagePiece - 1 + 1,
 											1 + 2,
 											1 + sizeof(int) + 2*sizeof(uint), // score, level and nb removed row
-											1 + sizeof(int) + 2*sizeof(uint)};
+											1 + sizeof(int) + 2*sizeof(uint),
+											1 + MaxLengthName*sizeof(char)};
 		public const uint SizeMaxBluetoothMessage = 512;
 
 		public const byte NumVersion = 2;
