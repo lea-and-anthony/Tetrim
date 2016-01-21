@@ -78,7 +78,7 @@
     <Compile Include="Code-Interface\AutoResizeTextView.cs" />
     <Compile Include="Code-View\PieceView.cs" />
     <Compile Include="Code-Interface\NextPieceView.cs" />
-    <Compile Include="Code-View\ProposedPieceView.cs" />
+    <Compile Include="Code-Interface\ProposedPieceView.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
