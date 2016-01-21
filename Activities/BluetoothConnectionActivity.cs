@@ -284,7 +284,7 @@ namespace Tetrim
 
 			if(writeBuf[0] == Constants.IdMessageStart && _state == Network.StartState.OPPONENT_READY)
 			{
-				User.Instance.AddFriend(Network.Instance.CommunicationWay._deviceAddress);
+				User.Instance.AddFriend(Network.Instance.CommunicationWay._deviceAddress, _opponentName);
 				MenuActivity.startGame(this, Utils.RequestCode.RequestGameTwoPlayer);// We launch the game (change view and everything)
 			}
 				
@@ -394,7 +394,8 @@ namespace Tetrim
 						DialogActivity.CloseAllDialog.Invoke();
 						_currentDialog = null;
 					}
-					User.Instance.AddFriend(Network.Instance.CommunicationWay._deviceAddress);
+
+					User.Instance.AddFriend(Network.Instance.CommunicationWay._deviceAddress, _opponentName);
 					MenuActivity.startGame(this, Utils.RequestCode.RequestGameTwoPlayer); // We launch the game (change view and everything)
 				}
 				else
@@ -499,7 +500,7 @@ namespace Tetrim
 				_pairedDevices.Clear();
 				foreach(BluetoothDevice device in pairedDevices)
 				{
-					if(User.Instance.Friends.Contains(device.Address))
+					if(User.Instance.Friends.ContainsKey(device.Address))
 					{
 						AddFriendDevice(device);
 						_friendsDevices.Add(device);

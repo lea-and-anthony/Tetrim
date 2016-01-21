@@ -136,14 +136,14 @@ namespace Tetrim
 
 		protected virtual void initializeUI()
 		{
-			setPlayerName(Resource.Id.player1name, true);
-			setPlayerStat(Resource.Id.player1score, true, false);
-			setPlayerStat(Resource.Id.player1rows, true, false);
-			setPlayerStat(Resource.Id.player1level, true, false);
-			setPlayerStat(Resource.Id.score1, true, true);
-			setPlayerStat(Resource.Id.rows1, true, true);
-			setPlayerStat(Resource.Id.level1, true, true);
-			setPlayerStat(Resource.Id.piece1, true, true);
+			UtilsUI.SetGamePlayerNameText(this, Resource.Id.player1name, true);
+			UtilsUI.SetGamePlayerStatText(this, Resource.Id.player1score, true, false);
+			UtilsUI.SetGamePlayerStatText(this, Resource.Id.player1rows, true, false);
+			UtilsUI.SetGamePlayerStatText(this, Resource.Id.player1level, true, false);
+			UtilsUI.SetGamePlayerStatText(this, Resource.Id.score1, true, true);
+			UtilsUI.SetGamePlayerStatText(this, Resource.Id.rows1, true, true);
+			UtilsUI.SetGamePlayerStatText(this, Resource.Id.level1, true, true);
+			UtilsUI.SetGamePlayerStatText(this, Resource.Id.piece1, true, true);
 
 			// Change the size of the components to center them
 			GridView myGrid = FindViewById<GridView>(Resource.Id.PlayerGridView);
@@ -170,22 +170,6 @@ namespace Tetrim
 			gameLayout.WeightSum = 0;
 		}
 
-		protected void setPlayerStat(int id, bool me, bool isTitle)
-		{
-			TextView textView = FindViewById<TextView>(id);
-			UtilsUI.SetTextFont(textView);
-			textView.SetBackgroundColor(Utils.getAndroidColor(me ? TetrisColor.Cyan : TetrisColor.Red));
-			textView.SetTextColor(!isTitle ? (me ? UtilsUI.Player1Background : UtilsUI.Player2Background)
-				: Utils.getAndroidDarkColor(me ? TetrisColor.Cyan : TetrisColor.Red));
-		}
-
-		protected void setPlayerName(int id, bool me)
-		{
-			TextView textView = FindViewById<TextView>(id);
-			UtilsUI.SetTextFont(textView);
-			textView.SetTextColor(Utils.getAndroidColor(me ? TetrisColor.Cyan : TetrisColor.Red));
-		}
-
 		protected void endGame()
 		{
 			Finish();
@@ -203,6 +187,7 @@ namespace Tetrim
 
 		protected int getTimerLapse()
 		{
+			// TODO : change speed
 			return 1000;
 		}
 	}

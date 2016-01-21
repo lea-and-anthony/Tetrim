@@ -53,7 +53,6 @@
     <Compile Include="Code-Model\Player.cs" />
     <Compile Include="Code-View\BlockView.cs" />
     <Compile Include="Code-View\GridView.cs" />
-    <Compile Include="Code-View\PieceView.cs" />
     <Compile Include="Code-View\Utils.cs" />
     <Compile Include="Code-View\PlayerView.cs" />
     <Compile Include="Activities\MenuActivity.cs" />
@@ -65,20 +64,21 @@
     <Compile Include="Network\Bluetooth\MyHandler.cs" />
     <Compile Include="Activities\BluetoothConnectionActivity.cs" />
     <Compile Include="Network\Bluetooth\Receiver.cs" />
-    <Compile Include="Code-View\ButtonStroked.cs" />
-    <Compile Include="Code-View\TextViewStroked.cs" />
     <Compile Include="Activities\ReconnectActivity.cs" />
     <Compile Include="Code-Model\User.cs" />
     <Compile Include="Activities\SettingsActivity.cs" />
-    <Compile Include="Code-View\NextPieceView.cs" />
     <Compile Include="Activities\GameSingleActivity.cs" />
     <Compile Include="Activities\GameMultiActivity.cs" />
     <Compile Include="Activities\GameActivity.cs" />
-    <Compile Include="Code-View\DialogBuilder.cs" />
     <Compile Include="Activities\DialogActivity.cs" />
-    <Compile Include="Code-View\ProposedPieceView.cs" />
     <Compile Include="Code-View\UtilsDialog.cs" />
     <Compile Include="Code-View\UtilsUI.cs" />
+    <Compile Include="Code-Interface\ButtonStroked.cs" />
+    <Compile Include="Code-Interface\DialogBuilder.cs" />
+    <Compile Include="Code-Interface\AutoResizeTextView.cs" />
+    <Compile Include="Code-View\PieceView.cs" />
+    <Compile Include="Code-Interface\NextPieceView.cs" />
+    <Compile Include="Code-Interface\ProposedPieceView.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
@@ -140,6 +140,7 @@
     <Folder Include="Network\" />
     <Folder Include="Activities\" />
     <Folder Include="Network\Bluetooth\" />
+    <Folder Include="Code-Interface\" />
   </ItemGroup>
   <ItemGroup>
     <AndroidAsset Include="Assets\Blox.ttf" />

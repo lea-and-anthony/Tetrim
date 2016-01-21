@@ -189,6 +189,39 @@ namespace Tetrim
 			//lp.SetMargins(margin, margin, margin, margin);
 			return lp;
 		}
+
+
+		public static void SetGamePlayerStatText(Activity activity, int id, bool me, bool isTitle)
+		{
+			TextView textView = activity.FindViewById<TextView>(id);
+			UtilsUI.SetTextFont(textView);
+			textView.SetBackgroundColor(Utils.getAndroidColor(me ? TetrisColor.Cyan : TetrisColor.Red));
+			textView.SetTextColor(!isTitle ? (me ? UtilsUI.Player1Background : UtilsUI.Player2Background)
+				: Utils.getAndroidDarkColor(me ? TetrisColor.Cyan : TetrisColor.Red));
+		}
+
+		public static void SetGamePlayerStatText(Activity activity, int id, bool me, bool isTitle, TetrisColor color)
+		{
+			TextView textView = activity.FindViewById<TextView>(id);
+			UtilsUI.SetTextFont(textView);
+			textView.SetBackgroundColor(Utils.getAndroidColor(color));
+			textView.SetTextColor(!isTitle ? (me ? UtilsUI.Player1Background : UtilsUI.Player2Background)
+				: Utils.getAndroidDarkColor(color));
+		}
+
+		public static void SetGamePlayerNameText(Activity activity, int id, bool me)
+		{
+			TextView textView = activity.FindViewById<TextView>(id);
+			UtilsUI.SetTextFont(textView);
+			textView.SetTextColor(Utils.getAndroidColor(me ? TetrisColor.Cyan : TetrisColor.Red));
+		}
+
+		public static void SetGamePlayerNameText(Activity activity, int id, TetrisColor color)
+		{
+			TextView textView = activity.FindViewById<TextView>(id);
+			UtilsUI.SetTextFont(textView);
+			textView.SetTextColor(Utils.getAndroidColor(color));
+		}
 	}
 }
 
