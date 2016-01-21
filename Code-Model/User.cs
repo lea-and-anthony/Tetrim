@@ -14,13 +14,14 @@ namespace Tetrim
 		private const string HighScoreKey = "HighScore";
 		private const char Separator = ',';
 		private const int MacAddressLength = 17;
-
+		// TODO : store name
 		private static ISharedPreferences _sharedPreferences;
 
 		private static User _instance = null;
 		private string _userName;
 		private int _highScore;
-		private List<string> _friends = new List<string>();
+		//private List<string> _friends = new List<string>();
+		private Dictionary<string, string> _friends = new Dictionary<string, string>();
 		private bool _wasUserStored = false;
 
 		public static User Instance
@@ -52,7 +53,7 @@ namespace Tetrim
 			}
 		}
 
-		public List<string> Friends
+		public Dictionary<string, string> Friends
 		{
 			get
 			{
@@ -68,22 +69,37 @@ namespace Tetrim
 			}
 		}
 
-		private User(string userName, int highScore, List<string> friends)
+		private User(string userName, int highScore, Dictionary<string, string> friends)
 		{
 			_userName = userName;
 			_highScore = highScore;
-			foreach(string friend in friends)
+			_friends = new Dictionary<string, string>(friends);
+			/*foreach(string friendKey in friends.Keys)
 			{
-				_friends.Add(friend);
-			}
+				_friends.Add(friendKey, friends[friendKey]);
+			}*/
 		}
 
-		public void AddFriend(string macAddress)
+		public void AddFriend(string macAddress, string name)
 		{
-			if(macAddress.Length == MacAddressLength && !_friends.Contains(macAddress))
+			// If it is a valid mac address
+			if(macAddress.Length == MacAddressLength)
 			{
-				_friends.Add(macAddress);
-				Save();
+				// If it is already a friend update his name if needed
+				// Otherwise add it
+				if(_friends.ContainsKey(macAddress))
+				{
+					if(_friends[macAddress] != name)
+					{
+						_friends[macAddress] = name;
+						Save();
+					}
+				}
+				else
+				{
+					_friends.Add(macAddress, name);
+					Save();
+				}
 			}
 		}
 
@@ -122,12 +138,45 @@ namespace Tetrim
 			_sharedPreferences = sharedPreferences;
 		}
 
-		private static void Save()
+		private string parseFriends()
+		{
+			string result = "{";
+			foreach(string friendKey in _friends.Keys)
+			{
+				result += string.Format("({0},{1})", friendKey, _friends[friendKey]);
+			}
+			result += "}";
+			return  result;
+		}
+
+		private static Dictionary<string, string> parseFriends(string friends)
+		{
+			Dictionary<string, string> friendsDict = new Dictionary<string, string>();
+			if(friends[0] == '{' && friends[friends.Length -1] == '}')
+			{
+				friends = friends.Substring(1, friends.Length - 2);
+				while(!string.IsNullOrEmpty(friends))
+				{
+					int start = friends.IndexOf("(");
+					int end = friends.LastIndexOf("(");
+					string friend = friends.Substring(start, end - start);
+					friends = friends.Substring(end + 1);
+
+					int middle = friend.IndexOf(",");
+					string macAddress = friend.Substring(0, middle);
+					string name = friend.Substring(middle + 1, friend.Length - (middle + 1));
+					friendsDict.Add(macAddress, name);
+				}
+			}
+			return friendsDict;
+		}
+
+		private void Save()
 		{
 			ISharedPreferencesEditor editor = _sharedPreferences.Edit();
 			editor.PutString(UserNameKey, _instance._userName);
 			editor.PutInt(HighScoreKey, _instance._highScore);
-			editor.PutString(FriendsKey, string.Join(Separator.ToString(), _instance._friends.ToArray()));
+			editor.PutString(FriendsKey, parseFriends());
 			editor.Commit();
 		}
 
@@ -146,7 +195,7 @@ namespace Tetrim
 			string friends = _sharedPreferences.GetString(FriendsKey, String.Empty);
 			int highScore = _sharedPreferences.GetInt(HighScoreKey, 0);
 
-			_instance = new User(userName, highScore, new List<string>(friends.Split(Separator)));
+			_instance = new User(userName, highScore, parseFriends(friends));
 			_instance._wasUserStored = (userName != String.Empty);
 		}
 	}

@@ -53,6 +53,8 @@ namespace Tetrim
 			UtilsUI.TextFont = Typeface.CreateFromAsset(Assets,"Foo.ttf");
 			UtilsUI.TitleFont = Typeface.CreateFromAsset(Assets,"Blox.ttf");
 			UtilsUI.ArrowFont = Typeface.CreateFromAsset(Assets,"Arrows.otf");
+			Utils.SetDefaultFont();
+			// TODO : test if it works
 
 			// Set the title
 			UtilsUI.SetTitleTextView(FindViewById<TextView>(Resource.Id.titleT), TetrisColor.Red);

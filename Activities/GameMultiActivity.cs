@@ -221,14 +221,14 @@ namespace Tetrim
 		{
 			base.initializeUI();
 			
-			setPlayerName(Resource.Id.player2name, false);
-			setPlayerStat(Resource.Id.player2score, false, false);
-			setPlayerStat(Resource.Id.player2rows, false, false);
-			setPlayerStat(Resource.Id.player2level, false, false);
-			setPlayerStat(Resource.Id.score2, false, true);
-			setPlayerStat(Resource.Id.rows2, false, true);
-			setPlayerStat(Resource.Id.level2, false, true);
-			setPlayerStat(Resource.Id.piece2, false, true);
+			UtilsUI.SetGamePlayerNameText(this, Resource.Id.player2name, false);
+			UtilsUI.SetGamePlayerStatText(this, Resource.Id.player2score, false, false);
+			UtilsUI.SetGamePlayerStatText(this, Resource.Id.player2rows, false, false);
+			UtilsUI.SetGamePlayerStatText(this, Resource.Id.player2level, false, false);
+			UtilsUI.SetGamePlayerStatText(this, Resource.Id.score2, false, true);
+			UtilsUI.SetGamePlayerStatText(this, Resource.Id.rows2, false, true);
+			UtilsUI.SetGamePlayerStatText(this, Resource.Id.level2, false, true);
+			UtilsUI.SetGamePlayerStatText(this, Resource.Id.piece2, false, true);
 
 			ProposedPieceView proposedPiecesView = FindViewById<ProposedPieceView>(Resource.Id.player2piece);
 			proposedPiecesView.SetBackgroundColor(Utils.getAndroidColor(TetrisColor.Red));

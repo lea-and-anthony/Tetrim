@@ -1,5 +1,7 @@
 ﻿using System;
 
+using Java.Lang.Reflect;
+
 using Android.App;
 using Android.Content;
 using Android.Graphics;
@@ -112,6 +114,32 @@ namespace Tetrim
 				return size;
 			default:
 				return Utils.GetPixelsFromDP(context, size);
+			}
+		}
+
+		public static void SetDefaultFont()
+		{
+			replaceFont("DEFAULT", UtilsUI.TextFont);
+			replaceFont("MONOSPACE", UtilsUI.TextFont);
+			replaceFont("SERIF", UtilsUI.TextFont);
+			replaceFont("SANS_SERIF", UtilsUI.TextFont);
+		}
+
+		private static void replaceFont(string staticTypefaceFieldName, Typeface newTypeface)
+		{
+			try
+			{
+				Field staticField = newTypeface.Class.GetDeclaredField(staticTypefaceFieldName);
+				staticField.Accessible = true;
+				staticField.Set(null, newTypeface);
+			}
+			catch (Java.Lang.NoSuchFieldException e)
+			{
+				e.PrintStackTrace();
+			}
+			catch (Java.Lang.IllegalAccessException e)
+			{
+				e.PrintStackTrace();
 			}
 		}
 	}
