@@ -23,6 +23,17 @@ namespace Tetrim
 		private object locker = new object ();
 
 		//--------------------------------------------------------------
+		// PROPERTIES
+		//--------------------------------------------------------------
+		public bool CanStart
+		{
+			get
+			{
+				return _serverSocket != null;
+			}
+		}
+
+		//--------------------------------------------------------------
 		// CONSTRUCTORS
 		//--------------------------------------------------------------
 		public AcceptThread(BluetoothManager service)
@@ -37,7 +48,7 @@ namespace Tetrim
 			}
 			catch(Java.IO.IOException e)
 			{
-				// TODO: stop the bluetooth if we reach this point (we reach it when the bluetooth is disabled too)
+				// TODO: stop the bluetooth if we reach this point
 				Log.Error(BluetoothManager.Tag, "Listen() failed", e);
 			}
 			_serverSocket = temp;
@@ -52,7 +63,7 @@ namespace Tetrim
 			Log.Debug(BluetoothManager.Tag, "BEGIN AcceptThread " + this.ToString());
 			#endif
 
-			if(_serverSocket == null)
+			if(!CanStart)
 			{
 				Log.Error(BluetoothManager.Tag, "ERROR: Could not start the accept thread because _serverSocket = null");
 				_end = true;
@@ -63,7 +74,7 @@ namespace Tetrim
 			BluetoothSocket socket = null;
 
 			// Listen to the server socket if we're not connected
-			while(_service.GetState() != BluetoothManager.State.Connected && _continue)
+			while(_service.State != BluetoothManager.StateEnum.Connected && _continue)
 			{
 				try
 				{
@@ -82,16 +93,16 @@ namespace Tetrim
 				{
 					lock (locker)
 					{
-						switch (_service.GetState())
+						switch (_service.State)
 						{
-						case BluetoothManager.State.Listen:
-						case BluetoothManager.State.Connecting:
+						case BluetoothManager.StateEnum.Listen:
+						case BluetoothManager.StateEnum.Connecting:
 							// Situation normal. Start the connected thread.
 							_success = true;
 							_service.Connected (socket, socket.RemoteDevice);
 							break;
-						case BluetoothManager.State.None:
-						case BluetoothManager.State.Connected:
+						case BluetoothManager.StateEnum.None:
+						case BluetoothManager.StateEnum.Connected:
 							// Either not ready or already connected. Terminate new socket.
 							try
 							{

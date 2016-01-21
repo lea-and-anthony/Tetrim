@@ -74,7 +74,7 @@ namespace Tetrim
 		//--------------------------------------------------------------
 		private void selectPiece(int piece)
 		{
-			if(Network.Instance.Connected() && _player != null)
+			if(Network.Instance.Connected && _player != null)
 			{
 				// Notify the other player of the newly selected piece
 				Network.Instance.CommunicationWay.Write(_player.GetMessageSendNewPiece(piece));

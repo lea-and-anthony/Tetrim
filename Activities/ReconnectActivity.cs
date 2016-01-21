@@ -187,7 +187,7 @@ namespace Tetrim
 
 		private void tryConnection()
 		{
-			if(Network.Instance.WaitingForConnection() && _deviceAddress != string.Empty)
+			if(Network.Instance.WaitingForConnection && _deviceAddress != string.Empty)
 			{
 				// Attempt to connect to the previous device
 				BluetoothDevice device = BluetoothAdapter.DefaultAdapter.GetRemoteDevice(_deviceAddress);
