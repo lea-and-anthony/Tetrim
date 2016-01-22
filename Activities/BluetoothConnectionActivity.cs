@@ -51,7 +51,6 @@ namespace Tetrim
 		private Network.StartState _state = Network.StartState.NONE;
 		private bool _isConnectionInitiator = false;
 		private string _opponentName = String.Empty;
-		private Intent _currentDialog = null;
 		private Menu _menuSelected = Menu.PAIRED;
 		private ScrollView _devicesLayout;
 		private LinearLayout _friendsDevicesLayout, _pairedDevicesLayout, _newDevicesLayout;
@@ -78,15 +77,11 @@ namespace Tetrim
 
 			// Initialize the buttons
 			UtilsUI.SetDeviceMenuButton(this, ref _friendsDevicesButton, Resource.Id.friendsDevices, FriendsDeviceColor);
-			_friendsDevicesButton.Click +=(sender, e) => {
-				SwitchMenu(Menu.FRIENDS);
-			};
+			_friendsDevicesButton.Click += (sender, e) => SwitchMenu (Menu.FRIENDS);
 			UtilsUI.SetDeviceMenuButton(this, ref _pairedDevicesButton, Resource.Id.pairedDevices, PairedDeviceColor);
-			_pairedDevicesButton.Click +=(sender, e) => {
-				SwitchMenu(Menu.PAIRED);
-			};
+			_pairedDevicesButton.Click += (sender, e) => SwitchMenu (Menu.PAIRED);
 			UtilsUI.SetDeviceMenuButton(this, ref _newDevicesButton, Resource.Id.newDevices, NewDeviceColor);
-			_newDevicesButton.Click +=(sender, e) => {
+			_newDevicesButton.Click += (sender, e) => {
 				SwitchMenu(Menu.NEW);
 				startDiscovery();
 			};
@@ -138,21 +133,6 @@ namespace Tetrim
 			_devicesLayout.ViewTreeObserver.RemoveGlobalOnLayoutListener(this);
 		}
 
-		protected override void OnResume ()
-		{
-			base.OnResume ();
-			if (Network.Instance.WaitingForStart)
-			{
-				// Performing this check in onResume() covers the case in which Bluetooth was
-				// not enabled when the button was hit, so we were paused to enable it...
-				// onResume() will be called when ACTION_REQUEST_ENABLE activity returns.
-				// Only if the state is STATE_NONE, do we know that we haven't started already
-
-				// Start the Bluetooth for the game
-				Network.Instance.CommunicationWay.Start();
-			}
-		}
-
 		protected override void OnDestroy()
 		{
 			base.OnDestroy();
@@ -168,7 +148,7 @@ namespace Tetrim
 
 			// Stop the Bluetooth Manager
 			if (Network.Instance.Enabled)
-				Network.Instance.CommunicationWay.Stop ();
+				Network.Instance.Stop ();
 
 			#if DEBUG
 			Log.Error (Tag, "--- ON DESTROY ---");
@@ -206,13 +186,13 @@ namespace Tetrim
 			_newDevicesLayout.AddView(newDeviceButton, _newDevicesLayout.ChildCount - 2, lp);
 		}
 
-		public void AddFriendDevice(BluetoothDevice device)
+		public void AddFriendDevice(BluetoothDevice device, string name)
 		{
 			if(device != null)
 			{
 				_friendsDevices.Add(device);
 			}
-			ButtonStroked friendsDeviceButton = UtilsUI.CreateDeviceButton(this, device, FriendsDeviceColor, (int)(_devicesLayout.Height*1f/NbDevices), Resource.String.none_friend);
+			ButtonStroked friendsDeviceButton = UtilsUI.CreateDeviceButton(this, device, FriendsDeviceColor, (int)(_devicesLayout.Height*1f/NbDevices), name);
 			LinearLayout.LayoutParams lp = UtilsUI.CreateDeviceLayoutParams(this, 5);
 			_friendsDevicesLayout.AddView(friendsDeviceButton, lp);
 		}
@@ -325,6 +305,9 @@ namespace Tetrim
 				_bluetoothAdapter.CancelDiscovery();
 			}
 
+			// Send the name of the user anyway
+			SendNameMessage();
+
 			if(_isConnectionInitiator)
 			{
 				// Send a request to start a game
@@ -332,17 +315,9 @@ namespace Tetrim
 			}
 			else
 			{
-				if(_currentDialog != null)
-				{
-					DialogActivity.CloseAllDialog.Invoke();
-					_currentDialog = null;
-				}
-
-				// Display a pop-up asking if we want to play now that we are connected
-				_currentDialog = DialogActivity.CreateYesNoDialog(this, Resources.GetString(Resource.String.game_request_title),
-					String.Format(Resources.GetString(Resource.String.game_request), _opponentName),
-					delegate{_currentDialog = null; SendStartGameMessage();}, delegate{_currentDialog = null; CancelConnection();});
-				StartActivity(_currentDialog);
+				// Dislay a pop-up telling that there is a connection which was made with someone
+				// The pop-up is closed as soon as we received a StartGameMessage
+				displayWaitingDialog(Resource.String.connection_in_progress);
 			}
 
 			return 0;
@@ -357,11 +332,10 @@ namespace Tetrim
 			// To avoid infinite loop because this function can throw a StateNoneEvent
 			Network.Instance.StateNoneEvent -= StateNoneEventReceived;
 
-			if(_currentDialog != null)
+			if(DialogActivity.CloseAllDialog != null)
 			{
 				// if the connection fail we remove the pop-up and restart the bluetooth
 				DialogActivity.CloseAllDialog.Invoke();
-				_currentDialog = null;
 			}
 
 			Network.Instance.CommunicationWay.Start();
@@ -382,29 +356,39 @@ namespace Tetrim
 
 		public int StartGameMessageReceived(byte[] message)
 		{
+			// Remove the pop-up in all the case
+			if(DialogActivity.CloseAllDialog != null)
+			{
+				DialogActivity.CloseAllDialog.Invoke();
+			}
+
 			// We have recieve a demand to start the game
 			// We verify that the two player have the same version of the application
 			if(message[1] == Constants.NumVersion)
 			{
+
 				// The 2 players have the same version, we can launch the game if we are ready
 				if(_state == Network.StartState.WAITING_FOR_OPPONENT)
 				{
-					if(_currentDialog != null)
-					{
-						DialogActivity.CloseAllDialog.Invoke();
-						_currentDialog = null;
-					}
-
 					User.Instance.AddFriend(Network.Instance.CommunicationWay._deviceAddress, _opponentName);
 					MenuActivity.startGame(this, Utils.RequestCode.RequestGameTwoPlayer); // We launch the game (change view and everything)
 				}
 				else
+				{
+					// if we are not ready, display a pop-up asking if we want to play with this person
 					_state = Network.StartState.OPPONENT_READY;
+
+					// Display a pop-up asking if we want to play now that we are connected and the opponent is ready
+					Intent dialog = DialogActivity.CreateYesNoDialog(this, Resources.GetString(Resource.String.game_request_title),
+						String.Format(Resources.GetString(Resource.String.game_request), _opponentName),
+						delegate{SendStartGameMessage();}, delegate{CancelConnection();});
+					StartActivity(dialog);
+				}
 			}
 			else
 			{
-				_currentDialog = UtilsDialog.CreateBluetoothDialogNoCancel(this, Resource.String.wrong_version);
-				StartActivity(_currentDialog);
+				Intent dialog = UtilsDialog.CreateBluetoothDialogNoCancel(this, Resource.String.wrong_version);
+				StartActivity(dialog);
 				Network.Instance.CommunicationWay.Start(); // We restart the connection
 			}
 			return 0;
@@ -425,7 +409,18 @@ namespace Tetrim
 
 		public void SendNameMessage()
 		{
+			byte[] message = new byte[Constants.SizeMessage[Constants.IdMessageName]];
+			message[0] = Constants.IdMessageName;
 
+			char[] smallName = User.Instance.UserName.ToCharArray();
+			char[] name = new char[Constants.MaxLengthName]; // the array is already initialized with the default value which is '\0'
+			Buffer.BlockCopy(smallName, 0, name, 0, sizeof(char)*smallName.Length);
+			for(int i = 0; i < name.Length; i++)
+			{
+				Utils.AddByteArrayToOverArray(ref message, BitConverter.GetBytes(name[i]), 1 + i*sizeof(char));
+			}
+
+			Network.Instance.CommunicationWay.Write(message);
 		}
 
 		public int NameReceived(string name)
@@ -449,10 +444,9 @@ namespace Tetrim
 			Log.Debug(Tag, "CancelConnection()");
 			#endif
 
-			if(_currentDialog != null)
+			if(DialogActivity.CloseAllDialog != null)
 			{
 				DialogActivity.CloseAllDialog.Invoke();
-				_currentDialog = null;
 			}
 
 			_state = Network.StartState.NONE;
@@ -498,12 +492,12 @@ namespace Tetrim
 			if(pairedDevices.Count > 0)
 			{
 				_pairedDevices.Clear();
+				string name;
 				foreach(BluetoothDevice device in pairedDevices)
 				{
-					if(User.Instance.Friends.ContainsKey(device.Address))
+					if(User.Instance.Friends.TryGetValue(device.Address, out name))
 					{
-						AddFriendDevice(device);
-						_friendsDevices.Add(device);
+						AddFriendDevice(device, name);
 					}
 					AddPairedDevice(device);
 				}
@@ -515,21 +509,20 @@ namespace Tetrim
 
 			if(_friendsDevices.Count == 0)
 			{
-				AddFriendDevice(null);
+				AddFriendDevice(null, Resources.GetString(Resource.String.none_friend));
 			}
 		}
 
 		private void displayWaitingDialog(int idMessage)
 		{
-			if(_currentDialog != null)
+			if(DialogActivity.CloseAllDialog != null)
 			{
 				DialogActivity.CloseAllDialog.Invoke();
-				_currentDialog = null;
 			}
 
-			_currentDialog = DialogActivity.CreateYesNoDialog(this, -1, idMessage,
+			Intent dialog = DialogActivity.CreateYesNoDialog(this, -1, idMessage,
 				Resource.String.cancel, -1, delegate{CancelConnection();}, null);
-			StartActivity(_currentDialog);
+			StartActivity(dialog);
 		}
 
 		// Start device discover with the BluetoothAdapter

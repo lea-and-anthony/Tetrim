@@ -139,6 +139,16 @@ namespace Tetrim
 
 		public static ButtonStroked CreateDeviceButton(BluetoothConnectionActivity activity, BluetoothDevice device, TetrisColor color, int minHeight, int defaultText)
 		{
+			if(device == null)
+			{
+				return CreateDeviceButton(activity, device, color, minHeight, activity.Resources.GetString(defaultText));
+			}
+
+			return CreateDeviceButton(activity, device, color, minHeight, device.Name);
+		}
+
+		public static ButtonStroked CreateDeviceButton(BluetoothConnectionActivity activity, BluetoothDevice device, TetrisColor color, int minHeight, string text)
+		{
 			ButtonStroked button = new ButtonStroked(activity.BaseContext);
 			button.SetMinimumHeight(minHeight);
 			button.StrokeColor = Utils.getAndroidColor(color);
@@ -152,17 +162,16 @@ namespace Tetrim
 			button.RadiusOut = 5;
 			button.IsTextStroked = false;
 			button.Shape = ButtonStroked.ButtonShape.BottomTop;
+			button.Text = text;
 			if(device != null)
 			{
 				button.Tag = device.Address;
-				button.Text = device.Name;
 				button.Click += delegate {
 					activity.DeviceListClick(button);
 				};
 			}
 			else
 			{
-				button.Text = activity.Resources.GetString(defaultText);
 				button.Enabled = false;
 			}
 			return button;

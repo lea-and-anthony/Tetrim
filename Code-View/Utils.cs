@@ -125,6 +125,14 @@ namespace Tetrim
 			replaceFont("SANS_SERIF", UtilsUI.TextFont);
 		}
 
+		public static void AddByteArrayToOverArray(ref byte[] message, byte[] over, int offset)
+		{
+			for(int i = 0; i < over.Length; i++)
+			{
+				message[offset + i] = over[i];
+			}
+		}
+
 		private static void replaceFont(string staticTypefaceFieldName, Typeface newTypeface)
 		{
 			try

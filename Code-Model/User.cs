@@ -152,15 +152,22 @@ namespace Tetrim
 		private static Dictionary<string, string> parseFriends(string friends)
 		{
 			Dictionary<string, string> friendsDict = new Dictionary<string, string>();
-			if(friends[0] == '{' && friends[friends.Length -1] == '}')
+			if(friends.Length > 2 && friends[0] == '{' && friends[friends.Length -1] == '}')
 			{
 				friends = friends.Substring(1, friends.Length - 2);
 				while(!string.IsNullOrEmpty(friends))
 				{
 					int start = friends.IndexOf("(");
-					int end = friends.LastIndexOf("(");
-					string friend = friends.Substring(start, end - start);
-					friends = friends.Substring(end + 1);
+					int end = friends.IndexOf(")");
+					string friend = friends.Substring(start + 1, end - start - 1);
+					try
+					{
+						friends = friends.Substring(end + 1);
+					}
+					catch(ArgumentOutOfRangeException)
+					{
+						friends = String.Empty;
+					}
 
 					int middle = friend.IndexOf(",");
 					string macAddress = friend.Substring(0, middle);

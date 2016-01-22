@@ -1,6 +1,4 @@
-﻿using System;
-
-using Java.Lang;
+﻿using Java.Lang;
 
 using Android.Bluetooth;
 using Android.Util;

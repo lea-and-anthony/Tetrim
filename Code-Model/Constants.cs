@@ -28,7 +28,7 @@ namespace Tetrim
 		public static int Score4Rows = 800;
 		public const int ScoreMoveDown = 1;
 		public const int ScoreMoveBottom = 2;
-		public const int MaxLengthName = 32; // TODO: prevent the user from entering long name
+		public const int MaxLengthName = 32; // TODO: prevent the user from entering long name (ToCharArray must return an array smaller than 32 char)
 
 		public const byte IdMessagePiece = 0;
 		public const byte IdMessageGrid = 1;

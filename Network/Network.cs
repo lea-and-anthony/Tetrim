@@ -51,6 +51,7 @@ namespace Tetrim
 		public event StandardDelegate StateConnectingEvent;
 		public event StandardDelegate StateConnectedEvent;
 		public event StandardDelegate StateNoneEvent;
+		public event StandardDelegate StateListenEvent;
 		public event DeviceNameDelegate DeviceNameEvent;
 		public event BufferDelegate ConnectionLostEvent;
 
@@ -281,6 +282,9 @@ namespace Tetrim
 					RestartMessage.Invoke();
 				}
 				break;
+			case Constants.IdMessageName:
+				NotifyDeviceName(message);
+				break;
 			}
 		}
 
@@ -291,6 +295,7 @@ namespace Tetrim
 			StateConnectingEvent = null;
 			StateConnectedEvent = null;
 			StateNoneEvent = null;
+			StateListenEvent = null;
 			DeviceNameEvent = null;
 			ConnectionLostEvent = null;
 			UsualGameMessage = null;
@@ -304,14 +309,10 @@ namespace Tetrim
 			RestartMessage = null;
 		}
 
-		public void WaitSync(int idMessage)
+		public void Stop()
 		{
-			if(idMessage == Constants.IdMessageRestart)
-			{
-				byte[] message = {Constants.IdMessageRestart};
-				// We notify the opponent that we are ready
-				_communicationWay.Write(message);
-			}
+			EraseAllEvent();
+			_communicationWay.Stop();
 		}
 
 		public void NotifyWriteMessage(byte[] writeBuf)
@@ -347,6 +348,14 @@ namespace Tetrim
 			}
 		}
 
+		public void NotifyStateListen()
+		{
+			if(StateListenEvent != null)
+			{
+				StateListenEvent.Invoke();
+			}
+		}
+
 		public void NotifyStateNone()
 		{
 			if(StateNoneEvent != null)
@@ -355,11 +364,23 @@ namespace Tetrim
 			}
 		}
 
-		public void NotifyDeviceName(string deviceName)
+		public void NotifyDeviceName(byte[] message)
 		{
 			if(DeviceNameEvent != null)
 			{
-				DeviceNameEvent.Invoke(deviceName);
+				char[] longName = new char[Constants.MaxLengthName];
+				int length = 0;
+				for(int i = 0; i < Constants.MaxLengthName && length == 0; i ++)
+				{
+					longName[i] = BitConverter.ToChar(message, 1 + i*sizeof(char));
+					if(longName[i] == '\0')
+					{
+						length = i;
+					}
+				}
+				char[] name = new char[length];
+				Buffer.BlockCopy(longName, 0, name, 0, length*sizeof(char));
+				DeviceNameEvent.Invoke(new String(name));
 			}
 		}
 

@@ -45,9 +45,7 @@ namespace Tetrim
 			StateChange = 1,
 			Read = 2,
 			Write = 3,
-			DeviceName = 4,
-			ConnectionLost = 5,
-			Alert = 6
+			ConnectionLost = 4
     	};
 
 		// Key name for identification message
@@ -130,7 +128,6 @@ namespace Tetrim
 
 				// Cancel all the threads
 				stopThreads();
-				_deviceAddress = string.Empty;
 
 				// Start the thread to listen on a BluetoothServerSocket
 				_acceptThread = new AcceptThread (this);
@@ -154,9 +151,6 @@ namespace Tetrim
 				#if DEBUG
 				Log.Debug (Tag, "Connecting to : " + device);
 				#endif
-
-				// Set the wanted device so we can check later if it is the right device we are connected to
-				_deviceAddress = device.Address;
 
 				// Cancel any thread attempting to make a connection
 				if (_state == StateEnum.Connecting)
@@ -194,37 +188,12 @@ namespace Tetrim
 				// Cancel all the threads
 				stopThreads();
 
-				if(_deviceAddress != string.Empty && _deviceAddress != device.Address)
-				{
-					// We are not connected to the right device so we stop the current connection
-					try
-					{
-						socket.Close();
-					}
-					catch(Java.IO.IOException e2)
-					{
-						Log.Error(Tag, "Unable to Close() socket when trying to stop a connection", e2);
-					}
-					string tmp = _deviceAddress;
-					Start();
-					_deviceAddress = tmp;
-					return;
-				}
+				// Set the address of the device we are connected to
 				_deviceAddress = device.Address;
 
 				// Start the thread to manage the connection and perform transmissions
 				_connectedThread = new ConnectedThread (socket, this);
 				_connectedThread.Start ();
-
-				// TODO Remove if it works
-				/*
-				// Send the name of the connected device back to the UI Activity
-				Message message = _handler.ObtainMessage ((int)MessageType.DeviceName);
-				Bundle bundle = new Bundle ();
-				bundle.PutString (DeviceName, device.Name);
-				message.Data = bundle;
-				_handler.SendMessage (message);
-				*/
 
 				setState (StateEnum.Connected);
 			}
@@ -283,10 +252,6 @@ namespace Tetrim
 		public void ConnectionFailed()
 		{
 			setState(StateEnum.None);
-
-			// Send a message to display an error alert
-			_handler.ObtainMessage((int) MessageType.Alert, Resource.String.ConnectionImpossible,
-				Resource.String.ConnectionImpossible, null).SendToTarget ();
 		}
 
 		// Retrieve the message from the handler
@@ -336,6 +301,8 @@ namespace Tetrim
 				_acceptThread.Cancel ();
 				_acceptThread = null;
 			}
+
+			_deviceAddress = string.Empty;
 		}
 	}
 }

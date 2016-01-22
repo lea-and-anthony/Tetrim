@@ -191,13 +191,16 @@ namespace Tetrim
 			Log.Debug(Tag, "OnLostConnection");
 			#endif
 
-			// If we lost the connection, we stop the game display a pop-up and try to reconnect
-			_gameTimer.Stop();
-			_originPause = StopOrigin.LostConnection;
+			if(!_gameOver)
+			{
+				// If we lost the connection, we stop the game display a pop-up and try to reconnect
+				_gameTimer.Stop();
+				_originPause = StopOrigin.LostConnection;
 
-			ReconnectActivity._messageFail = message;
-			var serverIntent = new Intent(this, typeof(ReconnectActivity));
-			StartActivityForResult(serverIntent,(int) Utils.RequestCode.RequestReconnect);
+				ReconnectActivity._messageFail = message;
+				var serverIntent = new Intent(this, typeof(ReconnectActivity));
+				StartActivityForResult(serverIntent,(int) Utils.RequestCode.RequestReconnect);
+			}
 
 			return 0;
 		}

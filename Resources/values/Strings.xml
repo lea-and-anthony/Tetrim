@@ -71,6 +71,7 @@
     <string name="wrong_version_title">Wrong Version Number</string>
     <string name="wrong_version">You and your opponent do not have the same version of the game.</string>
 	<string name="waiting_for_opponent">Waiting for your opponent...</string>
+	<string name="connection_in_progress">Connection in progress...</string>
 
     <string name="reconnect_activity">Reconnection</string>
 </resources>

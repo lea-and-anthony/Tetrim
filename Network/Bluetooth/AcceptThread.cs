@@ -85,7 +85,7 @@ namespace Tetrim
 				catch(Java.IO.IOException e)
 				{
 					Log.Error(BluetoothManager.Tag, "Accept() failed", e);
-					break;
+					continue;
 				}
 
 				// If a connection was accepted

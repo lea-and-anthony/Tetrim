@@ -221,17 +221,9 @@ namespace Tetrim
 
 		private void completeScoreInMessage(ref byte[] message, int offset)
 		{
-			addByteArrayToOverArray(ref message, BitConverter.GetBytes(_score), offset);
-			addByteArrayToOverArray(ref message, BitConverter.GetBytes(_level), offset + sizeof(uint));
-			addByteArrayToOverArray(ref message, BitConverter.GetBytes(_removedRows), offset + 2*sizeof(uint));
-		}
-
-		private void addByteArrayToOverArray(ref byte[] message, byte[] over, int offset)
-		{
-			for(int i = 0; i < over.Length; i++)
-			{
-				message[offset + i] = over[i];
-			}
+			Utils.AddByteArrayToOverArray(ref message, BitConverter.GetBytes(_score), offset);
+			Utils.AddByteArrayToOverArray(ref message, BitConverter.GetBytes(_level), offset + sizeof(uint));
+			Utils.AddByteArrayToOverArray(ref message, BitConverter.GetBytes(_removedRows), offset + 2*sizeof(uint));
 		}
 	}
 }

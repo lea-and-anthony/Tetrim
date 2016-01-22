@@ -30,6 +30,8 @@ namespace Tetrim
 					Network.Instance.NotifyStateConnecting();
 					break;
 				case (int) BluetoothManager.StateEnum.Listen:
+					Network.Instance.NotifyStateListen();
+					break;
 				case (int) BluetoothManager.StateEnum.None:
 					Network.Instance.NotifyStateNone();
 					break;
@@ -43,17 +45,9 @@ namespace Tetrim
 				byte[] readBuf = (byte[])message.Obj;
 				Network.Instance.NotifyReadMessage(readBuf);
 				break;
-			case (int) BluetoothManager.MessageType.DeviceName:
-				string deviceName = message.Data.GetString (BluetoothManager.DeviceName);
-				Network.Instance.NotifyDeviceName(deviceName);
-				break;
 			case (int) BluetoothManager.MessageType.ConnectionLost:
 				// We transfer the problem to the UI Activity
 				Network.Instance.NotifyConnectionLost((byte[])message.Obj);
-				break;
-			case (int) BluetoothManager.MessageType.Alert:
-				// Display an error message
-				Log.Warn(BluetoothManager.Tag, "MessageType.ALERT");
 				break;
 			}
 		}

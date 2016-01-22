@@ -419,6 +419,9 @@ namespace Tetrim
 			// aapt resource value: 0x7f040027
 			public const int connection_back = 2130968615;
 			
+			// aapt resource value: 0x7f040032
+			public const int connection_in_progress = 2130968626;
+			
 			// aapt resource value: 0x7f04000e
 			public const int deleteFriends = 2130968590;
 			
@@ -485,8 +488,8 @@ namespace Tetrim
 			// aapt resource value: 0x7f04001d
 			public const int playerWin = 2130968605;
 			
-			// aapt resource value: 0x7f040032
-			public const int reconnect_activity = 2130968626;
+			// aapt resource value: 0x7f040033
+			public const int reconnect_activity = 2130968627;
 			
 			// aapt resource value: 0x7f040022
 			public const int resume = 2130968610;

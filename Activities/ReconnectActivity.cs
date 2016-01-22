@@ -1,13 +1,8 @@
-﻿using System;
-using System.Reflection;
-using System.ComponentModel;
-using Android.App;
+﻿using Android.App;
 using Android.Bluetooth;
 using Android.Content;
 using Android.OS;
 using Android.Util;
-using Android.Views;
-using Android.Widget;
 
 namespace Tetrim
 {
@@ -27,6 +22,7 @@ namespace Tetrim
 		private bool _connectingOccured = false;
 		private bool isDialogDisplayed = false;
 		private Network.StartState _state = Network.StartState.NONE;
+		private readonly object _locker = new object (); // locker on _state because this variable can be modified in several threads
 
 		//--------------------------------------------------------------
 		// EVENT CATCHING METHODES
@@ -62,7 +58,7 @@ namespace Tetrim
 			Network.Instance.StateConnectingEvent -= OnConnecting;
 			Network.Instance.StateNoneEvent -= OnFail;
 			Network.Instance.RestartMessage -= OnRestartReceived;
-			Network.Instance.WriteEvent += WriteMessageEventReceived;
+			Network.Instance.WriteEvent -= WriteMessageEventReceived;
 		}
 
 		protected override void OnActivityResult(int requestCode, Result resultCode, Intent data)
@@ -94,6 +90,13 @@ namespace Tetrim
 			#if DEBUG
 			Log.Debug(Tag, "OnConnected");
 			#endif
+
+			if(_deviceAddress != Network.Instance.CommunicationWay._deviceAddress)
+			{
+				// We are connected to the wrong device so we stop the current connection
+				Network.Instance.CommunicationWay.Start();
+				return 1;
+			}
 
 			if(_messageFail != null)
 			{
@@ -134,32 +137,46 @@ namespace Tetrim
 				}
 				_connectingOccured = false;
 			}
+			_state = Network.StartState.NONE;
 
 			return 0;
 		}
 
 		private int OnRestartReceived()
 		{
-			if(_state != Network.StartState.WAITING_FOR_OPPONENT)
+			lock (_locker)
 			{
-				_state = Network.StartState.OPPONENT_READY;
-			}
-			else
-			{
-				// Set result and finish this Activity
-				SetResult(Result.Ok, null);
-				Finish();
+				if(_state != Network.StartState.WAITING_FOR_OPPONENT)
+				{
+					_state = Network.StartState.OPPONENT_READY;
+				}
+				else
+				{
+					// Set result and finish this Activity
+					SetResult(Result.Ok, null);
+					Finish();
+				}
 			}
 			return 0;
 		}
 
 		public int WriteMessageEventReceived(byte[] writeBuf)
 		{
-			if(writeBuf[0] == Constants.IdMessageRestart && _state == Network.StartState.OPPONENT_READY)
+			if(writeBuf[0] == Constants.IdMessageRestart)
 			{
-				// Set result and finish this Activity
-				SetResult(Result.Ok, null);
-				Finish();
+				lock (_locker)
+				{
+					if(_state == Network.StartState.OPPONENT_READY)
+					{
+						// Set result and finish this Activity
+						SetResult(Result.Ok, null);
+						Finish();
+					}
+					else if(_state == Network.StartState.NONE)
+					{
+						_state = Network.StartState.WAITING_FOR_OPPONENT;
+					}
+				}
 			}
 			return 0;
 		}
@@ -169,10 +186,6 @@ namespace Tetrim
 			byte[] message = {Constants.IdMessageRestart};
 			// We notify the opponent that we are ready
 			Network.Instance.CommunicationWay.Write(message);
-			if(_state == Network.StartState.NONE)
-			{
-				_state = Network.StartState.WAITING_FOR_OPPONENT;
-			}
 		}
 
 		private void restartBluetooth()
