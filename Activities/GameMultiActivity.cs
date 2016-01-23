@@ -12,7 +12,7 @@ using Android.Views;
 
 namespace Tetrim
 {
-	[Activity(Label = "Tetrim", Icon = "@drawable/icon", Theme = "@android:style/Theme.NoTitleBar.Fullscreen", ScreenOrientation = Android.Content.PM.ScreenOrientation.Portrait)]
+	[Activity]
 	public class GameMultiActivity : GameActivity
 	{
 		//--------------------------------------------------------------
@@ -256,7 +256,7 @@ namespace Tetrim
 
 			// Background stroke paint
 			// TODO : same width as buttons and set layout margins
-			int strokeBorderWidth = Utils.GetPixelsFromDP(BaseContext, 10);
+			int strokeBorderWidth = Utils.GetPixelsFromDP(this, 10);
 			Paint strokeBackPaint = new Paint();
 			strokeBackPaint.Color = Utils.getAndroidColor(TetrisColor.Red);
 			strokeBackPaint.SetStyle(Paint.Style.Stroke);
@@ -273,8 +273,8 @@ namespace Tetrim
 			bounds.Right += strokeBorderWidth;
 
 			// Actually draw background
-			int radiusIn = Utils.GetPixelsFromDP(BaseContext, 7);
-			int radiusOut = Utils.GetPixelsFromDP(BaseContext, 5);
+			int radiusIn = Utils.GetPixelsFromDP(this, 7);
+			int radiusOut = Utils.GetPixelsFromDP(this, 5);
 			backCanvas.DrawRoundRect(bounds, radiusOut, radiusOut, strokeBackPaint);
 			backCanvas.DrawRoundRect(bounds, radiusIn, radiusIn, fillBackPaint);
 

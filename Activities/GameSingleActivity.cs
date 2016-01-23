@@ -7,7 +7,7 @@ using Android.OS;
 
 namespace Tetrim
 {
-	[Activity(Label = "Tetrim", Icon = "@drawable/icon", Theme = "@android:style/Theme.NoTitleBar.Fullscreen", ScreenOrientation = Android.Content.PM.ScreenOrientation.Portrait)]
+	[Activity]
 	public class GameSingleActivity : GameActivity
 	{
 		//--------------------------------------------------------------

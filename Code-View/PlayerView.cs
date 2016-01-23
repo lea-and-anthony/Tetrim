@@ -31,9 +31,13 @@ namespace Tetrim
 		public void SetViews(TextView playerName, TextView playerScore, TextView playerLevel, TextView playerRows)
 		{
 			_playerName = playerName;
+			_playerName.Text = _player._name;
 			_playerScore = playerScore;
+			_playerScore.Text = _player._score.ToString();
 			_playerLevel = playerLevel;
+			_playerLevel.Text = _player._level.ToString();
 			_playerRows = playerRows;
+			_playerRows.Text = _player._removedRows.ToString();
 		}
 
 		public void Draw()
@@ -42,7 +46,6 @@ namespace Tetrim
 			if(_playerName != null)
 			{
 				// Write the text
-				_playerName.Text = _player._name;
 				_playerScore.Text = _player._score.ToString();
 				_playerLevel.Text = _player._level.ToString();
 				_playerRows.Text = _player._removedRows.ToString();

@@ -133,6 +133,7 @@
     <AndroidResource Include="Resources\layout\Menu.axml" />
     <AndroidResource Include="Resources\layout\BluetoothConnection.axml" />
     <AndroidResource Include="Resources\layout\Dialog.axml" />
+    <AndroidResource Include="Resources\values\themes.xml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Code-Model\" />

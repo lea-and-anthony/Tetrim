@@ -20,9 +20,8 @@ namespace Tetrim
 		public static Intent CreatePauseGameDialog(GameActivity activity)
 		{
 			// Content
-			TextView titleText = new TextView(activity.BaseContext);
+			TextView titleText = new TextView(activity);
 			titleText.SetTextSize(ComplexUnitType.Dip, 30);
-			UtilsUI.SetTextFont(titleText);
 			titleText.Text = activity.Resources.GetString(Resource.String.pause);
 			titleText.Gravity = GravityFlags.CenterHorizontal;
 			titleText.SetTextColor(Utils.getAndroidColor(TetrisColor.Blue));
@@ -46,22 +45,19 @@ namespace Tetrim
 		public static Intent CreateGameOverDialogSingle(Activity activity, int score)
 		{
 			// Title saying GAME OVER
-			TextView titleText = new TextView(activity.BaseContext);
+			TextView titleText = new TextView(activity);
 			titleText.SetTextSize(ComplexUnitType.Dip, 30);
-			UtilsUI.SetTextFont(titleText);
 			titleText.Text = activity.Resources.GetString(Resource.String.gameOver);
 			titleText.Gravity = GravityFlags.CenterHorizontal;
 			titleText.SetTextColor(Utils.getAndroidColor(TetrisColor.Red));
 
 			// Score display
-			TextView scoreText = new TextView(activity.BaseContext);
+			TextView scoreText = new TextView(activity);
 			scoreText.SetTextSize(ComplexUnitType.Dip, 20);
-			UtilsUI.SetTextFont(scoreText);
 
 			// Highscore display
-			TextView highScoreText = new TextView(activity.BaseContext);
+			TextView highScoreText = new TextView(activity);
 			highScoreText.SetTextSize(ComplexUnitType.Dip, 20);
-			UtilsUI.SetTextFont(highScoreText);
 
 			if(score > User.Instance.HighScore)
 			{
@@ -89,15 +85,13 @@ namespace Tetrim
 		public static Intent CreateGameOverDialogMulti(Activity activity, bool hasWon)
 		{
 			// Create the content
-			TextView titleText = new TextView(activity.BaseContext);
+			TextView titleText = new TextView(activity);
 			titleText.SetTextSize(ComplexUnitType.Dip, 30);
-			UtilsUI.SetTextFont(titleText);
 			titleText.Text = activity.Resources.GetString(Resource.String.gameOver);
 			titleText.Gravity = GravityFlags.CenterHorizontal;
 			titleText.SetTextColor(Utils.getAndroidColor(TetrisColor.Yellow));
-			TextView text = new TextView(activity.BaseContext);
+			TextView text = new TextView(activity);
 			text.SetTextSize(ComplexUnitType.Dip, 30);
-			UtilsUI.SetTextFont(text);
 			text.Text = activity.Resources.GetString(hasWon ? Resource.String.playerWin : Resource.String.playerLoose);
 			text.Gravity = GravityFlags.CenterHorizontal;
 			text.SetTextColor(Utils.getAndroidColor(hasWon ? TetrisColor.Green : TetrisColor.Red));

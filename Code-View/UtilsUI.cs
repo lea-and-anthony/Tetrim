@@ -29,11 +29,6 @@ namespace Tetrim
 			titleTextView.SetTextColor(Utils.getAndroidColor(color));
 		}
 
-		public static void SetTextFont(TextView titleTextView)
-		{
-			titleTextView.SetTypeface(UtilsUI.TextFont, TypefaceStyle.Normal);
-		}
-
 		public static void SetMenuButton(ButtonStroked button, TetrisColor color)
 		{
 			button.SetTypeface(UtilsUI.TextFont, TypefaceStyle.Normal);
@@ -100,7 +95,7 @@ namespace Tetrim
 				button.StrokeColor = Utils.getAndroidDarkColor(color);
 				button.FillColor = Utils.getAndroidColor(color);
 				button.Text = text;
-				button.TextSize = Utils.GetPixelsFromDP(activity.BaseContext, 20);
+				button.TextSize = Utils.GetPixelsFromDP(activity, 20);
 				button.Click += delegate {
 					DialogBuilder.ReturnText = (DialogActivity.Builder.RequestCode == DialogBuilder.DialogRequestCode.Text ) ? field.Text : null;
 				};
@@ -139,12 +134,12 @@ namespace Tetrim
 
 		public static ButtonStroked CreateDeviceButton(BluetoothConnectionActivity activity, BluetoothDevice device, TetrisColor color, int minHeight, int defaultText)
 		{
-			ButtonStroked button = new ButtonStroked(activity.BaseContext);
+			ButtonStroked button = new ButtonStroked(activity);
 			button.SetMinimumHeight(minHeight);
 			button.StrokeColor = Utils.getAndroidColor(color);
 			button.FillColor = Utils.getAndroidDarkColor(color);
 			button.Gravity = GravityFlags.Left;
-			int padding = Utils.GetPixelsFromDP(activity.BaseContext, 20);
+			int padding = Utils.GetPixelsFromDP(activity, 20);
 			button.SetPadding(padding, padding, padding, padding);
 			button.StrokeBorderWidth = 7;
 			button.StrokeTextWidth = 5;
@@ -177,7 +172,7 @@ namespace Tetrim
 
 		public static void SetDeviceMenuLayout(Activity activity, ref LinearLayout layout, int nbDevices)
 		{
-			layout = new LinearLayout(activity.BaseContext);
+			layout = new LinearLayout(activity);
 			layout.WeightSum = nbDevices;
 			layout.Orientation = Orientation.Vertical;
 		}
@@ -185,7 +180,7 @@ namespace Tetrim
 		public static LinearLayout.LayoutParams CreateDeviceLayoutParams(Activity activity, int marginPixel)
 		{
 			LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MatchParent, 0, 1);
-			int margin = Utils.GetPixelsFromDP(activity.BaseContext, marginPixel);
+			int margin = Utils.GetPixelsFromDP(activity, marginPixel);
 			//lp.SetMargins(margin, margin, margin, margin);
 			return lp;
 		}
@@ -194,7 +189,6 @@ namespace Tetrim
 		public static void SetGamePlayerStatText(Activity activity, int id, bool me, bool isTitle)
 		{
 			TextView textView = activity.FindViewById<TextView>(id);
-			UtilsUI.SetTextFont(textView);
 			textView.SetBackgroundColor(Utils.getAndroidColor(me ? TetrisColor.Cyan : TetrisColor.Red));
 			textView.SetTextColor(!isTitle ? (me ? UtilsUI.Player1Background : UtilsUI.Player2Background)
 				: Utils.getAndroidDarkColor(me ? TetrisColor.Cyan : TetrisColor.Red));
@@ -203,7 +197,6 @@ namespace Tetrim
 		public static void SetGamePlayerStatText(Activity activity, int id, bool me, bool isTitle, TetrisColor color)
 		{
 			TextView textView = activity.FindViewById<TextView>(id);
-			UtilsUI.SetTextFont(textView);
 			textView.SetBackgroundColor(Utils.getAndroidColor(color));
 			textView.SetTextColor(!isTitle ? (me ? UtilsUI.Player1Background : UtilsUI.Player2Background)
 				: Utils.getAndroidDarkColor(color));
@@ -211,15 +204,13 @@ namespace Tetrim
 
 		public static void SetGamePlayerNameText(Activity activity, int id, bool me)
 		{
-			TextView textView = activity.FindViewById<TextView>(id);
-			UtilsUI.SetTextFont(textView);
+			AutoResizeTextView textView = activity.FindViewById<AutoResizeTextView>(id);
 			textView.SetTextColor(Utils.getAndroidColor(me ? TetrisColor.Cyan : TetrisColor.Red));
 		}
 
 		public static void SetGamePlayerNameText(Activity activity, int id, TetrisColor color)
 		{
 			TextView textView = activity.FindViewById<TextView>(id);
-			UtilsUI.SetTextFont(textView);
 			textView.SetTextColor(Utils.getAndroidColor(color));
 		}
 	}

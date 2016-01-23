@@ -20,7 +20,7 @@ namespace Tetrim
 	// devices detected in the area after discovery. When a device is chosen
 	// by the user, the MAC address of the device is sent back to the parent
 	// Activity in the result Intent.
-	[Activity(Label = "Tetrim", Icon = "@drawable/icon", Theme = "@android:style/Theme.NoTitleBar.Fullscreen", ScreenOrientation = Android.Content.PM.ScreenOrientation.Portrait)]		
+	[Activity]		
 	public class BluetoothConnectionActivity : Activity, ViewTreeObserver.IOnGlobalLayoutListener
 	{
 		//--------------------------------------------------------------
@@ -540,9 +540,9 @@ namespace Tetrim
 			Log.Debug(Tag, "doDiscovery()");
 			#endif
 
-			_progressBar = new ProgressBar(BaseContext);
+			_progressBar = new ProgressBar(this);
 			_progressBar.Indeterminate = true;
-			int padding = Utils.GetPixelsFromDP(BaseContext, 15);
+			int padding = Utils.GetPixelsFromDP(this, 15);
 			_progressBar.SetPadding(padding, padding, padding, padding);
 			_newDevicesLayout.AddView(_progressBar, LinearLayout.LayoutParams.MatchParent, (int)(_devicesLayout.Height*1f/NbDevices));
 
