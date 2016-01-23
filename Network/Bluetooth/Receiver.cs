@@ -1,11 +1,5 @@
-﻿using System;
-using Android.App;
-using Android.Bluetooth;
+﻿using Android.Bluetooth;
 using Android.Content;
-using Android.OS;
-using Android.Util;
-using Android.Views;
-using Android.Widget;
 
 namespace Tetrim
 {

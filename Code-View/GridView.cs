@@ -1,11 +1,11 @@
 ﻿using System;
-using System.Threading;
 using System.Collections.Generic;
+using System.Threading;
 
-using Android.Views;
-using Android.Graphics;
 using Android.Content;
+using Android.Graphics;
 using Android.Util;
+using Android.Views;
 
 namespace Tetrim
 {

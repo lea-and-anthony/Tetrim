@@ -1,7 +1,4 @@
-﻿using System;
-
-using Android.OS;
-using Android.Util;
+﻿using Android.OS;
 
 namespace Tetrim
 {

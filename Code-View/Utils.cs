@@ -2,13 +2,11 @@
 
 using Java.Lang.Reflect;
 
-using Android.App;
 using Android.Content;
 using Android.Graphics;
-using Android.Views;
-using Android.Widget;
 using Android.Runtime;
 using Android.Util;
+using Android.Views;
 
 namespace Tetrim
 {

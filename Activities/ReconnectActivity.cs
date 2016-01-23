@@ -1,12 +1,13 @@
 ﻿using Android.App;
 using Android.Bluetooth;
 using Android.Content;
+using Android.Content.PM;
 using Android.OS;
 using Android.Util;
 
 namespace Tetrim
 {
-	[Activity(Theme = "@style/Theme.TetrimDialogTheme")]
+	[Activity(Theme = "@style/Theme.TetrimDialogTheme", ScreenOrientation = ScreenOrientation.Portrait)]
 	public class ReconnectActivity : Activity
 	{
 		//--------------------------------------------------------------

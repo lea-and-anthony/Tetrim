@@ -1,17 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-
-using Android.App;
-using Android.Graphics;
+﻿using Android.App;
 using Android.Content;
-using Android.Widget;
+using Android.Content.PM;
 using Android.OS;
 using Android.Util;
-using Android.Bluetooth;
 
 namespace Tetrim
 {
-	[Activity]		
+	[Activity(ScreenOrientation = ScreenOrientation.Portrait)]		
 	public class SettingsActivity : Activity
 	{
 		//--------------------------------------------------------------

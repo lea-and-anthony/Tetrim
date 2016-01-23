@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 
 using Android.Content;
-using Android.Views;
 using Android.Graphics;
 using Android.Util;
+using Android.Views;
 
 namespace Tetrim
 {

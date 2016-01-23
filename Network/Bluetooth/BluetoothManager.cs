@@ -17,10 +17,10 @@
 * limitations under the License.
 */
 
+using Java.Util;
+
 using Android.Bluetooth;
 using Android.OS;
-using Java.Util;
-using System.Runtime.CompilerServices;
 using Android.Util;
 
 namespace Tetrim

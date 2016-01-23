@@ -1,16 +1,17 @@
 ﻿using System;
 
+using Android.App;
 using Android.Content;
+using Android.Content.PM;
 using Android.Graphics;
 using Android.Graphics.Drawables;
-using Android.App;
 using Android.OS;
 using Android.Views;
 using Android.Widget;
 
 namespace Tetrim
 {
-	[Activity(Theme = "@style/Theme.TetrimDialogTheme")]		
+	[Activity(Theme = "@style/Theme.TetrimDialogTheme", ScreenOrientation = ScreenOrientation.Portrait)]		
 	public class DialogActivity : Activity, ViewTreeObserver.IOnGlobalLayoutListener
 	{
 		//--------------------------------------------------------------

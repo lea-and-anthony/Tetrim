@@ -3,9 +3,9 @@ using System.Timers;
 
 using Android.App;
 using Android.Graphics;
-using Android.Widget;
 using Android.Util;
 using Android.Views;
+using Android.Widget;
 
 namespace Tetrim
 {

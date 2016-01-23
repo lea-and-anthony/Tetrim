@@ -1,18 +1,15 @@
-﻿using System;
-using System.Timers;
-
-using Android.App;
-using Android.Graphics;
+﻿using Android.App;
 using Android.Content;
-using Android.Widget;
+using Android.Content.PM;
+using Android.Graphics;
 using Android.OS;
 using Android.Util;
-using Android.Bluetooth;
 using Android.Views;
+using Android.Widget;
 
 namespace Tetrim
 {
-	[Activity(MainLauncher = true)]
+	[Activity(MainLauncher = true, ScreenOrientation = ScreenOrientation.Portrait)]
 	public class MenuActivity : Activity, ViewTreeObserver.IOnGlobalLayoutListener
 	{
 		//--------------------------------------------------------------

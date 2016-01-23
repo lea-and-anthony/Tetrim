@@ -1,13 +1,8 @@
-﻿using Java.Lang;
-
-using System;
+﻿using System;
 
 using Android.Content;
-using Android.Content.Res;
 using Android.Graphics;
-using Android.OS;
 using Android.Runtime;
-using Android.Text;
 using Android.Util;
 using Android.Widget;
 

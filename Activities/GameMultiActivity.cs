@@ -2,17 +2,18 @@
 using System.Timers;
 
 using Android.App;
+using Android.Content;
+using Android.Content.PM;
 using Android.Graphics;
 using Android.Graphics.Drawables;
-using Android.Content;
-using Android.Widget;
 using Android.OS;
 using Android.Util;
 using Android.Views;
+using Android.Widget;
 
 namespace Tetrim
 {
-	[Activity]
+	[Activity(ScreenOrientation = ScreenOrientation.Portrait)]
 	public class GameMultiActivity : GameActivity
 	{
 		//--------------------------------------------------------------

@@ -1,8 +1,8 @@
 ﻿using Android.App;
 using Android.Content;
+using Android.Util;
 using Android.Views;
 using Android.Widget;
-using Android.Util;
 
 namespace Tetrim
 {

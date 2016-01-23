@@ -3,11 +3,12 @@ using System.Timers;
 
 using Android.App;
 using Android.Content;
+using Android.Content.PM;
 using Android.OS;
 
 namespace Tetrim
 {
-	[Activity]
+	[Activity(ScreenOrientation = ScreenOrientation.Portrait)]
 	public class GameSingleActivity : GameActivity
 	{
 		//--------------------------------------------------------------

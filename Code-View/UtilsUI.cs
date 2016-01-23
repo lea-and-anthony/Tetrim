@@ -4,10 +4,9 @@ using Android.App;
 using Android.Bluetooth;
 using Android.Content;
 using Android.Graphics;
+using Android.Util;
 using Android.Views;
 using Android.Widget;
-using Android.Runtime;
-using Android.Util;
 
 namespace Tetrim
 {

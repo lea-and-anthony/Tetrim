@@ -1,7 +1,6 @@
-﻿using System;
+﻿using Java.Lang;
 
 using Android.Bluetooth;
-using Java.Lang;
 using Android.Util;
 
 namespace Tetrim
