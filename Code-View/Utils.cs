@@ -120,6 +120,7 @@ namespace Tetrim
 		public static void SetDefaultFont()
 		{
 			replaceFont("DEFAULT", UtilsUI.TextFont);
+			replaceFont("DEFAULT_BOLD", UtilsUI.TextFont);
 			replaceFont("MONOSPACE", UtilsUI.TextFont);
 			replaceFont("SERIF", UtilsUI.TextFont);
 			replaceFont("SANS_SERIF", UtilsUI.TextFont);
@@ -140,6 +141,7 @@ namespace Tetrim
 				Field staticField = newTypeface.Class.GetDeclaredField(staticTypefaceFieldName);
 				staticField.Accessible = true;
 				staticField.Set(null, newTypeface);
+				staticField.Accessible = false;
 			}
 			catch (Java.Lang.NoSuchFieldException e)
 			{

@@ -12,7 +12,7 @@ using Android.Views;
 
 namespace Tetrim
 {
-	[Activity(Label = "Tetrim", MainLauncher = true, Icon = "@drawable/icon", Theme = "@android:style/Theme.NoTitleBar.Fullscreen", ScreenOrientation = Android.Content.PM.ScreenOrientation.Portrait)]
+	[Activity(MainLauncher = true)]
 	public class MenuActivity : Activity, ViewTreeObserver.IOnGlobalLayoutListener
 	{
 		//--------------------------------------------------------------
@@ -75,7 +75,6 @@ namespace Tetrim
 			singlePlayerButton.Click += delegate {
 				startGame(this, Utils.RequestCode.RequestGameOnePlayer);
 			};
-
 			// Two players button
 			ButtonStroked twoPlayersButton = FindViewById<ButtonStroked>(Resource.Id.twoPlayersButton);
 			UtilsUI.SetMenuButton(twoPlayersButton, TetrisColor.Cyan);

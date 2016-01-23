@@ -6,7 +6,7 @@ using Android.Util;
 
 namespace Tetrim
 {
-	[Activity(Label = "@string/reconnect_activity", Icon = "@drawable/icon", Theme = "@android:style/Theme.Dialog", ScreenOrientation = Android.Content.PM.ScreenOrientation.Portrait)]
+	[Activity(Theme = "@style/Theme.TetrimDialogTheme")]
 	public class ReconnectActivity : Activity
 	{
 		//--------------------------------------------------------------

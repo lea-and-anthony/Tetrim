@@ -10,7 +10,7 @@ using Android.Widget;
 
 namespace Tetrim
 {
-	[Activity(Label = "", Icon = "@drawable/icon", Theme = "@android:style/Theme.Dialog", ScreenOrientation = Android.Content.PM.ScreenOrientation.Portrait)]		
+	[Activity(Theme = "@style/Theme.TetrimDialogTheme")]		
 	public class DialogActivity : Activity, ViewTreeObserver.IOnGlobalLayoutListener
 	{
 		//--------------------------------------------------------------
@@ -78,18 +78,18 @@ namespace Tetrim
 			case DialogBuilder.DialogContentType.TextView:
 				if(!String.IsNullOrEmpty(Builder.Message))
 				{
-					_message = new TextView(this.BaseContext);
+					_message = new TextView(this);
 					_message.SetTypeface(niceFont, TypefaceStyle.Normal);
 					_message.Text = Builder.Message;
-					_message.TextSize = Utils.GetPixelsFromDP(this.BaseContext, 7);
+					_message.TextSize = Utils.GetPixelsFromDP(this, 7);
 					_content.AddView(_message, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MatchParent, LinearLayout.LayoutParams.WrapContent));
 				}
 				break;
 			case DialogBuilder.DialogContentType.EditText:
-				_field = new EditText(this.BaseContext);
+				_field = new EditText(this);
 				_field.SetTypeface(niceFont, TypefaceStyle.Normal);
 				_field.Hint = Builder.Message;
-				_field.TextSize = Utils.GetPixelsFromDP(this.BaseContext, 7);
+				_field.TextSize = Utils.GetPixelsFromDP(this, 7);
 				_content.AddView(_field, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MatchParent, LinearLayout.LayoutParams.WrapContent));
 				break;
 			case DialogBuilder.DialogContentType.None:
@@ -277,7 +277,7 @@ namespace Tetrim
 
 		public static Intent CreateBasicDialog(Activity activity, DialogBuilder.DialogRequestCode request, DialogBuilder.DialogContentType type, string title, string message, string posText, string negText, EventHandler posAction, EventHandler negAction)
 		{
-			DialogBuilder builder = new DialogBuilder(activity.BaseContext);
+			DialogBuilder builder = new DialogBuilder(activity);
 			builder.RequestCode = request;
 			builder.ContentType = type;
 			if(!String.IsNullOrEmpty(title))
@@ -300,7 +300,7 @@ namespace Tetrim
 
 		public static Intent CreateCustomDialog(Activity activity, View[] content, string posText, string negText, EventHandler posAction, EventHandler negAction)
 		{
-			DialogBuilder builder = new DialogBuilder(activity.BaseContext);
+			DialogBuilder builder = new DialogBuilder(activity);
 			builder.ContentType = DialogBuilder.DialogContentType.None;
 			builder.RequestCode = DialogBuilder.DialogRequestCode.PosOrNeg;
 			builder.Content.AddRange(content);

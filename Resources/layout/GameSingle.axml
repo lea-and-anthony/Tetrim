@@ -30,15 +30,25 @@
             android:id="@+id/column1"
             android:layout_weight="50"
             android:weightSum="100">
-            <TextView
-                android:text="Player 1"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:id="@+id/player1name"
-                android:gravity="center"
-                android:textColor="#ff4db6ac"
+            <LinearLayout
+                android:orientation="horizontal"
+                android:minWidth="25px"
+                android:minHeight="25px"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="34" />
+                android:id="@+id/player1nameLayout"
+                android:layout_weight="34"
+                android:paddingRight="5dp"
+                android:paddingLeft="5dp">
+                <Tetrim.AutoResizeTextView
+                    android:text="Player 1"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:id="@+id/player1name"
+                    android:gravity="center"
+                    android:textColor="#ff4db6ac"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+            </LinearLayout>
             <LinearLayout
                 android:orientation="vertical"
                 android:minWidth="25px"
@@ -48,9 +58,11 @@
                 android:layout_height="0dp"
                 android:layout_weight="66"
                 android:paddingLeft="5dp"
-                android:paddingRight="5dp">
+                android:paddingRight="5dp"
+                android:paddingBottom="2dp"
+                android:paddingTop="2dp">
                 <TextView
-                    android:text="Next piece"
+                    android:text="NEXT PIECE"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:id="@+id/piece1"
                     android:gravity="center"
@@ -58,19 +70,13 @@
                     android:background="#ff4db6ac"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="2dp"
-                    android:layout_marginTop="2dp"
-                    android:layout_marginRight="2dp"
                     android:paddingRight="2dp"
                     android:paddingLeft="2dp" />
                 <Tetrim.NextPieceView
                     android:id="@+id/player1piece"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="#ff4db6ac"
-                    android:layout_marginLeft="2dp"
-                    android:layout_marginRight="2dp"
-                    android:layout_marginBottom="2dp" />
+                    android:background="#ff4db6ac" />
             </LinearLayout>
         </LinearLayout>
         <LinearLayout
@@ -89,9 +95,11 @@
                 android:layout_height="0dp"
                 android:layout_weight="50"
                 android:paddingRight="5dp"
-                android:paddingLeft="5dp">
+                android:paddingLeft="5dp"
+                android:paddingBottom="2dp"
+                android:paddingTop="2dp">
                 <TextView
-                    android:text="Score"
+                    android:text="SCORE"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:id="@+id/score1"
                     android:gravity="center"
@@ -99,9 +107,6 @@
                     android:layout_height="wrap_content"
                     android:textColor="#ff212121"
                     android:background="#ff4db6ac"
-                    android:layout_marginLeft="2dp"
-                    android:layout_marginTop="2dp"
-                    android:layout_marginRight="2dp"
                     android:paddingRight="2dp"
                     android:paddingLeft="2dp" />
                 <TextView
@@ -112,10 +117,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="#ff4db6ac"
-                    android:textColor="#ff212121"
-                    android:layout_marginLeft="2dp"
-                    android:layout_marginRight="2dp"
-                    android:layout_marginBottom="2dp" />
+                    android:textColor="#ff212121" />
             </LinearLayout>
             <LinearLayout
                 android:orientation="horizontal"
@@ -134,9 +136,11 @@
                     android:id="@+id/player1rowsLayout"
                     android:layout_weight="50"
                     android:paddingRight="5dp"
-                    android:paddingLeft="5dp">
+                    android:paddingLeft="5dp"
+                    android:paddingBottom="2dp"
+                    android:paddingTop="2dp">
                     <TextView
-                        android:text="Rows"
+                        android:text="ROWS"
                         android:textAppearance="?android:attr/textAppearanceSmall"
                         android:id="@+id/rows1"
                         android:gravity="left"
@@ -144,9 +148,6 @@
                         android:layout_height="wrap_content"
                         android:textColor="#ff212121"
                         android:background="#ff4db6ac"
-                        android:layout_marginLeft="2dp"
-                        android:layout_marginTop="2dp"
-                        android:layout_marginRight="2dp"
                         android:paddingRight="2dp"
                         android:paddingLeft="2dp" />
                     <TextView
@@ -157,10 +158,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:background="#ff4db6ac"
-                        android:textColor="#ff212121"
-                        android:layout_marginLeft="2dp"
-                        android:layout_marginRight="2dp"
-                        android:layout_marginBottom="2dp" />
+                        android:textColor="#ff212121" />
                 </LinearLayout>
                 <LinearLayout
                     android:orientation="vertical"
@@ -171,9 +169,11 @@
                     android:id="@+id/player1levelLayout"
                     android:layout_weight="50"
                     android:paddingLeft="5dp"
-                    android:paddingRight="5dp">
+                    android:paddingRight="5dp"
+                    android:paddingTop="2dp"
+                    android:paddingBottom="2dp">
                     <TextView
-                        android:text="Level"
+                        android:text="LEVEL"
                         android:textAppearance="?android:attr/textAppearanceSmall"
                         android:id="@+id/level1"
                         android:gravity="left"
@@ -181,9 +181,6 @@
                         android:layout_height="wrap_content"
                         android:background="#ff4db6ac"
                         android:textColor="#ff212121"
-                        android:layout_marginLeft="2dp"
-                        android:layout_marginTop="2dp"
-                        android:layout_marginRight="2dp"
                         android:paddingRight="2dp"
                         android:paddingLeft="2dp" />
                     <TextView
@@ -194,10 +191,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:background="#ff4db6ac"
-                        android:textColor="#ff212121"
-                        android:layout_marginLeft="2dp"
-                        android:layout_marginRight="2dp"
-                        android:layout_marginBottom="2dp" />
+                        android:textColor="#ff212121" />
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>

@@ -11,7 +11,7 @@ using Android.Bluetooth;
 
 namespace Tetrim
 {
-	[Activity(Label = "Tetrim", Icon = "@drawable/icon", Theme = "@android:style/Theme.NoTitleBar.Fullscreen", ScreenOrientation = Android.Content.PM.ScreenOrientation.Portrait)]		
+	[Activity]		
 	public class SettingsActivity : Activity
 	{
 		//--------------------------------------------------------------
@@ -36,8 +36,6 @@ namespace Tetrim
 			#if DEBUG
 			Log.Debug(Tag, "onCreate()");
 			#endif
-
-			UtilsUI.SetTextFont(FindViewById<TextView>(Resource.Id.settingsTitle));
 
 			ButtonStroked backButton = FindViewById<ButtonStroked>(Resource.Id.backButton);
 			UtilsUI.SetIconButtonWithHeight(backButton, TetrisColor.Orange);

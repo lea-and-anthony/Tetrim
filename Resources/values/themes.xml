@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+  <style name="Theme.TetrimTheme" parent="android:Theme.NoTitleBar.Fullscreen">
+    <item name="android:typeface">serif</item>
+  </style>
+  <style name="Theme.TetrimDialogTheme" parent="android:Theme.Dialog">
+    <item name="android:typeface">serif</item>
+  </style>
+</resources>
+

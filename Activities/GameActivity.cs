@@ -106,7 +106,7 @@ namespace Tetrim
 			}
 
 			// Creation of the model
-			_player1 = new Player();
+			_player1 = new Player(User.Instance.UserName);
 
 			// And the view
 			_player1View = new PlayerView(_player1);

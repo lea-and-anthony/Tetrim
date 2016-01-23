@@ -16,7 +16,7 @@ using System.Collections.Generic;
 
 namespace Tetrim
 {
-	[Activity(Label = "Tetrim", Icon = "@drawable/icon", Theme = "@android:style/Theme.NoTitleBar.Fullscreen", ScreenOrientation = Android.Content.PM.ScreenOrientation.Portrait)]		
+	[Activity]		
 	public class BluetoothConnectionActivity : Activity, ViewTreeObserver.IOnGlobalLayoutListener
 	{
 		//--------------------------------------------------------------
@@ -373,7 +373,6 @@ namespace Tetrim
 			// We verify that the two player have the same version of the application
 			if(message[1] == Constants.NumVersion)
 			{
-
 				// The 2 players have the same version, we can launch the game if we are ready
 				if(_state == Network.StartState.WAITING_FOR_OPPONENT)
 				{
@@ -539,9 +538,9 @@ namespace Tetrim
 			Log.Debug(Tag, "doDiscovery()");
 			#endif
 
-			_progressBar = new ProgressBar(BaseContext);
+			_progressBar = new ProgressBar(this);
 			_progressBar.Indeterminate = true;
-			int padding = Utils.GetPixelsFromDP(BaseContext, 15);
+			int padding = Utils.GetPixelsFromDP(this, 15);
 			_progressBar.SetPadding(padding, padding, padding, padding);
 			_newDevicesLayout.AddView(_progressBar, LinearLayout.LayoutParams.MatchParent, (int)(_devicesLayout.Height*1f/NbDevices));
 
