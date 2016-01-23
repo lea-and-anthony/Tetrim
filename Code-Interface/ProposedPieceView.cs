@@ -97,8 +97,7 @@ namespace Tetrim
 			if(_blockSize == 0)
 			{
 				// Calculate the size of the block, Space for each piece set to 5 blocks (except for the last one)
-				_blockSize = Math.Min(Math.Abs(canvas.ClipBounds.Right - canvas.ClipBounds.Left)/(_nbPieceByLine*5),
-					Math.Abs(canvas.ClipBounds.Top - canvas.ClipBounds.Bottom)/(Constants.NbLinePropPiece*5));
+				_blockSize = Math.Min(Width/(_nbPieceByLine*5), Height/(Constants.NbLinePropPiece*5));
 
 				// Create the blocks images with the right size
 				foreach(TetrisColor color in Enum.GetValues(typeof(TetrisColor)))
@@ -129,10 +128,9 @@ namespace Tetrim
 					_proposedPieces[i].GetDrawnSize(_blockSize, ref xSize, ref ySize);
 
 					// Draw each piece
-					int supposedHeight = Math.Abs(canvas.ClipBounds.Bottom - canvas.ClipBounds.Top);
 					_proposedPieces[i].Draw(canvas, _blockSize, _blockImages, 
 											(i % _nbPieceByLine) * _blockSize * 5 + (_blockSize * 5 - xSize) / 2, 
-											supposedHeight - ((i / _nbPieceByLine + 1) * _blockSize * 5 - (_blockSize * 5 - ySize) / 2), 
+											Height - ((i / _nbPieceByLine + 1) * _blockSize * 5 - (_blockSize * 5 - ySize) / 2), 
 											false);
 				}
 			}
