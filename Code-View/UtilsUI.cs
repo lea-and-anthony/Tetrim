@@ -30,7 +30,6 @@ namespace Tetrim
 
 		public static void SetMenuButton(ButtonStroked button, TetrisColor color)
 		{
-			button.SetTypeface(UtilsUI.TextFont, TypefaceStyle.Normal);
 			button.StrokeBorderWidth = 15;
 			button.StrokeTextWidth = 7;
 			button.RadiusIn = 10;
@@ -94,7 +93,7 @@ namespace Tetrim
 				button.StrokeColor = Utils.getAndroidDarkColor(color);
 				button.FillColor = Utils.getAndroidColor(color);
 				button.Text = text;
-				button.TextSize = Utils.GetPixelsFromDP(activity, 20);
+				button.SetTextSize(ComplexUnitType.Dip, 20);
 				button.Click += delegate {
 					DialogBuilder.ReturnText = (DialogActivity.Builder.RequestCode == DialogBuilder.DialogRequestCode.Text ) ? field.Text : null;
 				};

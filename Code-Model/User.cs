@@ -14,13 +14,11 @@ namespace Tetrim
 		private const string HighScoreKey = "HighScore";
 		private const char Separator = ',';
 		private const int MacAddressLength = 17;
-		// TODO : store name
 		private static ISharedPreferences _sharedPreferences;
 
 		private static User _instance = null;
 		private string _userName;
 		private int _highScore;
-		//private List<string> _friends = new List<string>();
 		private Dictionary<string, string> _friends = new Dictionary<string, string>();
 		private bool _wasUserStored = false;
 
@@ -74,10 +72,6 @@ namespace Tetrim
 			_userName = userName;
 			_highScore = highScore;
 			_friends = new Dictionary<string, string>(friends);
-			/*foreach(string friendKey in friends.Keys)
-			{
-				_friends.Add(friendKey, friends[friendKey]);
-			}*/
 		}
 
 		public void AddFriend(string macAddress, string name)

@@ -13,16 +13,16 @@
         android:layout_height="0dp"
         android:id="@+id/linearLayout3"
         android:layout_weight="50">
-        <TextView
+        <Tetrim.AutoResizeTextView
             android:text="@string/welcome"
-            android:textAppearance="?android:attr/textAppearanceLarge"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/userNameText"
             android:layout_marginLeft="5dp"
             android:layout_marginTop="5dp"
             android:layout_marginRight="5dp"
-            android:layout_marginBottom="5dp" />
+            android:layout_marginBottom="5dp"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
         <LinearLayout
             android:orientation="vertical"
             android:minWidth="25px"
