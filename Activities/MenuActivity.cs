@@ -1,7 +1,6 @@
 ﻿using Android.App;
 using Android.Content;
 using Android.Content.PM;
-using Android.Graphics;
 using Android.OS;
 using Android.Util;
 using Android.Views;
@@ -9,7 +8,7 @@ using Android.Widget;
 
 namespace Tetrim
 {
-	[Activity(MainLauncher = true, ScreenOrientation = ScreenOrientation.Portrait)]
+	[Activity(ScreenOrientation = ScreenOrientation.Portrait)]
 	public class MenuActivity : Activity, ViewTreeObserver.IOnGlobalLayoutListener
 	{
 		//--------------------------------------------------------------
@@ -36,23 +35,6 @@ namespace Tetrim
 			Log.Debug(Tag, "onCreate()");
 			#endif
 
-			ISharedPreferences sharedPreferencesUser = ApplicationContext.GetSharedPreferences(User.UserFileNameKey, FileCreationMode.Private);
-			User.GiveContext(ref sharedPreferencesUser);
-
-			// Retrieve the user's name
-			if(!User.Instance.IsUserStored)
-			{
-				Intent intent = UtilsDialog.CreateUserNameDialogNoCancel(this);
-				StartActivity(intent);
-			}
-
-			// Retrieve the fonts
-			UtilsUI.TextFont = Typeface.CreateFromAsset(Assets,"Foo.ttf");
-			UtilsUI.TitleFont = Typeface.CreateFromAsset(Assets,"Blox.ttf");
-			UtilsUI.ArrowFont = Typeface.CreateFromAsset(Assets,"Arrows.otf");
-			Utils.SetDefaultFont();
-			// TODO : test if it works
-
 			// Set the title
 			UtilsUI.SetTitleTextView(FindViewById<TextView>(Resource.Id.titleT), TetrisColor.Red);
 			UtilsUI.SetTitleTextView(FindViewById<TextView>(Resource.Id.titleE), TetrisColor.Orange);
@@ -63,7 +45,7 @@ namespace Tetrim
 
 			// Set the user name
 			_userNameText = FindViewById<TextView>(Resource.Id.userNameText);
-			_userNameText.SetTypeface(UtilsUI.TextFont, TypefaceStyle.Normal);
+			_userNameText.SetTextSize(ComplexUnitType.Dip, 40);
 			_userNameText.Text = Resources.GetString(Resource.String.welcomeUser, User.Instance.UserName);
 
 			// Single player button
@@ -72,6 +54,7 @@ namespace Tetrim
 			singlePlayerButton.Click += delegate {
 				startGame(this, Utils.RequestCode.RequestGameOnePlayer);
 			};
+
 			// Two players button
 			ButtonStroked twoPlayersButton = FindViewById<ButtonStroked>(Resource.Id.twoPlayersButton);
 			UtilsUI.SetMenuButton(twoPlayersButton, TetrisColor.Cyan);
@@ -101,6 +84,13 @@ namespace Tetrim
 			if(menuContainer.ViewTreeObserver.IsAlive)
 			{
 				menuContainer.ViewTreeObserver.AddOnGlobalLayoutListener(this);
+			}
+
+			// Retrieve the user's name
+			if(!User.Instance.IsUserStored)
+			{
+				Intent intent = UtilsDialog.CreateUserNameDialogNoCancel(this);
+				StartActivity(intent);
 			}
 		}
 

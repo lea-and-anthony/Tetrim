@@ -75,17 +75,15 @@ namespace Tetrim
 
 			int targetWidth = textWidth - PaddingLeft - PaddingRight;
 			_textPaint.Set(this.Paint);
-			_textPaint.SetTypeface(font);
-
-			if(font == UtilsUI.TextFont)
-				_textPaint.SetTypeface(UtilsUI.TextFont);
 
 			while ((_preferredTextSize - MinTextSize) > Threshold)
 			{
 				float size = (_preferredTextSize + MinTextSize) / 2f;
 				_textPaint.TextSize = size;
 
-				if (_textPaint.MeasureText(text) >= targetWidth)
+				float measuredSize = _textPaint.MeasureText(text);
+
+				if (measuredSize >= targetWidth)
 				{
 					_preferredTextSize = size; // Too big
 				}

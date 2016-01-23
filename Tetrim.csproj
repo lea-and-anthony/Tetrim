@@ -79,6 +79,7 @@
     <Compile Include="Code-View\PieceView.cs" />
     <Compile Include="Code-Interface\NextPieceView.cs" />
     <Compile Include="Code-Interface\ProposedPieceView.cs" />
+    <Compile Include="Activities\MainActivity.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />

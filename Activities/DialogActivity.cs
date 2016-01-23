@@ -59,11 +59,8 @@ namespace Tetrim
 				_root.ViewTreeObserver.AddOnGlobalLayoutListener(this);
 			}
 
-			Typeface niceFont = Typeface.CreateFromAsset(Assets,"Foo.ttf");
-
 			_title = FindViewById<TextView>(Resource.Id.alertTitle);
 			_title.SetTextColor(Utils.getAndroidLightColor(TetrisColor.Blue));
-			_title.SetTypeface(niceFont, TypefaceStyle.Normal);
 			if(String.IsNullOrEmpty(Builder.Title))
 			{
 				_title.Visibility = ViewStates.Gone;
@@ -80,17 +77,15 @@ namespace Tetrim
 				if(!String.IsNullOrEmpty(Builder.Message))
 				{
 					_message = new TextView(this);
-					_message.SetTypeface(niceFont, TypefaceStyle.Normal);
 					_message.Text = Builder.Message;
-					_message.TextSize = Utils.GetPixelsFromDP(this, 7);
+					_message.SetTextSize(Android.Util.ComplexUnitType.Dip, 20);
 					_content.AddView(_message, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MatchParent, LinearLayout.LayoutParams.WrapContent));
 				}
 				break;
 			case DialogBuilder.DialogContentType.EditText:
 				_field = new EditText(this);
-				_field.SetTypeface(niceFont, TypefaceStyle.Normal);
 				_field.Hint = Builder.Message;
-				_field.TextSize = Utils.GetPixelsFromDP(this, 7);
+				_field.SetTextSize(Android.Util.ComplexUnitType.Dip, 20);
 				_content.AddView(_field, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MatchParent, LinearLayout.LayoutParams.WrapContent));
 				break;
 			case DialogBuilder.DialogContentType.None:

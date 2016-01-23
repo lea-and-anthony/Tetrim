@@ -75,7 +75,6 @@ namespace Tetrim
 
 			Typeface niceFont = Typeface.CreateFromAsset(Assets,"Foo.ttf");
 			TextView selectDeviceText = FindViewById<TextView>(Resource.Id.selectDeviceText);
-			selectDeviceText.SetTypeface(niceFont, TypefaceStyle.Normal);
 
 			// Initialize the buttons
 			UtilsUI.SetDeviceMenuButton(this, ref _friendsDevicesButton, Resource.Id.friendsDevices, FriendsDeviceColor);
