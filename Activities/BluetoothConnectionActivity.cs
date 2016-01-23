@@ -162,8 +162,16 @@ namespace Tetrim
 			#endif
 			if(requestCode == (int) Utils.RequestCode.RequestGameTwoPlayer)
 			{
-				// We end this activity after the game so we come back on the menu screen
-				Finish();
+				if(resultCode == Result.FirstUser)
+				{
+					// We want to restart a game
+					MenuActivity.startGame(this, Utils.RequestCode.RequestGameTwoPlayer); // We launch the game (change view and everything)
+				}
+				else
+				{
+					// We end this activity after the game so we come back on the menu screen
+					Finish();
+				}
 			}
 			// The request code is tested in ResultBluetoothActivation
 			if(Network.Instance.ResultBluetoothActivation(requestCode, resultCode, this))
@@ -267,7 +275,6 @@ namespace Tetrim
 				User.Instance.AddFriend(Network.Instance.CommunicationWay._deviceAddress, _opponentName);
 				MenuActivity.startGame(this, Utils.RequestCode.RequestGameTwoPlayer);// We launch the game (change view and everything)
 			}
-				
 
 			return 0;
 		}

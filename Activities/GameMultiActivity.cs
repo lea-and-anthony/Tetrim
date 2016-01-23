@@ -26,6 +26,14 @@ namespace Tetrim
 			LostConnection
 		}
 
+		private enum GameState
+		{
+			Play,
+			GameOver,
+			WaitingForRestart,
+			OpponentReadyForRestart,
+		}
+
 		//--------------------------------------------------------------
 		// ATTRIBUTES
 		//--------------------------------------------------------------
@@ -34,8 +42,12 @@ namespace Tetrim
 
 		private StopOrigin _originPause = StopOrigin.None;
 		private bool endMessageSent = false;
-		private bool _gameOver = false;
+		private GameState _gameState;
 		private readonly object _locker = new object ();
+
+		// for the restart
+		private Network.StartState _restartState = Network.StartState.NONE;
+		private readonly object _stateLocker = new object (); // locker on _restartState because this variable can be modified in several threads
 
 		//--------------------------------------------------------------
 		// EVENT CATCHING METHODES
@@ -43,6 +55,7 @@ namespace Tetrim
 		protected override void OnCreate(Bundle bundle)
 		{
 			base.OnCreate(bundle);
+			SetResult(Result.Ok);
 
 			if(!Network.Instance.Connected)
 			{
@@ -84,19 +97,27 @@ namespace Tetrim
 			Network.Instance.ScoreMessage += OnReceiveScoreMessage;
 			Network.Instance.EndMessage += OnReceiveEndMessage;
 			Network.Instance.ConnectionLostEvent += OnLostConnection;
+			Network.Instance.NewGameMessage += OnReceiveNewGame;
+			Network.Instance.WriteEvent += WriteMessageEventReceived;
 
+			_gameState = GameState.Play;
 			startGame();
 		}
 
 		protected override void OnDestroy ()
 		{
+			if(DialogActivity.CloseAllDialog != null)
+			{
+				DialogActivity.CloseAllDialog.Invoke();
+			}
+
+			Network.Instance.EraseAllEvent();
+
 			// If we are still playing, we send the end message to the opponent
 			if (Network.Instance.Connected && !endMessageSent)
 			{
 				Network.Instance.CommunicationWay.Write(_player1.GetEndMessage());
 			}
-
-			Network.Instance.EraseAllEvent();
 
 			base.OnDestroy();
 		}
@@ -117,6 +138,7 @@ namespace Tetrim
 				else
 				{
 					// We didn't reconnect to the other device so we end the party
+					SetResult(Result.Ok);
 					Finish();
 				}
 			}
@@ -141,9 +163,9 @@ namespace Tetrim
 				lock (_locker)
 				{
 					_gameTimer.Stop();
-					if(!_gameOver)
+					if(_gameState == GameState.Play)
 					{
-						_gameOver = true;
+						_gameState = GameState.GameOver;
 						//Utils.PopUpEndEvent += endGame;
 						Intent intent = UtilsDialog.CreateGameOverDialogMulti(this, false);
 						StartActivity(intent);
@@ -156,6 +178,34 @@ namespace Tetrim
 
 			// Display of the current model
 			FindViewById(Resource.Id.PlayerGridView).PostInvalidate();
+		}
+
+		public int WriteMessageEventReceived(byte[] writeBuf)
+		{
+			if(writeBuf[0] == Constants.IdMessageResume)
+			{
+				_gameTimer.AutoReset = true;
+				_gameTimer.Interval = getTimerLapse();
+				_gameTimer.Start();
+
+				_originPause = StopOrigin.None;
+			}
+			else if(writeBuf[0] == Constants.IdMessageNewGame)
+			{
+				lock (_stateLocker)
+				{
+					if(_restartState == Network.StartState.OPPONENT_READY)
+					{
+						SetResult(Result.FirstUser);
+						Finish();
+					}
+					else if(_restartState == Network.StartState.NONE)
+					{
+						_restartState = Network.StartState.WAITING_FOR_OPPONENT;
+					}
+				}
+			}
+			return 0;
 		}
 
 		private int OnReceiveScoreMessage(byte[] message)
@@ -175,9 +225,14 @@ namespace Tetrim
 				if(_gameTimer != null)
 					_gameTimer.Stop();
 				
-				if(!_gameOver)
+				if(_gameState == GameState.Play)
 				{
-					_gameOver = true;
+					_gameState = GameState.GameOver;
+
+					if(DialogActivity.CloseAllDialog != null)
+					{
+						DialogActivity.CloseAllDialog.Invoke();
+					}
 					Intent intent = UtilsDialog.CreateGameOverDialogMulti(this, true);
 					StartActivity(intent);
 				}
@@ -191,7 +246,7 @@ namespace Tetrim
 			Log.Debug(Tag, "OnLostConnection");
 			#endif
 
-			if(!_gameOver)
+			if(_gameState == GameState.Play)
 			{
 				// If we lost the connection, we stop the game display a pop-up and try to reconnect
 				_gameTimer.Stop();
@@ -201,7 +256,37 @@ namespace Tetrim
 				var serverIntent = new Intent(this, typeof(ReconnectActivity));
 				StartActivityForResult(serverIntent,(int) Utils.RequestCode.RequestReconnect);
 			}
+			if(_gameState == GameState.GameOver)
+			{
+				// TODO : close current dialog and display a pop-up
+				// telling that we can't restart a game
+			}
+			else
+			{
+				// We lost the connection while we were asking to restart a game
+				// So, the opponent doesn't want to play and we notify the player
+				// TODO: pop-up
+				SetResult(Result.Ok);
+				Finish();
+			}
 
+			return 0;
+		}
+
+		private int OnReceiveNewGame()
+		{
+			lock (_stateLocker)
+			{
+				if(_restartState != Network.StartState.WAITING_FOR_OPPONENT)
+				{
+					_restartState = Network.StartState.OPPONENT_READY;
+				}
+				else
+				{
+					SetResult(Result.FirstUser);
+					Finish();
+				}
+			}
 			return 0;
 		}
 
@@ -214,6 +299,20 @@ namespace Tetrim
 			if(_originPause == StopOrigin.MyPause)
 			{
 				resumeGame(true);
+			}
+		}
+
+		public override void NewGame()
+		{
+			byte[] message = {Constants.IdMessageNewGame};
+			// We notify the opponent that we are ready for a new game
+			Network.Instance.CommunicationWay.Write(message);
+
+			if(_restartState == Network.StartState.NONE)
+			{
+				Intent dialog = DialogActivity.CreateYesNoDialog(this, -1, Resource.String.waiting_for_opponent,
+					Resource.String.cancel, -1, delegate{SetResult(Result.Ok); Finish();}, null);
+				StartActivity(dialog);
 			}
 		}
 
@@ -300,6 +399,7 @@ namespace Tetrim
 				Network.Instance.CommunicationWay.Write(message);
 			}
 
+			//TODO display a pop-up different when requestFromUser is false
 			Intent intent = UtilsDialog.CreatePauseGameDialog(this);
 			StartActivity(intent);
 
@@ -377,12 +477,21 @@ namespace Tetrim
 				byte[] message = {Constants.IdMessageResume};
 				Network.Instance.CommunicationWay.Write(message);
 			}
+			else
+			{
+				// Restart the timer if it is the opponeny who send the message to restart
+				// Else we are going to wait that he receives the message
+				if(DialogActivity.CloseAllDialog != null)
+				{
+					DialogActivity.CloseAllDialog.Invoke();
+				}
 
-			_gameTimer.AutoReset = true;
-			_gameTimer.Interval = getTimerLapse();
-			_gameTimer.Start();
+				_gameTimer.AutoReset = true;
+				_gameTimer.Interval = getTimerLapse();
+				_gameTimer.Start();
 
-			_originPause = StopOrigin.None;
+				_originPause = StopOrigin.None;
+			}
 
 			return 0;
 		}

@@ -43,7 +43,7 @@ namespace Tetrim
 				delegate {User.Instance.SetName(DialogBuilder.ReturnText);}, null);
 		}
 
-		public static Intent CreateGameOverDialogSingle(Activity activity, int score)
+		public static Intent CreateGameOverDialogSingle(GameActivity activity, int score)
 		{
 			// Title saying GAME OVER
 			TextView titleText = new TextView(activity.BaseContext);
@@ -83,10 +83,10 @@ namespace Tetrim
 			}
 
 			return DialogActivity.CreateCustomDialog(activity, new[]{titleText, scoreText, highScoreText}, Resource.String.playAgain, Resource.String.menu,
-				delegate {MenuActivity.startGame(activity, Utils.RequestCode.RequestGameOnePlayer); activity.Finish();}, delegate {activity.Finish();});
+				delegate {activity.NewGame();}, delegate {activity.Finish();});
 		}
 
-		public static Intent CreateGameOverDialogMulti(Activity activity, bool hasWon)
+		public static Intent CreateGameOverDialogMulti(GameActivity activity, bool hasWon)
 		{
 			// Create the content
 			TextView titleText = new TextView(activity.BaseContext);
@@ -103,7 +103,7 @@ namespace Tetrim
 			text.SetTextColor(Utils.getAndroidColor(hasWon ? TetrisColor.Green : TetrisColor.Red));
 
 			return DialogActivity.CreateCustomDialog(activity, new[]{titleText, text}, Resource.String.playAgain, Resource.String.menu,
-				delegate {MenuActivity.startGame(activity, Utils.RequestCode.RequestGameTwoPlayer); activity.Finish();}, delegate {activity.Finish();});
+				delegate {activity.NewGame();}, delegate {activity.Finish();});
    		}
 	}
 }

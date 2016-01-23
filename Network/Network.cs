@@ -52,7 +52,6 @@ namespace Tetrim
 		public event StandardDelegate StateConnectedEvent;
 		public event StandardDelegate StateNoneEvent;
 		public event StandardDelegate StateListenEvent;
-		public event DeviceNameDelegate DeviceNameEvent;
 		public event BufferDelegate ConnectionLostEvent;
 
 		public event GameMessageDelegate UsualGameMessage;
@@ -64,6 +63,8 @@ namespace Tetrim
 		public event GameMessageDelegate ScoreMessage;
 		public event SimpleMessageDelegate PauseMessage;
 		public event SimpleMessageDelegate ResumeMessage;
+		public event DeviceNameDelegate DeviceNameEvent;
+		public event StandardDelegate NewGameMessage;
 
 		//--------------------------------------------------------------
 		// CONSTRUCTORS
@@ -285,6 +286,12 @@ namespace Tetrim
 			case Constants.IdMessageName:
 				NotifyDeviceName(message);
 				break;
+			case Constants.IdMessageNewGame:
+				if(NewGameMessage != null)
+				{
+					NewGameMessage.Invoke();
+				}
+				break;
 			}
 		}
 
@@ -307,6 +314,7 @@ namespace Tetrim
 			PauseMessage = null;
 			ResumeMessage = null;
 			RestartMessage = null;
+			NewGameMessage = null;
 		}
 
 		public void Stop()

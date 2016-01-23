@@ -47,6 +47,7 @@ namespace Tetrim
 
 		private int _blockSize = 0; // Size of the blocks in pixels according to the screen resolution
 		private Dictionary<TetrisColor, Bitmap> _blockImages = new Dictionary<TetrisColor, Bitmap>(); // Images of the blocks
+		private bool _redraw = true;
 		private Bitmap _bitmapBuffer = null;// Buffer to render the view faster
 
 		private Mutex _mutexView = null; // To Prevent the modification of the view while it is displayed
@@ -86,7 +87,7 @@ namespace Tetrim
 			// Before drawing any block, we need to set the mutex so we don't change the view while it is displayed
 			_mutexView.WaitOne();
 
-			if(_bitmapBuffer == null)
+			if(_redraw)
 				DrawBitmap();
 
 			if(canvas.ClipBounds.Left != 0 || canvas.ClipBounds.Top != 0)
@@ -127,10 +128,7 @@ namespace Tetrim
 			}
 
 			// We need to redraw the view
-			if(_bitmapBuffer != null)
-				_bitmapBuffer.Dispose();
-			
-			_bitmapBuffer = null;
+			_redraw = true;
 
 			// Now we can display the view
 			_mutexView.ReleaseMutex();
@@ -223,6 +221,8 @@ namespace Tetrim
 					_mapView[i,j].Draw(bitmapCanvas, _blockSize, _blockImages, StrokeWidthBorder, StrokeWidthBorder);
 				}
 			}
+
+			_redraw = false;
 		}
 	}
 }

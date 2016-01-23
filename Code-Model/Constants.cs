@@ -41,7 +41,8 @@ namespace Tetrim
 		public const byte IdMessageEnd = 8;
 		public const byte IdMessageScore = 9;
 		public const byte IdMessageName = 10;
-		public const byte MaxIdMessage = 11;
+		public const byte IdMessageNewGame = 11;
+		public const byte MaxIdMessage = 12;
 
 		// All the messages begin by the Id so size += 1
 		private const uint sizeMessagePiece = 2+1+1 + 1;
@@ -55,7 +56,8 @@ namespace Tetrim
 											1 + 2,
 											1 + sizeof(int) + 2*sizeof(uint), // score, level and nb removed row
 											1 + sizeof(int) + 2*sizeof(uint),
-											1 + MaxLengthName*sizeof(char)};
+											1 + MaxLengthName*sizeof(char),
+											1};
 		public const uint SizeMaxBluetoothMessage = 512;
 
 		public const byte NumVersion = 2;

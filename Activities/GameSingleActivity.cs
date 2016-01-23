@@ -56,6 +56,12 @@ namespace Tetrim
 			_gameTimer.Interval = getTimerLapse();
 			_gameTimer.Start();
 		}
+			
+		public override void NewGame()
+		{
+			MenuActivity.startGame(this, Utils.RequestCode.RequestGameOnePlayer);
+			Finish();
+		}
 
 		//--------------------------------------------------------------
 		// PROTECTED METHODES

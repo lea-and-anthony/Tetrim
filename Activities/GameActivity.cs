@@ -83,6 +83,7 @@ namespace Tetrim
 		protected abstract void OnTimerElapsed(object source, ElapsedEventArgs e);
 		protected abstract int pauseGame(bool requestFromUser);
 		public abstract void ResumeGame();
+		public abstract void NewGame();
 		protected abstract void moveLeftButtonPressed(object sender, EventArgs e);
 		protected abstract void moveRightButtonPressed(object sender, EventArgs e);
 		protected abstract void turnLeftButtonPressed(object sender, EventArgs e);
