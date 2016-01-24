@@ -24,9 +24,9 @@
 		public Grid ()
 		{
 			_map = new Block[Constants.GridSizeX, Constants.GridSizeY];
-			_fallingPiece = new Piece (this);
-			_shadowPiece = new Piece (this, _fallingPiece);
-			_nextPiece = new Piece(0,0);
+			_fallingPiece = new Piece (this, Constants.IdGeneratorPlayer1);
+			_shadowPiece = new Piece (_fallingPiece);
+			_nextPiece = new Piece(0, 0, Constants.IdGeneratorPlayer1);
 			_nextPiece.MoveToZero();
 			_isNextPieceModified = false;
 			UpdateShadowPiece();
@@ -43,11 +43,6 @@
 		public bool isOutOfGrid(int x, int y)
 		{
 			return (x < 0 || x > Constants.GridSizeXmax || y < 0 || y > Constants.GridSizeYmax);
-		}
-
-		public Piece generatePiece()
-		{
-			return new Piece(this);
 		}
 
 		private bool isRowFull (int yRow)
@@ -123,8 +118,8 @@
 
 			// Next, we create the new piece
 			_fallingPiece = new Piece (_nextPiece._shape, _nextPiece._angle, this);
-			_shadowPiece = new Piece (this, _fallingPiece);
-			_nextPiece = new Piece (0, 0);
+			_shadowPiece = new Piece (_fallingPiece);
+			_nextPiece = new Piece (0, 0, Constants.IdGeneratorPlayer1);
 			_nextPiece.MoveToZero();
 			_isNextPieceModified = false;
 			UpdateShadowPiece();
@@ -169,12 +164,6 @@
 		public void addBlock(int x, int y, TetrisColor color)
 		{
 			_map[x,y] = new Block(x, y, color);
-		}
-
-		public void addPiece(Shape shape, uint angle, Grid grid)
-		{
-			_fallingPiece = new Piece(shape, angle, grid);
-			UpdateShadowPiece();
 		}
 
 		public void MoveLeft()

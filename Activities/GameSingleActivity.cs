@@ -45,7 +45,7 @@ namespace Tetrim
 			}
 
 			//	Speed
-			//changeSpeedIfNecessary();
+			changeSpeedIfNecessary();
 
 			// Display of the current model
 			FindViewById(Resource.Id.PlayerGridView).PostInvalidate();

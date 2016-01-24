@@ -5,6 +5,9 @@ namespace Tetrim
 	public static class Constants
 	{
 		public static Random Rand = new Random();
+		public const int IdGeneratorPlayer1 = 1;
+		public const int IdGeneratorPlayer2 = 2;
+
 		public const int GridSizeXmin = 0;
 		public const int GridSizeXmax = 9;
 		public const int GridSizeX = GridSizeXmax - GridSizeXmin + 1;
@@ -17,7 +20,6 @@ namespace Tetrim
 		public const string ScorePrint = "Score : ";
 		public const string LevelPrint = "Level : ";
 		public const string RowsPrint = "Rows cleared : ";
-		public const int ShapeMax = (int) Shape.ShapeMax;
 		public const int ColorMax = (int) TetrisColor.ColorMax;
 
 		public const int MinLevel = 1;
@@ -70,7 +72,7 @@ namespace Tetrim
 
 	public enum Shape
 	{
-		I, J, L, O,	S, T, Z, ShapeMax
+		I, J, L, O,	S, T, Z
 	};
 
 	public enum TetrisColor
