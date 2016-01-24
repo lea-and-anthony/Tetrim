@@ -131,7 +131,7 @@ namespace Tetrim
 					_proposedPieces[i].Draw(canvas, _blockSize, _blockImages, 
 											(i % _nbPieceByLine) * _blockSize * 5 + (_blockSize * 5 - xSize) / 2, 
 											Height - ((i / _nbPieceByLine + 1) * _blockSize * 5 - (_blockSize * 5 - ySize) / 2), 
-											false);
+											Height);
 				}
 			}
 		}

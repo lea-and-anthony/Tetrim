@@ -20,6 +20,7 @@ namespace Tetrim
 		// ATTRIBUTES
 		//--------------------------------------------------------------
 		protected Timer _gameTimer = null;
+		protected int _previousLevel = Constants.MinLevel;
 
 		public Player _player1 { get; protected set; }
 		public PlayerView _player1View { get; protected set; } // View of the player 1
@@ -186,10 +187,21 @@ namespace Tetrim
 			FindViewById<ButtonStroked>(Resource.Id.buttonMoveFoot).Click += moveFootButtonPressed;
 		}
 
+		protected void changeSpeedIfNecessary()
+		{
+			if(_previousLevel < _player1._level)
+			{
+				_previousLevel = _player1._level;
+				_gameTimer.Stop();
+				_gameTimer.Interval = getTimerLapse();
+				_gameTimer.Start();
+			}
+		}
+
 		protected int getTimerLapse()
 		{
-			// TODO : change speed
-			return 1000;
+			// Formula to get 1 second at level 1 and 0.5 at level 10
+			return 4000 / (_player1._level + 3);
 		}
 	}
 }

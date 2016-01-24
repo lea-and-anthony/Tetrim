@@ -191,15 +191,15 @@ namespace Tetrim
 			{
 				// Define the boundaries of the block
 				float left = blockSize*_block._x + xOffset;
-				float right = left + blockSize;
+				//float right = left + blockSize;
 				float top = height == 0 ? blockSize*(Constants.GridSizeYmax - _block._y) + yOffset :
 					height - blockSize*(_block._y + 1) - yOffset;
-				float bottom = top + blockSize;
+				//float bottom = top + blockSize;
 
 				// Draw the image inside the block
 				Paint paint = new Paint();
 				paint.Alpha = _isShadow ? AlphaShadow : AlphaOpaque;
-				canvas.DrawBitmap(blockImages[_block._color], null, new RectF(left, top, right, bottom), paint);
+				canvas.DrawBitmap(blockImages[_block._color], left, top, paint);
 			}
 		}
 			

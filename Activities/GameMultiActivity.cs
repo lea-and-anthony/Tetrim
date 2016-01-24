@@ -177,6 +177,9 @@ namespace Tetrim
 			//  Network
 			actualizeViewOtherPlayer(isSamePiece, messageBuffer, newNextPiece);
 
+			//	Speed
+			//changeSpeedIfNecessary();
+
 			// Display of the current model
 			FindViewById(Resource.Id.PlayerGridView).PostInvalidate();
 		}
@@ -441,7 +444,7 @@ namespace Tetrim
 
 		protected override void moveDownButtonPressed(object sender, EventArgs e)
 		{
-			if(_player1.MoveDown())
+			if(_player1.MoveDown() && _gameTimer.Enabled)
 			{
 				_gameTimer.Stop();
 
@@ -456,7 +459,7 @@ namespace Tetrim
 
 		protected override void moveFootButtonPressed(object sender, EventArgs e)
 		{
-			if(_player1.MoveBottom())
+			if(_player1.MoveBottom() && _gameTimer.Enabled)
 			{
 				_gameTimer.Stop();
 

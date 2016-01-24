@@ -44,6 +44,9 @@ namespace Tetrim
 				StartActivity(intent);
 			}
 
+			//	Speed
+			//changeSpeedIfNecessary();
+
 			// Display of the current model
 			FindViewById(Resource.Id.PlayerGridView).PostInvalidate();
 		}

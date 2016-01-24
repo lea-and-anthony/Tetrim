@@ -25,7 +25,7 @@ namespace Tetrim
 		{
 			_name = name;
 			_score = 0;
-			_level = 1;
+			_level = Constants.MinLevel;
 			_removedRows = 0;
 			_grid = new Grid();
 			_proposedPieces = new Piece[Constants.NbProposedPiece];

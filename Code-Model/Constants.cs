@@ -20,6 +20,7 @@ namespace Tetrim
 		public const int ShapeMax = (int) Shape.ShapeMax;
 		public const int ColorMax = (int) TetrisColor.ColorMax;
 
+		public const int MinLevel = 1;
 		public const int MaxLevel = 30;
 		public static int Score1Row = 100;
 		public static int Score2Rows = 300;

@@ -65,8 +65,7 @@ namespace Tetrim
 			if(_blockSize == 0)
 			{
 				// Calculate the size of the block. We need the space for at least 4 blocks.
-				_blockSize = Math.Min((Math.Abs(canvas.ClipBounds.Right - canvas.ClipBounds.Left) - MarginAroundPiece) / 4,
-					(Math.Abs(canvas.ClipBounds.Top - canvas.ClipBounds.Bottom) - MarginAroundPiece) / 4);
+				_blockSize = Math.Min((Width - MarginAroundPiece) / 4, (Height - MarginAroundPiece) / 4);
 
 				// Create the blocks images with the right size
 				foreach(TetrisColor color in Enum.GetValues(typeof(TetrisColor)))
@@ -85,7 +84,7 @@ namespace Tetrim
 				float ySize = 0;
 				_nextPiece.GetDrawnSize(_blockSize, ref xSize, ref ySize);
 
-				_nextPiece.Draw(canvas, _blockSize, _blockImages, (Width - xSize) / 2, (Height - ySize) / 2, false);
+				_nextPiece.Draw(canvas, _blockSize, _blockImages, (Width - xSize) / 2, (Height - ySize) / 2, Height);
 			}
 		}
 	}
