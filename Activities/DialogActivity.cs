@@ -168,8 +168,7 @@ namespace Tetrim
 		//--------------------------------------------------------------
 		protected void InitializeUI()
 		{
-			_buttonLayout.SetMinimumHeight(_positiveButton.Height);
-			_buttonLayout.SetMinimumHeight(_negativeButton.Height);
+			_buttonLayout.SetMinimumHeight(Math.Max(_positiveButton.Height, _negativeButton.Height));
 
 			// Initialize background
 			// TODO : sometimes bug because "width and height must be > 0"

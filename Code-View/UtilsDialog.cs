@@ -68,6 +68,8 @@ namespace Tetrim
 
 		public static Intent CreateGameOverDialogSingle(GameActivity activity, int score)
 		{
+			// TODO: change colors of game over pop-up
+
 			// Title saying GAME OVER
 			TextView titleText = new TextView(activity);
 			titleText.SetTextSize(ComplexUnitType.Dip, 30);
