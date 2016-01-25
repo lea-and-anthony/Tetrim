@@ -1,4 +1,7 @@
-﻿namespace Tetrim
+﻿using System;
+using System.Collections.Generic;
+
+namespace Tetrim
 {
 
 	public class Piece
@@ -10,11 +13,12 @@
 		public TetrisColor _color { get; private set; }
 		public uint _angle { get; private set; }
 		public Block[] _blocks { get; private set; }
+		private static Dictionary<int, Stack<Shape>> randomGenerator = new Dictionary<int, Stack<Shape>>();
 
 		//--------------------------------------------------------------
 		// CONSTRUCTORS
 		//--------------------------------------------------------------
-		public Piece (Grid grid) : this (pickShape(), pickAngle(), grid)
+		public Piece (Grid grid, int generatorKey) : this (pickShape(randomGenerator, generatorKey), pickAngle(), grid)
 		{
 		}
 
@@ -22,7 +26,7 @@
 		{
 		}
 
-		public Piece (Grid grid, Piece piece)
+		public Piece (Piece piece)
 		{
 			_shape = piece._shape;
 			_color = piece._color;
@@ -42,12 +46,12 @@
 			placeBlockAccordingToShape((Constants.GridSizeXmin + Constants.GridSizeXmax) / 2, Constants.GridSizeYmax);
 			_angle = 0;
 			turnPieceAccordingToAngle(grid, angle);
-			movePieceUp(Constants.GridSizeXmax);
+			movePieceUp(Constants.GridSizeYmax);
 		}
 
-		public Piece(int x , int y)
+		public Piece(int x , int y, int generatorKey)
 		{
-			_shape = pickShape();
+			_shape = pickShape(randomGenerator, generatorKey);
 			_color = pickColor(_shape);
 			_blocks = new Block[Constants.BlockPerPiece];
 			placeBlockAccordingToShape(x+1, y+2);
@@ -58,9 +62,28 @@
 		//--------------------------------------------------------------
 		// STATICS METHODES
 		//--------------------------------------------------------------
-		public static Shape pickShape ()
+		private static Shape pickShape (Dictionary<int, Stack<Shape>> randomGenerator, int generatorKey)
 		{
-			return (Shape) Constants.Rand.Next(Constants.ShapeMax);
+			Stack<Shape> followingShapes = null;
+			if(!randomGenerator.TryGetValue(generatorKey, out followingShapes) || followingShapes == null || followingShapes.Count == 0)
+			{
+				// Remove of the old key if it exists
+				randomGenerator.Remove(generatorKey);
+
+				// Create the "bag" of pieces
+				followingShapes = new Stack<Shape>();
+				List<Shape> pieces = new List<Shape>((IEnumerable<Shape>) Enum.GetValues(typeof(Shape)));
+				while(pieces.Count > 0)
+				{
+					int index = Constants.Rand.Next(pieces.Count);
+					followingShapes.Push(pieces[index]);
+					pieces.RemoveAt(index);
+				}
+
+				randomGenerator.Add(generatorKey, followingShapes);
+			}
+
+			return followingShapes.Pop();
 		}
 
 		private static TetrisColor pickColor (Shape shape)
@@ -285,7 +308,7 @@
 
 		public byte[] getMessage(byte[] bytes, uint begin)
 		{
-			// The position x and y will never be over 255 and less than 0 so we just have to cast the int to byte
+			// The position x and y will never be over 127 and less than 0 so we just have to cast the int to byte
 			bytes[begin] = (byte) _blocks[0]._x;
 			bytes[begin+1] = (byte) _blocks[0]._y;
 			bytes[begin+2] = (byte) _angle;

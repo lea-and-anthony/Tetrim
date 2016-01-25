@@ -35,15 +35,15 @@ namespace Tetrim
 		//--------------------------------------------------------------
 		public void Draw (Canvas canvas, float blockSize, Dictionary<TetrisColor, Bitmap> blockImages, float xOffset, float yOffset)
 		{
-			Draw(canvas, blockSize, blockImages, xOffset, yOffset, true);
+			Draw(canvas, blockSize, blockImages, xOffset, yOffset, 0);
 		}
 
-		public void Draw (Canvas canvas, float blockSize, Dictionary<TetrisColor, Bitmap> blockImages, float xOffset, float yOffset, bool inGrid)
+		public void Draw (Canvas canvas, float blockSize, Dictionary<TetrisColor, Bitmap> blockImages, float xOffset, float yOffset, int height)
 		{
 			// Draw each block of the piece
 			for (uint i = 0 ; i < Constants.BlockPerPiece ; i++)
 			{
-				_blocksView[i].Draw(canvas, blockSize, blockImages, xOffset, yOffset, inGrid);
+				_blocksView[i].Draw(canvas, blockSize, blockImages, xOffset, yOffset, height);
 			}
 		}
 

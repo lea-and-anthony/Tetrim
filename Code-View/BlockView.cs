@@ -182,24 +182,24 @@ namespace Tetrim
 		//--------------------------------------------------------------
 		public void Draw (Canvas canvas, float blockSize, Dictionary<TetrisColor, Bitmap> blockImages, float xOffset, float yOffset)
 		{
-			Draw(canvas, blockSize, blockImages, xOffset, yOffset, true);
+			Draw(canvas, blockSize, blockImages, xOffset, yOffset, 0);
 		}
 
-		public void Draw (Canvas canvas, float blockSize, Dictionary<TetrisColor, Bitmap> blockImages, float xOffset, float yOffset, bool inGrid)
+		public void Draw (Canvas canvas, float blockSize, Dictionary<TetrisColor, Bitmap> blockImages, float xOffset, float yOffset, int height)
 		{
 			if (_block != null)
 			{
 				// Define the boundaries of the block
 				float left = blockSize*_block._x + xOffset;
-				float right = left + blockSize;
-				float top = inGrid ? blockSize*(Constants.GridSizeYmax - _block._y) + yOffset :
-					Math.Abs(canvas.ClipBounds.Bottom - canvas.ClipBounds.Top) - blockSize*(_block._y + 1) - yOffset;
-				float bottom = top + blockSize;
+				//float right = left + blockSize;
+				float top = height == 0 ? blockSize*(Constants.GridSizeYmax - _block._y) + yOffset :
+					height - blockSize*(_block._y + 1) - yOffset;
+				//float bottom = top + blockSize;
 
 				// Draw the image inside the block
 				Paint paint = new Paint();
 				paint.Alpha = _isShadow ? AlphaShadow : AlphaOpaque;
-				canvas.DrawBitmap(blockImages[_block._color], null, new RectF(left, top, right, bottom), paint);
+				canvas.DrawBitmap(blockImages[_block._color], left, top, paint);
 			}
 		}
 			

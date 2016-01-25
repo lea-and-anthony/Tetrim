@@ -49,6 +49,7 @@ namespace Tetrim
 		private Dictionary<TetrisColor, Bitmap> _blockImages = new Dictionary<TetrisColor, Bitmap>(); // Images of the blocks
 		private bool _redraw = true;
 		private Bitmap _bitmapBuffer = null;// Buffer to render the view faster
+		private Bitmap _firstBitmapBuffer = null;// Buffer to render the view faster
 
 		private Mutex _mutexView = null; // To Prevent the modification of the view while it is displayed
 
@@ -89,13 +90,7 @@ namespace Tetrim
 
 			if(_redraw)
 				DrawBitmap();
-
-			if(canvas.ClipBounds.Left != 0 || canvas.ClipBounds.Top != 0)
-			{
-				Log.Debug("Tetrim-GridView", "ClipBound of the view not starting from 0 : ClipBound (Top, Left) = " +  canvas.ClipBounds.Top + ", " + canvas.ClipBounds.Left);
-			}
-
-			//canvas.DrawBitmap(_bitmapBuffer, -canvas.ClipBounds.Left, -canvas.ClipBounds.Top, null);
+			
 			canvas.DrawBitmap(_bitmapBuffer, 0, 0, null);
 
 			// Draw the pieces
@@ -171,6 +166,35 @@ namespace Tetrim
 
 			Canvas bitmapCanvas = new Canvas(_bitmapBuffer);
 
+			if(_firstBitmapBuffer == null)
+				DrawFirstBitmap();
+
+			bitmapCanvas.DrawBitmap(_firstBitmapBuffer, 0, 0, null);
+
+			// Draw the blocks
+			for (uint i = 0 ; i < _grid._map.GetLength(0) ; i++)
+			{
+				for (uint j = 0 ; j < _grid._map.GetLength(1) ; j++)
+				{
+					_mapView[i,j].Draw(bitmapCanvas, _blockSize, _blockImages, StrokeWidthBorder, StrokeWidthBorder);
+				}
+			}
+
+			_redraw = false;
+		}
+
+		private void DrawFirstBitmap()
+		{
+			if(_grid == null)
+				return; // if the gridView haven't been initialized, we stop
+
+			if(_firstBitmapBuffer != null)
+				return;
+			
+			_firstBitmapBuffer = Bitmap.CreateBitmap(Width, Height, Bitmap.Config.Argb8888);
+
+			Canvas bitmapCanvas = new Canvas(_firstBitmapBuffer);
+
 			// If it is the first draw, calculate the size of the block according to the size of the canvas
 			if (_blockSize == 0)
 			{
@@ -212,17 +236,6 @@ namespace Tetrim
 			{
 				bitmapCanvas.DrawLine(left, y, right, y, GridPaint);
 			}
-
-			// Draw the blocks
-			for (uint i = 0 ; i < _grid._map.GetLength(0) ; i++)
-			{
-				for (uint j = 0 ; j < _grid._map.GetLength(1) ; j++)
-				{
-					_mapView[i,j].Draw(bitmapCanvas, _blockSize, _blockImages, StrokeWidthBorder, StrokeWidthBorder);
-				}
-			}
-
-			_redraw = false;
 		}
 	}
 }

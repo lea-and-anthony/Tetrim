@@ -25,14 +25,13 @@ namespace Tetrim
 		{
 			_name = name;
 			_score = 0;
-			_level = 1;
+			_level = Constants.MinLevel;
 			_removedRows = 0;
 			_grid = new Grid();
 			_proposedPieces = new Piece[Constants.NbProposedPiece];
 			for(int i = 0; i < Constants.NbProposedPiece; i++)
 			{
-				_proposedPieces[i] = new Piece((i % (Constants.NbProposedPiece/Constants.NbLinePropPiece))*5, 
-													(i / (Constants.NbProposedPiece/Constants.NbLinePropPiece))*5);
+				_proposedPieces[i] = new Piece(0, 0, Constants.IdGeneratorPlayer2);
 				_proposedPieces[i].MoveToZero();
 			}
 		}
@@ -202,8 +201,7 @@ namespace Tetrim
 
 		public void ChangeProposedPiece(int i)
 		{
-			_proposedPieces[i] = new Piece((i%(Constants.NbProposedPiece/Constants.NbLinePropPiece)) * 5, 
-											(i/(Constants.NbProposedPiece/Constants.NbLinePropPiece)) * 5);
+			_proposedPieces[i] = new Piece(0, 0, Constants.IdGeneratorPlayer2);
 			_proposedPieces[i].MoveToZero();
 		}
 
