@@ -31,7 +31,7 @@ namespace Tetrim
 		public const string ExtraDeviceAddress = "device_address";
 
 		private const int NbDevices = 6;
-		private const TetrisColor FriendsDeviceColor = TetrisColor.Pink;
+		private const TetrisColor FriendsDeviceColor = TetrisColor.Magenta;
 		private const TetrisColor PairedDeviceColor = TetrisColor.Green;
 		private const TetrisColor NewDeviceColor = TetrisColor.Blue;
 
@@ -166,7 +166,7 @@ namespace Tetrim
 				if(resultCode == Result.FirstUser)
 				{
 					// We want to restart a game
-					MenuActivity.startGame(this, Utils.RequestCode.RequestGameTwoPlayer); // We launch the game (change view and everything)
+					MenuActivity.startTwoPlayerGame(this, _opponentName); // We launch the game (change view and everything)
 				}
 				else
 				{
@@ -192,7 +192,7 @@ namespace Tetrim
 			}
 			ButtonStroked newDeviceButton = UtilsUI.CreateDeviceButton(this, device, NewDeviceColor, (int)(_devicesLayout.Height*1f/NbDevices), Resource.String.none_found);
 			LinearLayout.LayoutParams lp = UtilsUI.CreateDeviceLayoutParams(this, 5);
-			_newDevicesLayout.AddView(newDeviceButton, _newDevicesLayout.ChildCount - 2, lp);
+			_newDevicesLayout.AddView(newDeviceButton, _newDevicesLayout.ChildCount - 1, lp);
 		}
 
 		public void AddFriendDevice(BluetoothDevice device, string name)
@@ -274,7 +274,7 @@ namespace Tetrim
 			if(writeBuf[0] == Constants.IdMessageStart && _state == Network.StartState.OPPONENT_READY)
 			{
 				User.Instance.AddFriend(Network.Instance.CommunicationWay._deviceAddress, _opponentName);
-				MenuActivity.startGame(this, Utils.RequestCode.RequestGameTwoPlayer);// We launch the game (change view and everything)
+				MenuActivity.startTwoPlayerGame(this, _opponentName);
 			}
 
 			return 0;
@@ -378,7 +378,7 @@ namespace Tetrim
 				if(_state == Network.StartState.WAITING_FOR_OPPONENT)
 				{
 					User.Instance.AddFriend(Network.Instance.CommunicationWay._deviceAddress, _opponentName);
-					MenuActivity.startGame(this, Utils.RequestCode.RequestGameTwoPlayer); // We launch the game (change view and everything)
+					MenuActivity.startTwoPlayerGame(this, _opponentName);
 				}
 				else
 				{
@@ -442,7 +442,10 @@ namespace Tetrim
 			_newDevicesLayout.RemoveView(_progressBar);
 
 			// Display if no device found
-			AddNewDevice(null);
+			if(_newDevices.Count == 0)
+			{
+				AddNewDevice(null);
+			}
 		}
 
 		public void CancelConnection()
@@ -527,7 +530,7 @@ namespace Tetrim
 				DialogActivity.CloseAllDialog.Invoke();
 			}
 
-			Intent dialog = DialogActivity.CreateYesNoDialog(this, -1, idMessage,
+			Intent dialog = DialogActivity.CreateYesNoDialog(this, idMessage, -1,
 				Resource.String.cancel, -1, delegate{CancelConnection();}, null);
 			StartActivity(dialog);
 		}
@@ -543,7 +546,8 @@ namespace Tetrim
 			_progressBar.Indeterminate = true;
 			int padding = Utils.GetPixelsFromDP(this, 15);
 			_progressBar.SetPadding(padding, padding, padding, padding);
-			_newDevicesLayout.AddView(_progressBar, LinearLayout.LayoutParams.MatchParent, (int)(_devicesLayout.Height*1f/NbDevices));
+			_newDevicesLayout.SetGravity(GravityFlags.CenterHorizontal);
+			_newDevicesLayout.AddView(_progressBar, (int)(_devicesLayout.Height*1f/NbDevices), (int)(_devicesLayout.Height*1f/NbDevices));
 
 			// If we're already discovering, stop it
 			if(_bluetoothAdapter.IsDiscovering)

@@ -1,4 +1,6 @@
-﻿using Android.App;
+﻿using System;
+
+using Android.App;
 using Android.Content;
 using Android.Util;
 using Android.Views;
@@ -13,21 +15,43 @@ namespace Tetrim
 		public static event PopUpEndDelegate PopUpEndEvent;
 		public static Intent CreateBluetoothDialogNoCancel(Activity activity, int messageId)
 		{
-			return DialogActivity.CreateYesNoDialog(activity, -1, messageId, Resource.String.ok, -1,
+			return DialogActivity.CreateYesNoDialog(activity, messageId, -1, Resource.String.ok, -1,
 				delegate {if(PopUpEndEvent != null){PopUpEndEvent.Invoke();PopUpEndEvent = null;}}, null);
 		}
 
 		public static Intent CreatePauseGameDialog(GameActivity activity)
 		{
-			// Content
-			TextView titleText = new TextView(activity);
-			titleText.SetTextSize(ComplexUnitType.Dip, 30);
-			titleText.Text = activity.Resources.GetString(Resource.String.pause);
-			titleText.Gravity = GravityFlags.CenterHorizontal;
-			titleText.SetTextColor(Utils.getAndroidColor(TetrisColor.Blue));
+			return CreatePauseGameDialog(activity, null);
+		}
 
-			return DialogActivity.CreateCustomDialog(activity, new[]{titleText}, Resource.String.resume, Resource.String.menu,
-				delegate {activity.ResumeGame();}, delegate {activity.Finish();});
+		public static Intent CreatePauseGameDialog(GameActivity activity, string name)
+		{
+			bool isMe = string.IsNullOrEmpty(name);
+			string title, nameText, message, posText, negText;
+			EventHandler posAction, negAction;
+			if(isMe)
+			{
+				nameText = activity.Resources.GetString(Resource.String.you);
+				posText = activity.Resources.GetString(Resource.String.resume);
+				posAction = delegate {activity.ResumeGame();};
+				negText = activity.Resources.GetString(Resource.String.menu);
+				negAction = delegate {activity.Finish();};
+			}
+			else
+			{
+				nameText = name;
+				/*posText = activity.Resources.GetString(Resource.String.menu);
+				posAction = delegate {activity.Finish();};
+				negText = string.Empty;
+				negAction = null;*/
+				posText = string.Empty;
+				posAction = null;
+				negText = activity.Resources.GetString(Resource.String.menu);
+				negAction = delegate {activity.Finish();};
+			}
+			title = activity.Resources.GetString(Resource.String.pause);
+			message = string.Format(activity.Resources.GetString(Resource.String.pauseBy, nameText));
+			return DialogActivity.CreateYesNoDialog(activity, title, message, posText, negText,	posAction, negAction);
 		}
 
 		public static Intent CreateUserNameDialog(Activity activity)

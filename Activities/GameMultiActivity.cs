@@ -65,7 +65,7 @@ namespace Tetrim
 			}
 
 			// Creation of the model
-			_player2 = new Player();
+			_player2 = new Player(Intent.GetStringExtra(Utils.OpponentNameExtra));
 
 			// And the view
 			_player2View = new PlayerView(_player2);
@@ -259,14 +259,14 @@ namespace Tetrim
 			}
 			if(_gameState == GameState.GameOver)
 			{
-				// TODO : close current dialog and display a pop-up
-				// telling that we can't restart a game
+				DialogActivity.CloseAllDialog.Invoke();
+				Intent intent = DialogActivity.CreateYesDialog(this, Resource.String.ConnectionLost, Resource.String.cannotRestartGame, Resource.String.ok, delegate {Finish();});
+				StartActivity(intent);
 			}
 			else
 			{
-				// We lost the connection while we were asking to restart a game
-				// So, the opponent doesn't want to play and we notify the player
-				// TODO: pop-up
+				Intent intent = DialogActivity.CreateYesDialog(this, Resource.String.ConnectionLost, Resource.String.lostFriend, Resource.String.ok, delegate {Finish();});
+				StartActivity(intent);
 				SetResult(Result.Ok);
 				Finish();
 			}
@@ -394,14 +394,18 @@ namespace Tetrim
 			_originPause = requestFromUser ? StopOrigin.MyPause : StopOrigin.PauseOpponent;
 
 			// We need to pause the other game if it is not it which stop us
+			string name = null;
 			if(requestFromUser)
 			{
 				byte[] message = {Constants.IdMessagePause};
 				Network.Instance.CommunicationWay.Write(message);
 			}
+			else
+			{
+				name = _player2._name;
+			}
 
-			//TODO display a pop-up different when requestFromUser is false
-			Intent intent = UtilsDialog.CreatePauseGameDialog(this);
+			Intent intent = UtilsDialog.CreatePauseGameDialog(this, name);
 			StartActivity(intent);
 
 			return 0;

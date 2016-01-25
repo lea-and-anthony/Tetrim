@@ -78,7 +78,7 @@
 			case Shape.S:
 				return TetrisColor.Green;
 			case Shape.T:
-				return TetrisColor.Pink;
+				return TetrisColor.Magenta;
 			case Shape.Z:
 				return TetrisColor.Red;
 			}

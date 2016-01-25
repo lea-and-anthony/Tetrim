@@ -6,13 +6,14 @@
     p1:id="@+id/root"
     p1:weightSum="100">
     <TextView
-        p1:text="Select a device :"
+        p1:text="select a device"
         p1:textAppearance="?android:attr/textAppearanceLarge"
         p1:layout_width="match_parent"
         p1:layout_height="0dp"
         p1:id="@+id/selectDeviceText"
         p1:gravity="center"
-        p1:layout_weight="10" />
+        p1:layout_weight="10"
+        p1:textSize="40dp" />
     <LinearLayout
         p1:orientation="horizontal"
         p1:layout_width="match_parent"

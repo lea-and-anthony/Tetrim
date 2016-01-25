@@ -6,6 +6,7 @@ using Android.Content.PM;
 using Android.Graphics;
 using Android.Graphics.Drawables;
 using Android.OS;
+using Android.Text;
 using Android.Views;
 using Android.Widget;
 
@@ -46,7 +47,7 @@ namespace Tetrim
 			base.OnCreate (savedInstanceState);
 
 			RequestWindowFeature(WindowFeatures.NoTitle);
-			Window.SetBackgroundDrawable(new ColorDrawable(Android.Graphics.Color.Transparent));
+			Window.SetBackgroundDrawable(new ColorDrawable(Color.Transparent));
 			SetContentView(Resource.Layout.Dialog);
 
 			_root = FindViewById<LinearLayout>(Resource.Id.alertContainer);
@@ -60,7 +61,8 @@ namespace Tetrim
 			}
 
 			_title = FindViewById<TextView>(Resource.Id.alertTitle);
-			_title.SetTextColor(Utils.getAndroidLightColor(TetrisColor.Blue));
+			_title.SetTextColor(Builder.StrokeColor);
+			_title.Gravity = GravityFlags.CenterHorizontal;
 			if(String.IsNullOrEmpty(Builder.Title))
 			{
 				_title.Visibility = ViewStates.Gone;
@@ -79,6 +81,8 @@ namespace Tetrim
 					_message = new TextView(this);
 					_message.Text = Builder.Message;
 					_message.SetTextSize(Android.Util.ComplexUnitType.Dip, 20);
+					_message.SetTextColor(Builder.TextColor);
+					_message.Gravity = GravityFlags.CenterHorizontal;
 					_content.AddView(_message, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MatchParent, LinearLayout.LayoutParams.WrapContent));
 				}
 				break;
@@ -86,6 +90,8 @@ namespace Tetrim
 				_field = new EditText(this);
 				_field.Hint = Builder.Message;
 				_field.SetTextSize(Android.Util.ComplexUnitType.Dip, 20);
+				// Limit the length
+				_field.SetFilters( new IInputFilter[] { new InputFilterLengthFilter(Constants.MaxLengthName) } );
 				_content.AddView(_field, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MatchParent, LinearLayout.LayoutParams.WrapContent));
 				break;
 			case DialogBuilder.DialogContentType.None:
@@ -108,10 +114,12 @@ namespace Tetrim
 
 			if(String.IsNullOrEmpty(Builder.PositiveText))
 			{
-				Builder.PositiveText = Resources.GetString(Resource.String.ok);
+				_positiveButton.Visibility = ViewStates.Gone;
+				LinearLayout.LayoutParams lpNeg = (LinearLayout.LayoutParams) _negativeButton.LayoutParameters;
+				lpNeg.Weight = 2;
+				_negativeButton.LayoutParameters = lpNeg;
 			}
-
-			if(String.IsNullOrEmpty(Builder.NegativeText))
+			else if (String.IsNullOrEmpty(Builder.NegativeText))
 			{
 				_negativeButton.Visibility = ViewStates.Gone;
 				LinearLayout.LayoutParams lpPos = (LinearLayout.LayoutParams) _positiveButton.LayoutParameters;
@@ -129,7 +137,7 @@ namespace Tetrim
 			}
 
 			UtilsUI.SetDialogButton(this, _positiveButton, _field, TetrisColor.Green, Builder.PositiveText, Builder.PositiveAction, true);
-			UtilsUI.SetDialogButton(this, _negativeButton, _field, TetrisColor.Orange, Builder.NegativeText, Builder.NegativeAction, false);
+			UtilsUI.SetDialogButton(this, _negativeButton, _field, TetrisColor.Yellow, Builder.NegativeText, Builder.NegativeAction, false);
 
 			CloseAllDialog += Finish;
 		}
@@ -161,6 +169,7 @@ namespace Tetrim
 		protected void InitializeUI()
 		{
 			_buttonLayout.SetMinimumHeight(_positiveButton.Height);
+			_buttonLayout.SetMinimumHeight(_negativeButton.Height);
 
 			// Initialize background
 			// TODO : sometimes bug because "width and height must be > 0"
@@ -226,9 +235,19 @@ namespace Tetrim
 		//--------------------------------------------------------------
 		// PUBLIC METHODES
 		//--------------------------------------------------------------
-		public static Intent CreateYesDialog(Activity activity, int titleId, int messageId, EventHandler posAction, EventHandler negAction)
+		public static Intent CreateYesDialog(Activity activity, int titleId, int messageId, int posTextId, EventHandler posAction)
 		{
-			return CreateYesNoDialog(activity, titleId, messageId, -1, -1, posAction, negAction);
+			return CreateYesNoDialog(activity, titleId, messageId, posTextId, -1, posAction, null);
+		}
+
+		public static Intent CreateYesDialog(Activity activity, int titleId, int messageId, EventHandler posAction)
+		{
+			return CreateYesNoDialog(activity, titleId, messageId, -1, -1, posAction, null);
+		}
+
+		public static Intent CreateYesDialog(Activity activity, string title, string message, string posText, EventHandler posAction)
+		{
+			return CreateYesNoDialog(activity, title, message, posText, String.Empty, posAction, null);
 		}
 
 		public static Intent CreateYesDialog(Activity activity, string title, string message, EventHandler posAction, EventHandler negAction)

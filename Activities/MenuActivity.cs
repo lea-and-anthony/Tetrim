@@ -41,7 +41,7 @@ namespace Tetrim
 			UtilsUI.SetTitleTextView(FindViewById<TextView>(Resource.Id.titleT2), TetrisColor.Yellow);
 			UtilsUI.SetTitleTextView(FindViewById<TextView>(Resource.Id.titleR), TetrisColor.Green);
 			UtilsUI.SetTitleTextView(FindViewById<TextView>(Resource.Id.titleI), TetrisColor.Cyan);
-			UtilsUI.SetTitleTextView(FindViewById<TextView>(Resource.Id.titleM), TetrisColor.Pink);
+			UtilsUI.SetTitleTextView(FindViewById<TextView>(Resource.Id.titleM), TetrisColor.Magenta);
 
 			// Set the user name
 			_userNameText = FindViewById<TextView>(Resource.Id.userNameText);
@@ -52,7 +52,7 @@ namespace Tetrim
 			ButtonStroked singlePlayerButton = FindViewById<ButtonStroked>(Resource.Id.singlePlayerButton);
 			UtilsUI.SetMenuButton(singlePlayerButton, TetrisColor.Red);
 			singlePlayerButton.Click += delegate {
-				startGame(this, Utils.RequestCode.RequestGameOnePlayer);
+				startOnePlayerGame(this);
 			};
 
 			// Two players button
@@ -115,7 +115,7 @@ namespace Tetrim
 		//--------------------------------------------------------------
 		// PUBLIC METHODES
 		//--------------------------------------------------------------
-		public static void startGame(Activity activity, Utils.RequestCode code)
+		/*public static void startGame(Activity activity, Utils.RequestCode code)
 		{
 			Intent intent = null;
 			if(Network.Instance.Connected)
@@ -127,6 +127,26 @@ namespace Tetrim
 				intent = new Intent(activity, typeof(GameSingleActivity));
 			}
 			activity.StartActivityForResult(intent, (int) code);
+		}*/
+
+		public static void startOnePlayerGame(Activity activity)
+		{
+			Intent intent = new Intent(activity, typeof(GameSingleActivity));
+			activity.StartActivityForResult(intent, (int) Utils.RequestCode.RequestGameOnePlayer);
+		}
+
+		public static void startTwoPlayerGame(Activity activity, string opponentName)
+		{
+			if(Network.Instance.Connected)
+			{
+				Intent intent = new Intent(activity, typeof(GameMultiActivity));
+				intent.PutExtra(Utils.OpponentNameExtra, opponentName);
+				activity.StartActivityForResult(intent, (int) Utils.RequestCode.RequestGameTwoPlayer);
+			}
+			else
+			{
+				// TODO : should not happen
+			}
 		}
 
 		//--------------------------------------------------------------

@@ -380,17 +380,17 @@ namespace Tetrim
 		public partial class String
 		{
 			
-			// aapt resource value: 0x7f040023
-			public const int BTNotAvailable = 2130968611;
+			// aapt resource value: 0x7f040027
+			public const int BTNotAvailable = 2130968615;
 			
-			// aapt resource value: 0x7f040024
-			public const int BTNotEnabled = 2130968612;
+			// aapt resource value: 0x7f040028
+			public const int BTNotEnabled = 2130968616;
 			
-			// aapt resource value: 0x7f040026
-			public const int ConnectionImpossible = 2130968614;
+			// aapt resource value: 0x7f04002a
+			public const int ConnectionImpossible = 2130968618;
 			
-			// aapt resource value: 0x7f040025
-			public const int ConnectionLost = 2130968613;
+			// aapt resource value: 0x7f040029
+			public const int ConnectionLost = 2130968617;
 			
 			// aapt resource value: 0x7f040000
 			public const int app_name = 2130968576;
@@ -413,14 +413,17 @@ namespace Tetrim
 			// aapt resource value: 0x7f040012
 			public const int cancel = 2130968594;
 			
+			// aapt resource value: 0x7f040021
+			public const int cannotRestartGame = 2130968609;
+			
 			// aapt resource value: 0x7f040010
 			public const int changeName = 2130968592;
 			
-			// aapt resource value: 0x7f040027
-			public const int connection_back = 2130968615;
+			// aapt resource value: 0x7f04002b
+			public const int connection_back = 2130968619;
 			
-			// aapt resource value: 0x7f040032
-			public const int connection_in_progress = 2130968626;
+			// aapt resource value: 0x7f040036
+			public const int connection_in_progress = 2130968630;
 			
 			// aapt resource value: 0x7f04000e
 			public const int deleteFriends = 2130968590;
@@ -437,14 +440,17 @@ namespace Tetrim
 			// aapt resource value: 0x7f04001f
 			public const int gameOver = 2130968607;
 			
-			// aapt resource value: 0x7f04002e
-			public const int game_request = 2130968622;
+			// aapt resource value: 0x7f040032
+			public const int game_request = 2130968626;
 			
-			// aapt resource value: 0x7f04002d
-			public const int game_request_title = 2130968621;
+			// aapt resource value: 0x7f040031
+			public const int game_request_title = 2130968625;
 			
 			// aapt resource value: 0x7f040002
 			public const int left_arrow = 2130968578;
+			
+			// aapt resource value: 0x7f040022
+			public const int lostFriend = 2130968610;
 			
 			// aapt resource value: 0x7f040019
 			public const int menu = 2130968601;
@@ -455,14 +461,14 @@ namespace Tetrim
 			// aapt resource value: 0x7f040017
 			public const int noDialog = 2130968599;
 			
-			// aapt resource value: 0x7f04002c
-			public const int none_found = 2130968620;
+			// aapt resource value: 0x7f040030
+			public const int none_found = 2130968624;
 			
-			// aapt resource value: 0x7f04002a
-			public const int none_friend = 2130968618;
+			// aapt resource value: 0x7f04002e
+			public const int none_friend = 2130968622;
 			
-			// aapt resource value: 0x7f04002b
-			public const int none_paired = 2130968619;
+			// aapt resource value: 0x7f04002f
+			public const int none_paired = 2130968623;
 			
 			// aapt resource value: 0x7f040011
 			public const int ok = 2130968593;
@@ -470,8 +476,11 @@ namespace Tetrim
 			// aapt resource value: 0x7f04000a
 			public const int onePlayer = 2130968586;
 			
-			// aapt resource value: 0x7f040021
-			public const int pause = 2130968609;
+			// aapt resource value: 0x7f040023
+			public const int pause = 2130968611;
+			
+			// aapt resource value: 0x7f040024
+			public const int pauseBy = 2130968612;
 			
 			// aapt resource value: 0x7f040018
 			public const int playAgain = 2130968600;
@@ -488,20 +497,20 @@ namespace Tetrim
 			// aapt resource value: 0x7f04001d
 			public const int playerWin = 2130968605;
 			
-			// aapt resource value: 0x7f040033
-			public const int reconnect_activity = 2130968627;
+			// aapt resource value: 0x7f040037
+			public const int reconnect_activity = 2130968631;
 			
-			// aapt resource value: 0x7f040022
-			public const int resume = 2130968610;
+			// aapt resource value: 0x7f040026
+			public const int resume = 2130968614;
 			
-			// aapt resource value: 0x7f040028
-			public const int retry_connection = 2130968616;
+			// aapt resource value: 0x7f04002c
+			public const int retry_connection = 2130968620;
 			
 			// aapt resource value: 0x7f040001
 			public const int right_arrow = 2130968577;
 			
-			// aapt resource value: 0x7f040029
-			public const int scanning = 2130968617;
+			// aapt resource value: 0x7f04002d
+			public const int scanning = 2130968621;
 			
 			// aapt resource value: 0x7f04000c
 			public const int settings = 2130968588;
@@ -518,8 +527,8 @@ namespace Tetrim
 			// aapt resource value: 0x7f040004
 			public const int up_arrow = 2130968580;
 			
-			// aapt resource value: 0x7f040031
-			public const int waiting_for_opponent = 2130968625;
+			// aapt resource value: 0x7f040035
+			public const int waiting_for_opponent = 2130968629;
 			
 			// aapt resource value: 0x7f040008
 			public const int welcome = 2130968584;
@@ -527,14 +536,17 @@ namespace Tetrim
 			// aapt resource value: 0x7f040009
 			public const int welcomeUser = 2130968585;
 			
-			// aapt resource value: 0x7f040030
-			public const int wrong_version = 2130968624;
+			// aapt resource value: 0x7f040034
+			public const int wrong_version = 2130968628;
 			
-			// aapt resource value: 0x7f04002f
-			public const int wrong_version_title = 2130968623;
+			// aapt resource value: 0x7f040033
+			public const int wrong_version_title = 2130968627;
 			
 			// aapt resource value: 0x7f040016
 			public const int yesDialog = 2130968598;
+			
+			// aapt resource value: 0x7f040025
+			public const int you = 2130968613;
 			
 			static String()
 			{

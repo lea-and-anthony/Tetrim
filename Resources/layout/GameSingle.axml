@@ -210,10 +210,11 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:id="@+id/layoutLeftGrid"
-            android:layout_weight="15"
+            android:layout_weight="17"
             android:layout_gravity="center"
             android:minWidth="25px"
-            android:minHeight="25px">
+            android:minHeight="25px"
+            android:layout_marginRight="5dp">
             <LinearLayout
                 android:orientation="vertical"
                 android:id="@+id/layoutButtonsLeft"
@@ -274,16 +275,17 @@
             android:id="@+id/PlayerGridView"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="70" />
+            android:layout_weight="66" />
         <RelativeLayout
             android:orientation="vertical"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:id="@+id/layoutRightGrid"
-            android:layout_weight="15"
+            android:layout_weight="17"
             android:layout_gravity="center"
             android:minWidth="25px"
-            android:minHeight="25px">
+            android:minHeight="25px"
+            android:layout_marginLeft="5dp">
             <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="match_parent"

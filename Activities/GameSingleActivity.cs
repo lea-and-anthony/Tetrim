@@ -60,7 +60,7 @@ namespace Tetrim
 			
 		public override void NewGame()
 		{
-			MenuActivity.startGame(this, Utils.RequestCode.RequestGameOnePlayer);
+			MenuActivity.startOnePlayerGame(this);
 			Finish();
 		}
 

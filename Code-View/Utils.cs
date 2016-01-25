@@ -20,66 +20,123 @@ namespace Tetrim
 			RequestGameTwoPlayer = 4,
 			RequestUserName = 5,
 		};
+
+		public const string OpponentNameExtra = "OpponentName";
 			
-
-
 		// Turn a color name into an Android Color
 		public static Color getAndroidColor(TetrisColor color)
 		{
 			switch (color)
 			{
 			case TetrisColor.Red:
-				return Color.ParseColor("#ffd50000");
+				return Color.ParseColor("#ffff0000");
 			case TetrisColor.Orange:
-				return Color.ParseColor("#ffff6d00");
+				return Color.ParseColor("#ffff8000");
 			case TetrisColor.Yellow:
-				return Color.ParseColor("#ffffc400");
+				return Color.ParseColor("#ffffff00");
 			case TetrisColor.Green:
-				return Color.ParseColor("#ff64dd17");
+				return Color.ParseColor("#ff00ff00");
 			case TetrisColor.Cyan:
-				return Color.ParseColor("#ff00e5ff");
+				return Color.ParseColor("#ff00ffff");
 			case TetrisColor.Blue:
-				return Color.ParseColor("#ff2962ff");
-			case TetrisColor.Pink:
-				return Color.ParseColor("#ffd500f9");
+				return Color.ParseColor("#ff0000ff");
+			case TetrisColor.Magenta:
+				return Color.ParseColor("#ffff00ff");
+			default:
+				return Color.ParseColor("#ff808080");
 			}
-			return Color.Gray;
 		}
 
 		public static Color getAndroidDarkColor(TetrisColor color)
 		{
-			Color androidColor = Utils.getAndroidColor(color);
-			androidColor.R /= 2;
-			androidColor.G /= 2;
-			androidColor.B /= 2;
-			return androidColor;
+			switch (color)
+			{
+			case TetrisColor.Red:
+				return Color.ParseColor("#ff800000");
+			case TetrisColor.Orange:
+				return Color.ParseColor("#ff804000");
+			case TetrisColor.Yellow:
+				return Color.ParseColor("#ff808000");
+			case TetrisColor.Green:
+				return Color.ParseColor("#ff008000");
+			case TetrisColor.Cyan:
+				return Color.ParseColor("#ff008080");
+			case TetrisColor.Blue:
+				return Color.ParseColor("#ff000080");
+			case TetrisColor.Magenta:
+				return Color.ParseColor("#ff800080");
+			default:
+				return Color.ParseColor("#ff404040");
+			}
 		}
 
 		public static Color getAndroidLightColor(TetrisColor color)
 		{
-			/*Color androidColor = Utils.getAndroidColor(color);
-			androidColor.R *= 2;
-			androidColor.G *= 2;
-			androidColor.B *= 2;
-			return androidColor;*/
 			switch (color)
 			{
 			case TetrisColor.Red:
-				return Color.Pink;
+				return Color.ParseColor("#ffff8080");
 			case TetrisColor.Orange:
-				return Color.LightSalmon;
+				return Color.ParseColor("#ffffbf80");
 			case TetrisColor.Yellow:
-				return Color.LightGoldenrodYellow;
+				return Color.ParseColor("#ffffff80");
 			case TetrisColor.Green:
-				return Color.LightGreen;
+				return Color.ParseColor("#ff80ff80");
 			case TetrisColor.Cyan:
-				return Color.LightCyan;
+				return Color.ParseColor("#ff80ffff");
 			case TetrisColor.Blue:
-				return Color.LightBlue;
-			case TetrisColor.Pink:
-				return Color.LightPink;
+				return Color.ParseColor("#ff8080ff");
+			case TetrisColor.Magenta:
+				return Color.ParseColor("#ffff80ff");
+			default:
+				return Color.ParseColor("#ffbfbfbf");
 			}
-			return Color.White;
+		}
+
+		public static Color getAndroidReallyLightColor(TetrisColor color)
+		{
+			switch (color)
+			{
+			case TetrisColor.Red:
+				return Color.ParseColor("#ffffe5e5");
+			case TetrisColor.Orange:
+				return Color.ParseColor("#fffff2e5");
+			case TetrisColor.Yellow:
+				return Color.ParseColor("#ffffffe5");
+			case TetrisColor.Green:
+				return Color.ParseColor("#ffe5ffe5");
+			case TetrisColor.Cyan:
+				return Color.ParseColor("#ffe5ffff");
+			case TetrisColor.Blue:
+				return Color.ParseColor("#ffe5e5ff");
+			case TetrisColor.Magenta:
+				return Color.ParseColor("#ffffe5ff");
+			default:
+				return Color.ParseColor("#ffffffff");
+			}
+		}
+
+		public static Color getAndroidReallyDarkColor(TetrisColor color)
+		{
+			switch (color)
+			{
+			case TetrisColor.Red:
+				return Color.ParseColor("#ff1a0000");
+			case TetrisColor.Orange:
+				return Color.ParseColor("#ff1a0d00");
+			case TetrisColor.Yellow:
+				return Color.ParseColor("#ff1a1a00");
+			case TetrisColor.Green:
+				return Color.ParseColor("#ff001a00");
+			case TetrisColor.Cyan:
+				return Color.ParseColor("#ff001a1a");
+			case TetrisColor.Blue:
+				return Color.ParseColor("#ff00001a");
+			case TetrisColor.Magenta:
+				return Color.ParseColor("#ff1a001a");
+			default:
+				return Color.ParseColor("#ff000000");
+			}
 		}
 
 		public static Paint createPaintWithStyle(Paint paint, Paint.Style style)

@@ -414,7 +414,8 @@
             android:layout_height="wrap_content"
             android:id="@+id/layoutButtonsLeft"
             android:layout_gravity="top"
-            android:layout_weight="15">
+            android:layout_weight="15"
+            android:layout_marginRight="5dp">
             <Tetrim.ButtonStroked
                 android:text="&lt;~"
                 android:layout_width="match_parent"
@@ -474,7 +475,8 @@
             android:id="@+id/layoutButtonsRight"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="15">
+            android:layout_weight="15"
+            android:layout_marginLeft="5dp">
             <Tetrim.ButtonStroked
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

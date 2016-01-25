@@ -46,11 +46,15 @@
     <string name="playerLoose">You loose !</string>
     <string name="gameOver">GAME OVER</string>
 
-    <!-- Prompt Name Dialog -->
+    <!-- Prompt Dialog -->
     <string name="askName">What is your name ?</string>
+    <string name="cannotRestartGame">Cannot restart a game.</string>
+    <string name="lostFriend">Seems your friend abandonned you :-(.</string>
 
     <!-- Pause Dialog -->
 	<string name="pause">PAUSE</string>
+	<string name="pauseBy">%1$s asked for a break.</string>
+	<string name="you">You</string>
     <string name="resume">Resume</string>
 
     <!-- Bluetooth -->

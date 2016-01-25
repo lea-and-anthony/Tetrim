@@ -47,7 +47,6 @@ namespace Tetrim
 			}
 			catch(Java.IO.IOException e)
 			{
-				// TODO: stop the bluetooth if we reach this point
 				Log.Error(BluetoothManager.Tag, "Listen() failed", e);
 			}
 			_serverSocket = temp;
