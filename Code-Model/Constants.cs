@@ -14,12 +14,7 @@ namespace Tetrim
 		public const int GridSizeYmin = 0;
 		public const int GridSizeYmax = 19;
 		public const int GridSizeY = GridSizeYmax - GridSizeYmin + 1;
-		public const uint BlockSize = 10;
 		public const uint BlockPerPiece = 4;
-		public const string DefaulPlayerName = "Anonymous";
-		public const string ScorePrint = "Score : ";
-		public const string LevelPrint = "Level : ";
-		public const string RowsPrint = "Rows cleared : ";
 		public const int ColorMax = (int) TetrisColor.ColorMax;
 
 		public const int MinLevel = 1;

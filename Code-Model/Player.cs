@@ -17,10 +17,6 @@ namespace Tetrim
 		//--------------------------------------------------------------
 		// CONSTRUCTORS
 		//--------------------------------------------------------------
-		public Player () : this(Constants.DefaulPlayerName)
-		{
-		}
-
 		public Player (string name)
 		{
 			_name = name;
