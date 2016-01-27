@@ -16,10 +16,10 @@
             android:layout_width="wrap_content"
             android:layout_height="50dp"
             android:layout_centerVertical="true"
-            android:tag="x"
+            android:tag="@string/closeIcon"
             android:layout_alignParentRight="true" />
         <TextView
-            android:text="settings"
+            android:text="@string/settings"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:id="@+id/settingsTitle"
             android:gravity="center_horizontal"

@@ -101,7 +101,6 @@
         android:layout_weight="50"
         android:weightSum="100">
         <Tetrim.ButtonStroked
-            android:text="1 player"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:id="@+id/singlePlayerButton"
@@ -114,7 +113,6 @@
             android:layout_marginLeft="5dp"
             android:tag="@string/onePlayer" />
         <Tetrim.ButtonStroked
-            android:text="2 players"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:id="@+id/twoPlayersButton"
@@ -127,7 +125,6 @@
             android:background="#ffffff"
             android:tag="@string/twoPlayers" />
         <Tetrim.ButtonStroked
-            android:text="settings"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:id="@+id/settingsButton"
@@ -140,7 +137,6 @@
             android:background="#ffffff"
             android:tag="@string/settings" />
         <Tetrim.ButtonStroked
-            android:text="exit"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:id="@+id/exitButton"

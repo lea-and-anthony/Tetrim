@@ -69,13 +69,7 @@ namespace Tetrim
 
 		public override void OnBackPressed()
 		{
-			if(_gameTimer != null)
-			{
-				if(_gameTimer.Enabled)
-					pauseGame(true);
-				else
-					ResumeGame();
-			}
+			handlePauseRequest();
 		}
 
 		//--------------------------------------------------------------
@@ -158,6 +152,10 @@ namespace Tetrim
 			nextPieceView.SetPlayer(_player1);
 			nextPieceView.SetBackgroundColor(Utils.getAndroidColor(TetrisColor.Cyan));
 
+			ButtonStroked pauseButton = FindViewById<ButtonStroked>(Resource.Id.pauseButton);
+			UtilsUI.SetIconButton(pauseButton, TetrisColor.Yellow, difference);
+			pauseButton.Click += delegate { handlePauseRequest(); };
+
 			// Set the buttons
 			UtilsUI.SetArrowButton(FindViewById<ButtonStroked>(Resource.Id.buttonMoveLeft), TetrisColor.Green, difference);
 			UtilsUI.SetArrowButton(FindViewById<ButtonStroked>(Resource.Id.buttonMoveRight), TetrisColor.Green, difference);
@@ -170,11 +168,23 @@ namespace Tetrim
 			// now we have set the size it is useless and it will allow the layout to actualize
 			LinearLayout gameLayout = FindViewById<LinearLayout>(Resource.Id.gridButtonLayout);
 			gameLayout.WeightSum = 0;
+
 		}
 
 		protected void endGame()
 		{
 			Finish();
+		}
+
+		protected void handlePauseRequest()
+		{
+			if(_gameTimer != null)
+			{
+				if(_gameTimer.Enabled)
+					pauseGame(true);
+				else
+					ResumeGame();
+			}
 		}
 
 		protected void associateButtonsEvent()

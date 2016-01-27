@@ -339,6 +339,14 @@ namespace Tetrim
 			ProposedPieceView proposedPiecesView = FindViewById<ProposedPieceView>(Resource.Id.player2piece);
 			proposedPiecesView.SetBackgroundColor(Utils.getAndroidColor(TetrisColor.Red));
 
+			// Change the buttons location
+			LinearLayout layoutButtonsLeft = FindViewById<LinearLayout>(Resource.Id.layoutButtonsLeft);
+			RelativeLayout.LayoutParams lpLeft = (RelativeLayout.LayoutParams)layoutButtonsLeft.LayoutParameters;
+			lpLeft.AddRule(LayoutRules.AlignParentTop);
+			LinearLayout layoutButtonsRight = FindViewById<LinearLayout>(Resource.Id.layoutButtonsRight);
+			RelativeLayout.LayoutParams lpRight = (RelativeLayout.LayoutParams)layoutButtonsRight.LayoutParameters;
+			lpRight.AddRule(LayoutRules.AlignParentTop);
+
 			// Center the opponent grid
 			Point size = GridView.CalculateUseSize(_player2View._gridView.MeasuredWidth, _player2View._gridView.MeasuredHeight);
 			LinearLayout.LayoutParams newLayoutParams = new LinearLayout.LayoutParams(size.X, size.Y);
@@ -354,11 +362,6 @@ namespace Tetrim
 			// Create image
 			Bitmap player2background = Bitmap.CreateBitmap(player2layout.Width, player2layout.Height, Bitmap.Config.Argb8888);
 			Canvas backCanvas = new Canvas(player2background);
-
-			// Background fill paint
-			Paint fillBackPaint = new Paint();
-			fillBackPaint.Color = UtilsUI.Player2Background;
-			fillBackPaint.AntiAlias = true;
 
 			// Background stroke paint
 			// TODO : same width as buttons and set layout margins
@@ -382,7 +385,6 @@ namespace Tetrim
 			int radiusIn = Utils.GetPixelsFromDP(this, 7);
 			int radiusOut = Utils.GetPixelsFromDP(this, 5);
 			backCanvas.DrawRoundRect(bounds, radiusOut, radiusOut, strokeBackPaint);
-			backCanvas.DrawRoundRect(bounds, radiusIn, radiusIn, fillBackPaint);
 
 			// Use it as background
 			player2layout.SetBackgroundDrawable(new BitmapDrawable(player2background));

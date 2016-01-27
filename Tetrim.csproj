@@ -80,6 +80,7 @@
     <Compile Include="Code-Interface\NextPieceView.cs" />
     <Compile Include="Code-Interface\ProposedPieceView.cs" />
     <Compile Include="Activities\MainActivity.cs" />
+    <Compile Include="Code-Interface\ButtonUI.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
@@ -135,6 +136,7 @@
     <AndroidResource Include="Resources\layout\BluetoothConnection.axml" />
     <AndroidResource Include="Resources\layout\Dialog.axml" />
     <AndroidResource Include="Resources\values\themes.xml" />
+    <AndroidResource Include="Resources\layout\Game.axml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Code-Model\" />
