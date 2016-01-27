@@ -412,6 +412,7 @@ namespace Tetrim
 			player2layout.SetBackgroundDrawable(new BitmapDrawable(_player2background));
 
 			backCanvas.Dispose();
+			strokeBackPaint.Dispose();
 		}
 		
 		// Pause the game, display a pop-up and send a message to the remote device if asked

@@ -11,13 +11,21 @@ namespace Tetrim
 	public class ProposedPieceView : View
 	{
 		//--------------------------------------------------------------
+		// CONSTANTS
+		//--------------------------------------------------------------
+		private const int StrokeWidthBorder = 4;
+		private static Paint GridPaint = Utils.createPaintWithStyle(
+			new Paint {AntiAlias = true, Color = Color.Gray, StrokeWidth = StrokeWidthBorder},
+			Paint.Style.Stroke);
+		
+		//--------------------------------------------------------------
 		// ATTRIBUTES
 		//--------------------------------------------------------------
 		private Player _player; // Instance of the player to whom the pieces are proposed
 		private PieceView[] _proposedPieces = new PieceView[Constants.NbProposedPiece]; // Array of the views of the proposed pieces
 		private int _selectedPiece = 0; // Selected piece by the player
 		private int _nbPieceByLine = 0;
-
+		private Point _offset = null;
 		private int _blockSize = 0; // Size of the blocks in pixels according to the screen resolution
 		private Dictionary<TetrisColor, Bitmap> _blockImages = new Dictionary<TetrisColor, Bitmap>(); // Images of the blocks
 
@@ -114,6 +122,8 @@ namespace Tetrim
 						_blockImages.Add(color, image);
 					}
 				}
+
+				_offset = new Point((Width - _nbPieceByLine*5*_blockSize) / 2, (Height - Constants.NbLinePropPiece*5*_blockSize));
 			}
 
 			// Draw the pieces and highlight the selected one
@@ -129,9 +139,11 @@ namespace Tetrim
 												(_blockSize * 5) * (i / _nbPieceByLine), 
 												((i % _nbPieceByLine) + 1) * _blockSize * 5, 
 												(_blockSize * 5) * (1 + i / _nbPieceByLine));
-						
+						rect.Offset(_offset.X, _offset.Y);
+
 						Paint paint = new Paint {AntiAlias = true, Color = Color.AntiqueWhite};
 						canvas.DrawRoundRect(rect, Constants.RadiusHighlight, Constants.RadiusHighlight, paint);
+						paint.Dispose();
 					}
 					float xSize = 0;
 					float ySize = 0;
@@ -139,10 +151,22 @@ namespace Tetrim
 
 					// Draw each piece
 					_proposedPieces[i].Draw(canvas, _blockSize, _blockImages, 
-											(i % _nbPieceByLine) * _blockSize * 5 + (_blockSize * 5 - xSize) / 2, 
-											Height - ((i / _nbPieceByLine + 1) * _blockSize * 5 - (_blockSize * 5 - ySize) / 2), 
+											(i % _nbPieceByLine) * _blockSize * 5 + (_blockSize * 5 - xSize) / 2 + _offset.X, 
+											Height - ((i / _nbPieceByLine + 1) * _blockSize * 5 - (_blockSize * 5 - ySize) / 2 + _offset.Y), 
 											Height);
 				}
+			}
+
+			// Grid
+			for(int i = 1; i < _nbPieceByLine; i++)
+			{
+				int x = _offset.X + i*5*_blockSize - StrokeWidthBorder / 2;
+				canvas.DrawLine(x, _offset.Y, x, _offset.Y + Constants.NbLinePropPiece*5*_blockSize, GridPaint);
+			}
+			for(int i = 1; i < Constants.NbLinePropPiece; i++)
+			{
+				int y = _offset.Y + i*5*_blockSize - StrokeWidthBorder / 2;
+				canvas.DrawLine(_offset.X, y, _offset.X + _nbPieceByLine*5*_blockSize, y, GridPaint);
 			}
 		}
 

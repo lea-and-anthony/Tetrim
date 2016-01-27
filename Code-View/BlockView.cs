@@ -70,6 +70,7 @@ namespace Tetrim
 			{
 				imageCanvas.DrawRect(i, blockSize - i, blockSize - i, i, borderPaint);
 			}
+			borderPaint.Dispose();
 
 			// Define the corners of the big rectangle without the border
 			PointF outerRectTopLeft = new PointF(
@@ -171,6 +172,8 @@ namespace Tetrim
 			};
 			paint.SetStyle(Paint.Style.Fill);
 			canvas.DrawPath(path, paint);
+
+			paint.Dispose();
 		}
 
 		// Adjust the saturation and value of a color keeping the hue intact
@@ -202,6 +205,7 @@ namespace Tetrim
 				Paint paint = new Paint();
 				paint.Alpha = _isShadow ? AlphaShadow : AlphaOpaque;
 				canvas.DrawBitmap(blockImages[_block._color], left, top, paint);
+				paint.Dispose();
 			}
 		}
 			
