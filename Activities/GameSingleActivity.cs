@@ -48,7 +48,7 @@ namespace Tetrim
 			changeSpeedIfNecessary();
 
 			// Display of the current model
-			FindViewById(Resource.Id.PlayerGridView).PostInvalidate();
+			actualizeView();
 		}
 		//--------------------------------------------------------------
 		// PUBLIC METHODS

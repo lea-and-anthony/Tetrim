@@ -24,7 +24,7 @@
 
     <!-- Settings -->
     <string name="deleteFriends">delete friends</string>
-    <string name="deleteHighScores">delete high scores</string>
+    <string name="deleteHighScores">delete highscore</string>
     <string name="changeName">change user name</string>
 
     <!-- Game -->

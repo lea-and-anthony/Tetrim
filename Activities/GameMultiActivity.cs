@@ -42,6 +42,7 @@ namespace Tetrim
 		public Player _player2 { get; private set; }
 		public PlayerView _player2View { get; private set; } // View of the player 2
 
+		private Bitmap _player2background = null;
 		private StopOrigin _originPause = StopOrigin.None;
 		private GameState _gameState;
 		private readonly object _locker = new object ();
@@ -117,6 +118,13 @@ namespace Tetrim
 				Network.Instance.CommunicationWay.Write(_player1.GetEndMessage());
 			}
 
+			if(_player2background != null)
+			{
+				_player2background.Recycle();
+				_player2background.Dispose();
+				_player2background = null;
+			}
+
 			_player2View._gridView.RemoveBitmaps(); // Remove of the bitmap
 			FindViewById<ProposedPieceView>(Resource.Id.player2piece).RemoveBitmaps(); // Remove of the dictionnary of bitmap
 			base.OnDestroy();
@@ -181,20 +189,7 @@ namespace Tetrim
 			changeSpeedIfNecessary();
 
 			// Display of the current model
-			if(!_player1View._gridView._frameRendered)
-			{
-				// We need to wait that the view is displayed before drawing the following one
-				#if DEBUG
-				Log.Debug(Tag, "Lag during display");
-				#endif
-				_gameTimer.Stop();
-				while(!_player1View._gridView._frameRendered)
-				{
-					Java.Lang.Thread.Sleep(50);
-				}
-				_gameTimer.Start();
-			}
-			FindViewById(Resource.Id.PlayerGridView).PostInvalidate();
+			actualizeView();
 		}
 
 		public int WriteMessageEventReceived(byte[] writeBuf)
@@ -380,9 +375,15 @@ namespace Tetrim
 		private void setBackground()
 		{
 			LinearLayout player2layout = FindViewById<LinearLayout>(Resource.Id.player2layout);
+
+			if(_player2background != null)
+			{
+				_player2background.Recycle();
+				_player2background.Dispose();
+			}
 			// Create image
-			Bitmap player2background = Bitmap.CreateBitmap(player2layout.Width, player2layout.Height, Bitmap.Config.Argb8888);
-			Canvas backCanvas = new Canvas(player2background);
+			_player2background = Bitmap.CreateBitmap(player2layout.Width, player2layout.Height, Bitmap.Config.Argb8888);
+			Canvas backCanvas = new Canvas(_player2background);
 
 			// Background stroke paint
 			// TODO : same width as buttons and set layout margins
@@ -408,7 +409,9 @@ namespace Tetrim
 			backCanvas.DrawRoundRect(bounds, radiusOut, radiusOut, strokeBackPaint);
 
 			// Use it as background
-			player2layout.SetBackgroundDrawable(new BitmapDrawable(player2background));
+			player2layout.SetBackgroundDrawable(new BitmapDrawable(_player2background));
+
+			backCanvas.Dispose();
 		}
 		
 		// Pause the game, display a pop-up and send a message to the remote device if asked

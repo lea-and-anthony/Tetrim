@@ -39,6 +39,7 @@ namespace Tetrim
 		protected TextView _message;
 		protected EditText _field;
 		protected ButtonStroked _positiveButton, _negativeButton;
+		protected Bitmap _backgroundImage = null;
 
 		public static DialogBuilder Builder;
 		public static StandardDelegate CloseAllDialog = null;
@@ -159,6 +160,13 @@ namespace Tetrim
 
 		protected override void OnDestroy()
 		{
+			if(_backgroundImage != null)
+			{
+				_backgroundImage.Recycle();
+				_backgroundImage.Dispose();
+				_backgroundImage = null;
+			}
+
 			Utils.RemoveBitmapsOfButtonStroked(_root);
 			base.OnDestroy();
 			CloseAllDialog -= Finish;
@@ -186,8 +194,14 @@ namespace Tetrim
 			if(_root.Width <= 0 || _root.Height <= 0)
 				return false;
 
-			Bitmap backgroundImage = Bitmap.CreateBitmap(_root.Width, _root.Height, Bitmap.Config.Argb8888);
-			Canvas canvas = new Canvas(backgroundImage);
+			if(_backgroundImage != null)
+			{
+				_backgroundImage.Recycle();
+				_backgroundImage.Dispose();
+			}
+
+			_backgroundImage = Bitmap.CreateBitmap(_root.Width, _root.Height, Bitmap.Config.Argb8888);
+			Canvas canvas = new Canvas(_backgroundImage);
 
 			Rect local = new Rect();
 			_root.GetLocalVisibleRect(local);
@@ -212,7 +226,9 @@ namespace Tetrim
 			canvas.DrawRoundRect(bounds, Builder.RadiusOut, Builder.RadiusOut, strokeBackPaint);
 			canvas.DrawRoundRect(bounds, Builder.RadiusIn, Builder.RadiusIn, fillBackPaint);
 
-			_root.SetBackgroundDrawable(new BitmapDrawable(backgroundImage));
+			_root.SetBackgroundDrawable(new BitmapDrawable(_backgroundImage));
+
+			canvas.Dispose();
 
 			return true;
 		}

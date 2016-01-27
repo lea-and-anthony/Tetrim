@@ -149,6 +149,8 @@ namespace Tetrim
 			};
 			drawPolygonInCanvas(imageCanvas, right3dBorder, rightColor);
 
+			imageCanvas.Dispose();
+
 			return image;
 		}
 

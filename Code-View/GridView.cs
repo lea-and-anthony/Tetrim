@@ -208,6 +208,8 @@ namespace Tetrim
 				}
 			}
 
+			bitmapCanvas.Dispose();
+
 			_redraw = false;
 		}
 
@@ -268,6 +270,8 @@ namespace Tetrim
 			{
 				bitmapCanvas.DrawLine(left, y, right, y, GridPaint);
 			}
+
+			bitmapCanvas.Dispose();
 		}
 	}
 }

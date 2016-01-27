@@ -199,6 +199,24 @@ namespace Tetrim
 			FindViewById<ButtonStroked>(Resource.Id.buttonMoveFoot).Click += moveFootButtonPressed;
 		}
 
+		protected void actualizeView()
+		{
+			if(!_player1View._gridView._frameRendered)
+			{
+				// We need to wait that the view is displayed before drawing the following one
+				#if DEBUG
+				Log.Debug(Tag, "Lag during display");
+				#endif
+				_gameTimer.Stop();
+				while(!_player1View._gridView._frameRendered)
+				{
+					Java.Lang.Thread.Sleep(50);
+				}
+				_gameTimer.Start();
+			}
+			FindViewById(Resource.Id.PlayerGridView).PostInvalidate();
+		}
+
 		protected void changeSpeedIfNecessary()
 		{
 			if(_previousLevel < _player1._level)

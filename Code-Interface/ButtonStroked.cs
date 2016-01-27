@@ -212,6 +212,9 @@ namespace Tetrim
 			states.AddState(new int[] {Android.Resource.Attribute.StateSelected}, new BitmapDrawable(_pressedImage));
 			states.AddState(new int[] { }, new BitmapDrawable(_unpressedImage));
 			SetBackgroundDrawable(states);
+
+			unpressedCanvas.Dispose();
+			pressedCanvas.Dispose();
 		}
 
 		private void DrawBackground(Canvas canvas, RectF bounds, Paint fillBackPaint, Paint strokeBackPaint)
