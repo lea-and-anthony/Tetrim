@@ -30,11 +30,11 @@ namespace Tetrim
 		//--------------------------------------------------------------
 		// ATTRIBUTES
 		//--------------------------------------------------------------
-		LinearLayout _root, _buttonLayout, _content;
-		TextView _title;
-		TextView _message;
-		EditText _field;
-		ButtonStroked _positiveButton, _negativeButton;
+		protected LinearLayout _root, _buttonLayout, _content;
+		protected TextView _title;
+		protected TextView _message;
+		protected EditText _field;
+		protected ButtonStroked _positiveButton, _negativeButton;
 
 		public static DialogBuilder Builder;
 		public static StandardDelegate CloseAllDialog = null;
@@ -112,14 +112,19 @@ namespace Tetrim
 			_positiveButton = FindViewById<ButtonStroked>(Resource.Id.positiveButton);
 			_negativeButton = FindViewById<ButtonStroked>(Resource.Id.negativeButton);
 
-			if(String.IsNullOrEmpty(Builder.PositiveText))
+			if(String.IsNullOrEmpty(Builder.PositiveText) && String.IsNullOrEmpty(Builder.NegativeText))
+			{
+				_positiveButton.Visibility = ViewStates.Gone;
+				_negativeButton.Visibility = ViewStates.Gone;
+			}
+			else if(String.IsNullOrEmpty(Builder.PositiveText))
 			{
 				_positiveButton.Visibility = ViewStates.Gone;
 				LinearLayout.LayoutParams lpNeg = (LinearLayout.LayoutParams) _negativeButton.LayoutParameters;
 				lpNeg.Weight = 2;
 				_negativeButton.LayoutParameters = lpNeg;
 			}
-			else if (String.IsNullOrEmpty(Builder.NegativeText))
+			else if(String.IsNullOrEmpty(Builder.NegativeText))
 			{
 				_negativeButton.Visibility = ViewStates.Gone;
 				LinearLayout.LayoutParams lpPos = (LinearLayout.LayoutParams) _positiveButton.LayoutParameters;
@@ -149,6 +154,7 @@ namespace Tetrim
 
 		protected override void OnDestroy()
 		{
+			Utils.RemoveBitmapsOfButtonStroked(_root);
 			base.OnDestroy();
 			CloseAllDialog -= Finish;
    		}
@@ -234,6 +240,14 @@ namespace Tetrim
 		//--------------------------------------------------------------
 		// PUBLIC METHODES
 		//--------------------------------------------------------------
+		public static void CloseAll()
+		{
+			if(CloseAllDialog != null)
+			{
+				CloseAllDialog.Invoke();
+			}
+		}
+
 		public static Intent CreateYesDialog(Activity activity, int titleId, int messageId, int posTextId, EventHandler posAction)
 		{
 			return CreateYesNoDialog(activity, titleId, messageId, posTextId, -1, posAction, null);

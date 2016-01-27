@@ -21,7 +21,7 @@ namespace Tetrim
 				switch(message.Arg1)
 				{
 				case (int) BluetoothManager.StateEnum.Connected:
-					Network.Instance.NotifyStateConnected();
+					Network.Instance.NotifyStateConnected((Network.ConnectionRole) message.Arg2);
 					break;
 				case (int) BluetoothManager.StateEnum.Connecting:
 					Network.Instance.NotifyStateConnecting();

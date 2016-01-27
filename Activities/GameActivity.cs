@@ -53,6 +53,8 @@ namespace Tetrim
 
 		protected override void OnDestroy ()
 		{
+			Utils.RemoveBitmapsOfButtonStroked(FindViewById<ViewGroup>(Resource.Id.layoutGame));
+			_player1View._gridView.RemoveBitmaps();
 			base.OnDestroy ();
 
 			// Stop the timer

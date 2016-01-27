@@ -8,7 +8,7 @@ using Android.Util;
 namespace Tetrim
 {
 	[Activity(Theme = "@style/Theme.TetrimDialogTheme", ScreenOrientation = ScreenOrientation.Portrait)]
-	public class ReconnectActivity : Activity
+	public class ReconnectActivity : DialogActivity
 	{
 		//--------------------------------------------------------------
 		// CONSTANTS
@@ -30,10 +30,22 @@ namespace Tetrim
 		//--------------------------------------------------------------
 		protected override void OnCreate (Bundle bundle)
 		{
+			Builder = new DialogBuilder(this);
+			Builder.PositiveText = null;
+			Builder.PositiveAction = null;
+			Builder.NegativeText = null;
+			Builder.NegativeAction = null;
+			Builder.Message = Resources.GetString(Resource.String.reconnect_activity);
+			Builder.Title = null;
+
 			base.OnCreate (bundle);
 
+			_root.SetMinimumWidth(0);
+			_root.SetMinimumHeight(0);
+			CloseAllDialog -= Finish;
+
 			// Set result CANCELED in case the user backs out
-			SetResult (Result.Canceled);
+			SetResult (Android.App.Result.Canceled);
 
 			// We retrieve the old device we were connected to so we can try to reconnect to it later
 			// (this value will be reinitialized during enabling)
@@ -54,6 +66,11 @@ namespace Tetrim
 		{
 			base.OnDestroy();
 
+			if(_messageFail != null && Network.Instance.Connected)
+			{
+				Network.Instance.CommunicationWay.Write(_messageFail);
+			}
+
 			// We unsubscribe from the events
 			Network.Instance.StateConnectedEvent -= OnConnected;
 			Network.Instance.StateConnectingEvent -= OnConnecting;
@@ -62,7 +79,7 @@ namespace Tetrim
 			Network.Instance.WriteEvent -= WriteMessageEventReceived;
 		}
 
-		protected override void OnActivityResult(int requestCode, Result resultCode, Intent data)
+		protected override void OnActivityResult(int requestCode, Android.App.Result resultCode, Intent data)
 		{
 			#if DEBUG
 			Log.Debug(Tag, "onActivityResult " + resultCode);
@@ -71,7 +88,7 @@ namespace Tetrim
 			{
 				tryConnection();
 			}
-			else
+			else if(requestCode == (int) Utils.RequestCode.RequestEnableBluetooth)
 			{
 				Finish();
 			}
@@ -99,16 +116,7 @@ namespace Tetrim
 				return 1;
 			}
 
-			if(_messageFail != null)
-			{
-				Network.Instance.CommunicationWay.Write(_messageFail);
-			}
-
-			if(isDialogDisplayed)
-			{
-				DialogActivity.CloseAllDialog.Invoke();
-				isDialogDisplayed = false;
-			}
+			DialogActivity.CloseAll();
 
 			// Now we display a pop-up asking if we want to continue the game
 			Intent intent = DialogActivity.CreateYesNoDialog(this, Resource.String.connection_back, -1,
@@ -127,7 +135,7 @@ namespace Tetrim
 			if(_connectingOccured)
 			{
 				// Reset result and asking if we retry or finish this Activity
-				SetResult(Result.Canceled, null);
+				SetResult(Android.App.Result.Canceled, null);
 
 				if(!isDialogDisplayed)
 				{
@@ -154,7 +162,7 @@ namespace Tetrim
 				else
 				{
 					// Set result and finish this Activity
-					SetResult(Result.Ok, null);
+					SetResult(Android.App.Result.Ok, null);
 					Finish();
 				}
 			}
@@ -170,7 +178,7 @@ namespace Tetrim
 					if(_state == Network.StartState.OPPONENT_READY)
 					{
 						// Set result and finish this Activity
-						SetResult(Result.Ok, null);
+						SetResult(Android.App.Result.Ok, null);
 						Finish();
 					}
 					else if(_state == Network.StartState.NONE)
@@ -203,9 +211,12 @@ namespace Tetrim
 		{
 			if(Network.Instance.WaitingForConnection && _deviceAddress != string.Empty)
 			{
-				// Attempt to connect to the previous device
-				BluetoothDevice device = BluetoothAdapter.DefaultAdapter.GetRemoteDevice(_deviceAddress);
-				Network.Instance.CommunicationWay.Connect(device);
+				if(Network.Instance.RoleInLastConnection == Network.ConnectionRole.Master)
+				{
+					// Attempt to connect to the previous device (only one device should try this)
+					BluetoothDevice device = BluetoothAdapter.DefaultAdapter.GetRemoteDevice(_deviceAddress);
+					Network.Instance.CommunicationWay.Connect(device);
+				}
 			}
 			else
 			{

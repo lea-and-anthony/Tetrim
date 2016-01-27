@@ -136,6 +136,7 @@ namespace Tetrim
 
 		protected override void OnDestroy()
 		{
+			Utils.RemoveBitmapsOfButtonStroked(FindViewById<ViewGroup>(Resource.Id.rootBluetoothConnection));
 			base.OnDestroy();
 
 			// Make sure we're not doing discovery anymore
@@ -340,11 +341,8 @@ namespace Tetrim
 			// To avoid infinite loop because this function can throw a StateNoneEvent
 			Network.Instance.StateNoneEvent -= StateNoneEventReceived;
 
-			if(DialogActivity.CloseAllDialog != null)
-			{
-				// if the connection fail we remove the pop-up and restart the bluetooth
-				DialogActivity.CloseAllDialog.Invoke();
-			}
+			// if the connection fail we remove the pop-up and restart the bluetooth
+			DialogActivity.CloseAll();
 
 			Network.Instance.CommunicationWay.Start();
 
@@ -364,11 +362,8 @@ namespace Tetrim
 
 		public int StartGameMessageReceived(byte[] message)
 		{
-			// Remove the pop-up in all the case
-			if(DialogActivity.CloseAllDialog != null)
-			{
-				DialogActivity.CloseAllDialog.Invoke();
-			}
+			// close the pop-up in all the case
+			DialogActivity.CloseAll();
 
 			// We have recieve a demand to start the game
 			// We verify that the two player have the same version of the application
@@ -454,10 +449,7 @@ namespace Tetrim
 			Log.Debug(Tag, "CancelConnection()");
 			#endif
 
-			if(DialogActivity.CloseAllDialog != null)
-			{
-				DialogActivity.CloseAllDialog.Invoke();
-			}
+			DialogActivity.CloseAll();
 
 			_state = Network.StartState.NONE;
 			Network.Instance.CommunicationWay.Start();
@@ -525,10 +517,7 @@ namespace Tetrim
 
 		private void displayWaitingDialog(int idMessage)
 		{
-			if(DialogActivity.CloseAllDialog != null)
-			{
-				DialogActivity.CloseAllDialog.Invoke();
-			}
+			DialogActivity.CloseAll();
 
 			Intent dialog = DialogActivity.CreateYesNoDialog(this, idMessage, -1,
 				Resource.String.cancel, -1, delegate{CancelConnection();}, null);

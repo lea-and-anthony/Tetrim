@@ -94,6 +94,12 @@ namespace Tetrim
 			}
 		}
 
+		protected override void OnDestroy()
+		{
+			Utils.RemoveBitmapsOfButtonStroked(FindViewById<ViewGroup>(Resource.Id.menuContainer));
+			base.OnDestroy();
+		}
+
 		protected override void OnResume ()
 		{
 			base.OnResume();

@@ -181,6 +181,19 @@ namespace Tetrim
 			replaceFont("SANS_SERIF", UtilsUI.TextFont);
 		}
 
+		public static void RemoveBitmapsOfButtonStroked(ViewGroup mainView)
+		{
+			for(int i = 0; i < mainView.ChildCount; i++)
+			{
+				View child = mainView.GetChildAt(i);
+				Type childType = child.GetType();
+				if(childType == typeof(ButtonStroked))
+					((ButtonStroked)child).RemoveBitmaps();
+				else if(childType.BaseType == typeof(ViewGroup))
+					RemoveBitmapsOfButtonStroked((ViewGroup) child);
+			}
+		}
+
 		public static void AddByteArrayToOverArray(ref byte[] message, byte[] over, int offset)
 		{
 			for(int i = 0; i < over.Length; i++)

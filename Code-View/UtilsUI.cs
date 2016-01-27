@@ -110,7 +110,7 @@ namespace Tetrim
 					case DialogBuilder.DialogRequestCode.Text:
 						if(answer)
 						{
-							if(!String.IsNullOrEmpty(field.Text))
+							if(!String.IsNullOrWhiteSpace(field.Text))
 							{
 								intent.PutExtra(DialogActivity.Builder.RequestCode.ToString(), field.Text);
 								activity.SetResult(Result.Ok, intent);

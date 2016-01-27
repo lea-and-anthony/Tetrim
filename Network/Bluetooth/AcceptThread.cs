@@ -97,7 +97,7 @@ namespace Tetrim
 						case BluetoothManager.StateEnum.Connecting:
 							// Situation normal. Start the connected thread.
 							_success = true;
-							_service.Connected (socket, socket.RemoteDevice);
+							_service.Connected (socket, socket.RemoteDevice, false);
 							break;
 						case BluetoothManager.StateEnum.None:
 						case BluetoothManager.StateEnum.Connected:

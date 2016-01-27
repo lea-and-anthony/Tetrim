@@ -48,7 +48,8 @@
 
     <!-- Prompt Dialog -->
     <string name="askName">What is your name ?</string>
-    <string name="cannotRestartGame">Cannot restart a game.</string>
+    <string name="cannotRestartGameWin">You have won ! But your friend got away :-(.</string>
+    <string name="cannotRestartGameLost">You have lost the party and your friend :-(.</string>
     <string name="lostFriend">Seems your friend abandonned you :-(.</string>
 
     <!-- Pause Dialog -->

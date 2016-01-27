@@ -3,6 +3,7 @@ using Android.Content;
 using Android.Content.PM;
 using Android.OS;
 using Android.Util;
+using Android.Views;
 
 namespace Tetrim
 {
@@ -60,6 +61,12 @@ namespace Tetrim
 					delegate {User.Instance.ClearHighScore();}, null);
 				StartActivity(intent);
 			};
+		}
+
+		protected override void OnDestroy()
+		{
+			Utils.RemoveBitmapsOfButtonStroked(FindViewById<ViewGroup>(Resource.Id.rootSettings));
+			base.OnDestroy();
 		}
 	}
 }

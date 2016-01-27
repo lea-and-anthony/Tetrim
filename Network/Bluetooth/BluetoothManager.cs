@@ -177,7 +177,7 @@ namespace Tetrim
 		}
 
 		/// Start the ConnectedThread to begin managing a Bluetooth connection
-		public void Connected(BluetoothSocket socket, BluetoothDevice device)
+		public void Connected(BluetoothSocket socket, BluetoothDevice device, bool initiator)
 		{
 			lock (_locker)
 			{
@@ -195,7 +195,10 @@ namespace Tetrim
 				_connectedThread = new ConnectedThread (socket, this);
 				_connectedThread.Start ();
 
-				setState (StateEnum.Connected);
+				if(initiator)
+					setState (StateEnum.Connected, (int) Network.ConnectionRole.Master);
+				else
+					setState (StateEnum.Connected, (int) Network.ConnectionRole.Slave);
 			}
 		}
 
@@ -266,6 +269,11 @@ namespace Tetrim
 		/// Set the current state of the chat connection.
 		private void setState(StateEnum state)
 		{
+			setState(state, -1);
+		}
+
+		private void setState(StateEnum state, int param)
+		{
 			lock (_locker)
 			{
 				#if DEBUG
@@ -275,7 +283,7 @@ namespace Tetrim
 				_state = state;
 
 				// Give the new state to the Handler so the UI Activity can update
-				_handler.ObtainMessage ((int)MessageType.StateChange, (int)state, -1).SendToTarget ();
+				_handler.ObtainMessage ((int)MessageType.StateChange, (int)state, param).SendToTarget ();
 			}   
 		}
 

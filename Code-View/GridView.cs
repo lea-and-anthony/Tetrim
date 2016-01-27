@@ -39,6 +39,8 @@ namespace Tetrim
 		//--------------------------------------------------------------
 		// ATTRIBUTES
 		//--------------------------------------------------------------
+		public bool _frameRendered { get; private set; }
+
 		private Grid _grid = null; // Instance of the grid to display
 		private BlockView[,] _mapView = null; // Array of the BlockViews constituting the grid
 
@@ -58,6 +60,7 @@ namespace Tetrim
 		//--------------------------------------------------------------
 		public GridView (Context context, IAttributeSet attrs) : base(context, attrs)
 		{
+			_frameRendered = true;
 		}
 
 		//--------------------------------------------------------------
@@ -76,10 +79,11 @@ namespace Tetrim
 		}
 
 		//--------------------------------------------------------------
-		// PROTECTED METHODES
+		// OVERRIDE METHODES
 		//--------------------------------------------------------------
 		public override void Draw (Canvas canvas)
 		{
+			_frameRendered = false;
 			base.OnDraw(canvas);
 
 			if(_grid == null)
@@ -99,6 +103,30 @@ namespace Tetrim
 
 			// Now we can change the view
 			_mutexView.ReleaseMutex();
+			_frameRendered = true;
+		}
+
+		public void RemoveBitmaps()
+		{
+			foreach(KeyValuePair<TetrisColor, Bitmap> entry in _blockImages)
+			{
+				entry.Value.Recycle();
+				entry.Value.Dispose();
+			}
+			_blockImages.Clear();
+
+			if(_bitmapBuffer != null)
+			{
+				_bitmapBuffer.Recycle();
+				_bitmapBuffer.Dispose();
+				_bitmapBuffer = null;
+			}
+			if(_firstBitmapBuffer != null)
+			{
+				_firstBitmapBuffer.Recycle();
+				_firstBitmapBuffer.Dispose();
+				_firstBitmapBuffer = null;
+			}
 		}
 
 		//--------------------------------------------------------------
@@ -206,7 +234,11 @@ namespace Tetrim
 				// Create the blocks images with the right size
 				foreach(TetrisColor color in Enum.GetValues(typeof(TetrisColor)))
 				{
-					_blockImages.Add(color, BlockView.CreateImage(_blockSize, color));
+					Bitmap image = BlockView.CreateImage(_blockSize, color);
+					if(image != null)
+					{
+						_blockImages.Add(color, image);
+					}
 				}
 			}
 

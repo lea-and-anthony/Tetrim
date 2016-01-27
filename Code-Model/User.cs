@@ -120,7 +120,7 @@ namespace Tetrim
 
 		public void SetName(string name)
 		{
-			if(name != _userName)
+			if(name != _userName && !String.IsNullOrWhiteSpace(name))
 			{
 				_userName = name;
 				Save();

@@ -95,7 +95,7 @@ namespace Tetrim
 				{
 					// Start the connected thread
 					_success = true;
-					_service.Connected(_socket, _device);
+					_service.Connected(_socket, _device, true);
 				}
 			}
 			else

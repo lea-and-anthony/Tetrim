@@ -30,6 +30,13 @@ namespace Tetrim
 			OPPONENT_READY
 		};
 
+		public enum ConnectionRole
+		{
+			None = 0,
+			Master = 1,
+			Slave = 2
+		}
+
 		//--------------------------------------------------------------
 		// EVENTS
 		//--------------------------------------------------------------
@@ -44,6 +51,7 @@ namespace Tetrim
 		// ATTRIBUTES
 		//--------------------------------------------------------------
 		private static readonly Network _instance = new Network();
+		private ConnectionRole _roleInLastConnection = ConnectionRole.None;
 
 		public BluetoothManager _communicationWay = null;
 
@@ -70,7 +78,7 @@ namespace Tetrim
 		//--------------------------------------------------------------
 		// CONSTRUCTORS
 		//--------------------------------------------------------------
-		private Network () {}
+		private Network() {}
 
 		//--------------------------------------------------------------
 		// PROPERTIES
@@ -124,6 +132,15 @@ namespace Tetrim
 			get 
 			{
 				return Enabled && _communicationWay.State == BluetoothManager.StateEnum.Listen;
+			}
+		}
+
+		/* Return the role of the device in the current connection (master if it is this one which asked for the connection, slave else) */
+		public ConnectionRole RoleInLastConnection
+		{
+			get 
+			{
+				return _roleInLastConnection;
 			}
 		}
 
@@ -349,8 +366,10 @@ namespace Tetrim
 			}
 		}
 
-		public void NotifyStateConnected()
+		public void NotifyStateConnected(ConnectionRole roleInConnection)
 		{
+			_roleInLastConnection = roleInConnection;
+
 			if(StateConnectedEvent != null)
 			{
 				StateConnectedEvent.Invoke();

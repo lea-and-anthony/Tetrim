@@ -30,7 +30,8 @@ namespace Tetrim
 		private enum GameState
 		{
 			Play,
-			GameOver,
+			GameOverWin,
+			GameOverLost,
 			WaitingForRestart,
 			OpponentReadyForRestart,
 		}
@@ -42,7 +43,6 @@ namespace Tetrim
 		public PlayerView _player2View { get; private set; } // View of the player 2
 
 		private StopOrigin _originPause = StopOrigin.None;
-		private bool endMessageSent = false;
 		private GameState _gameState;
 		private readonly object _locker = new object ();
 
@@ -107,19 +107,18 @@ namespace Tetrim
 
 		protected override void OnDestroy ()
 		{
-			if(DialogActivity.CloseAllDialog != null)
-			{
-				DialogActivity.CloseAllDialog.Invoke();
-			}
+			DialogActivity.CloseAll();
 
 			Network.Instance.EraseAllEvent();
 
 			// If we are still playing, we send the end message to the opponent
-			if (Network.Instance.Connected && !endMessageSent)
+			if (Network.Instance.Connected && _gameState == GameState.Play)
 			{
 				Network.Instance.CommunicationWay.Write(_player1.GetEndMessage());
 			}
 
+			_player2View._gridView.RemoveBitmaps(); // Remove of the bitmap
+			FindViewById<ProposedPieceView>(Resource.Id.player2piece).RemoveBitmaps(); // Remove of the dictionnary of bitmap
 			base.OnDestroy();
 		}
 
@@ -132,6 +131,7 @@ namespace Tetrim
 			{
 				if(resultCode == Result.Ok)
 				{
+					Network.Instance.ConnectionLostEvent += OnLostConnection;
 					// We can restart the game if the connection is working again
 					_gameTimer.Start();
 					_originPause = StopOrigin.None;
@@ -166,8 +166,8 @@ namespace Tetrim
 					_gameTimer.Stop();
 					if(_gameState == GameState.Play)
 					{
-						_gameState = GameState.GameOver;
-						//Utils.PopUpEndEvent += endGame;
+						_gameState = GameState.GameOverLost;
+						// no need to close all dialog because the timer shouldn't be running if a dialog is displayed
 						Intent intent = UtilsDialog.CreateGameOverDialogMulti(this, false);
 						StartActivity(intent);
 					}
@@ -181,6 +181,19 @@ namespace Tetrim
 			changeSpeedIfNecessary();
 
 			// Display of the current model
+			if(!_player1View._gridView._frameRendered)
+			{
+				// We need to wait that the view is displayed before drawing the following one
+				#if DEBUG
+				Log.Debug(Tag, "Lag during display");
+				#endif
+				_gameTimer.Stop();
+				while(!_player1View._gridView._frameRendered)
+				{
+					Java.Lang.Thread.Sleep(50);
+				}
+				_gameTimer.Start();
+			}
 			FindViewById(Resource.Id.PlayerGridView).PostInvalidate();
 		}
 
@@ -231,12 +244,9 @@ namespace Tetrim
 				
 				if(_gameState == GameState.Play)
 				{
-					_gameState = GameState.GameOver;
+					_gameState = GameState.GameOverWin;
 
-					if(DialogActivity.CloseAllDialog != null)
-					{
-						DialogActivity.CloseAllDialog.Invoke();
-					}
+					DialogActivity.CloseAll();
 					Intent intent = UtilsDialog.CreateGameOverDialogMulti(this, true);
 					StartActivity(intent);
 				}
@@ -250,9 +260,12 @@ namespace Tetrim
 			Log.Debug(Tag, "OnLostConnection");
 			#endif
 
+			DialogActivity.CloseAll();
+
 			if(_gameState == GameState.Play)
 			{
 				// If we lost the connection, we stop the game display a pop-up and try to reconnect
+				Network.Instance.ConnectionLostEvent -= OnLostConnection;
 				_gameTimer.Stop();
 				_originPause = StopOrigin.LostConnection;
 
@@ -260,18 +273,26 @@ namespace Tetrim
 				var serverIntent = new Intent(this, typeof(ReconnectActivity));
 				StartActivityForResult(serverIntent,(int) Utils.RequestCode.RequestReconnect);
 			}
-			if(_gameState == GameState.GameOver)
-			{
-				DialogActivity.CloseAllDialog.Invoke();
-				Intent intent = DialogActivity.CreateYesDialog(this, Resource.String.ConnectionLost, Resource.String.cannotRestartGame, Resource.String.ok, delegate {Finish();});
-				StartActivity(intent);
-			}
 			else
 			{
-				Intent intent = DialogActivity.CreateYesDialog(this, Resource.String.ConnectionLost, Resource.String.lostFriend, Resource.String.ok, delegate {Finish();});
-				StartActivity(intent);
+				Intent intent = null;
+
+				switch(_gameState)
+				{
+				case GameState.GameOverWin:
+					intent = DialogActivity.CreateYesDialog(this, Resource.String.ConnectionLost, Resource.String.cannotRestartGameWin, Resource.String.ok, delegate {Finish();});
+					break;
+				case GameState.GameOverLost:
+					intent = DialogActivity.CreateYesDialog(this, Resource.String.ConnectionLost, Resource.String.cannotRestartGameLost, Resource.String.ok, delegate {Finish();});
+					break;
+				case GameState.OpponentReadyForRestart:
+				case GameState.WaitingForRestart: // display of the same pop-up in these case
+					intent = DialogActivity.CreateYesDialog(this, Resource.String.ConnectionLost, Resource.String.lostFriend, Resource.String.ok, delegate {Finish();});
+					break;
+				}
+
 				SetResult(Result.Ok);
-				Finish();
+				StartActivity(intent);
 			}
 
 			return 0;
@@ -489,10 +510,7 @@ namespace Tetrim
 			{
 				// Restart the timer if it is the opponeny who send the message to restart
 				// Else we are going to wait that he receives the message
-				if(DialogActivity.CloseAllDialog != null)
-				{
-					DialogActivity.CloseAllDialog.Invoke();
-				}
+				DialogActivity.CloseAll();
 
 				_gameTimer.AutoReset = true;
 				_gameTimer.Interval = getTimerLapse();
@@ -541,7 +559,6 @@ namespace Tetrim
 			if (_player1._grid.isGameOver())
 			{
 				Network.Instance.CommunicationWay.Write(_player1.GetEndMessage());
-				endMessageSent = true;
 			}
 
 			if(!isSamePiece) // the piece was added on the map so the score changed

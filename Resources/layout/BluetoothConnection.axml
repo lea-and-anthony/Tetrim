@@ -3,7 +3,7 @@
     p1:orientation="vertical"
     p1:layout_width="match_parent"
     p1:layout_height="match_parent"
-    p1:id="@+id/root"
+    p1:id="@+id/rootBluetoothConnection"
     p1:weightSum="100">
     <TextView
         p1:text="select a device"

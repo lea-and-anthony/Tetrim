@@ -24,10 +24,6 @@ namespace Tetrim
 		//--------------------------------------------------------------
 		// CONSTRUCTORS
 		//--------------------------------------------------------------
-		/*public ViewProposedPiece(IntPtr javaReference, JniHandleOwnership transfer) : base(javaReference, transfer)
-		{
-		}*/
-
 		public ProposedPieceView(Context context, IAttributeSet attrs) : base(context, attrs)
 		{
 			_nbPieceByLine = (int)Math.Ceiling(Constants.NbProposedPiece*1.0/Constants.NbLinePropPiece);
@@ -36,6 +32,16 @@ namespace Tetrim
 		//--------------------------------------------------------------
 		// PUBLIC METHODES
 		//--------------------------------------------------------------
+		public void RemoveBitmaps()
+		{
+				foreach(KeyValuePair<TetrisColor, Bitmap> entry in _blockImages)
+				{
+					entry.Value.Recycle();
+					entry.Value.Dispose();
+				}
+				_blockImages.Clear();
+		}
+
 		public void SetPlayer(Player player)
 		{
 			// Associate the new instance
@@ -102,7 +108,11 @@ namespace Tetrim
 				// Create the blocks images with the right size
 				foreach(TetrisColor color in Enum.GetValues(typeof(TetrisColor)))
 				{
-					_blockImages.Add(color, BlockView.CreateImage(_blockSize, color));
+					Bitmap image = BlockView.CreateImage(_blockSize, color);
+					if(image != null)
+					{
+						_blockImages.Add(color, image);
+					}
 				}
 			}
 

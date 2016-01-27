@@ -108,6 +108,50 @@ namespace Tetrim
 			CreateButton(context);
 		}
 
+		//--------------------------------------------------------------
+		// PUBLIC METHODES
+		//--------------------------------------------------------------
+		public void SetTypeface(Typeface typeface, TypefaceStyle style)
+		{
+			Typeface = typeface;
+		}
+
+		public void SetTextSize(ComplexUnitType unit, int size)
+		{
+			TextSize = Utils.ConvertTextSize(_context, unit, size);
+		}
+
+		public void RemoveBitmaps()
+		{
+			if(_pressedImage != null)
+			{
+				_pressedImage.Recycle();
+				_pressedImage.Dispose();
+				_pressedImage = null;
+			}
+			if(_unpressedImage != null)
+			{
+				_unpressedImage.Recycle();
+				_unpressedImage.Dispose();
+				_unpressedImage = null;
+			}
+		}
+
+		//--------------------------------------------------------------
+		// EVENT METHODES
+		//--------------------------------------------------------------
+		protected override void OnSizeChanged (int w, int h, int oldw, int oldh)
+		{
+			base.OnSizeChanged (w, h, oldw, oldh);
+			if((w != 0 && h != 0 && _unpressedImage == null) || (_unpressedImage != null && (w != _unpressedImage.Width || h != _unpressedImage.Height)))
+			{
+				InitializeImages();
+			}
+		}
+
+		//--------------------------------------------------------------
+		// PRIVATE METHODES
+		//--------------------------------------------------------------
 		private void CreateButton(Context context)
 		{
 			_context = context;
@@ -122,29 +166,50 @@ namespace Tetrim
 			StrokeTextWidth = StrokeTextWidth;
 			RadiusIn = RadiusIn;
 			RadiusOut = RadiusOut;
-		}
+   		}
 
-		public void SetTypeface(Typeface typeface, TypefaceStyle style)
+		private void DrawBackground(Canvas canvas, RectF bounds, Paint fillBackPaint, Paint strokeBackPaint)
 		{
-			Typeface = typeface;
-		}
-
-		public void SetTextSize(ComplexUnitType unit, int size)
-		{
-			TextSize = Utils.ConvertTextSize(_context, unit, size);
-		}
-
-		protected override void OnSizeChanged (int w, int h, int oldw, int oldh)
-		{
-			base.OnSizeChanged (w, h, oldw, oldh);
-			if((w != 0 && h != 0 && _unpressedImage == null) || (_unpressedImage != null && (w != _unpressedImage.Width || h != _unpressedImage.Height)))
+			switch(Shape)
 			{
-				InitializeImages();
+			case ButtonShape.BottomTop:
+				bounds.Left = 0;
+				bounds.Right = Width;
+				canvas.DrawRect(bounds, fillBackPaint);
+				canvas.DrawLine(bounds.Left, bounds.Top, bounds.Right, bounds.Top, strokeBackPaint);
+				canvas.DrawLine(bounds.Left, bounds.Bottom, bounds.Right, bounds.Bottom, strokeBackPaint);
+				break;
+			case ButtonShape.LeftRight:
+				bounds.Top = 0;
+				bounds.Bottom = Height;
+				canvas.DrawRect(bounds, fillBackPaint);
+				canvas.DrawLine(bounds.Left, bounds.Top, bounds.Left, bounds.Bottom, strokeBackPaint);
+				canvas.DrawLine(bounds.Right, bounds.Top, bounds.Right, bounds.Bottom, strokeBackPaint);
+				break;
+			case ButtonShape.Rectangle:
+				canvas.DrawRect(bounds, strokeBackPaint);
+				canvas.DrawRect(bounds, fillBackPaint);
+				break;
+			default:
+				canvas.DrawRoundRect(bounds, _radiusOut, _radiusOut, strokeBackPaint);
+				canvas.DrawRoundRect(bounds, _radiusIn, _radiusIn, fillBackPaint);
+				break;
 			}
 		}
 
-		protected void InitializeImages()
+		private void InitializeImages()
 		{
+			if(_pressedImage != null)
+			{
+				_pressedImage.Recycle();
+				_pressedImage.Dispose();
+			}
+			if(_unpressedImage != null)
+			{
+				_unpressedImage.Recycle();
+				_unpressedImage.Dispose();
+			}
+
 			_unpressedImage = Bitmap.CreateBitmap(Width, IsSquared ? Width : Height, Bitmap.Config.Argb8888);
 			_pressedImage = Bitmap.CreateBitmap(Width, IsSquared ? Width : Height, Bitmap.Config.Argb8888);
 			Canvas unpressedCanvas = new Canvas(_unpressedImage);
@@ -270,35 +335,6 @@ namespace Tetrim
 			states.AddState(new int[] {Android.Resource.Attribute.StateSelected}, new BitmapDrawable(_pressedImage));
 			states.AddState(new int[] { }, new BitmapDrawable(_unpressedImage));
 			SetBackgroundDrawable(states);
-		}
-
-		private void DrawBackground(Canvas canvas, RectF bounds, Paint fillBackPaint, Paint strokeBackPaint)
-		{
-			switch(Shape)
-			{
-			case ButtonShape.BottomTop:
-				bounds.Left = 0;
-				bounds.Right = Width;
-				canvas.DrawRect(bounds, fillBackPaint);
-				canvas.DrawLine(bounds.Left, bounds.Top, bounds.Right, bounds.Top, strokeBackPaint);
-				canvas.DrawLine(bounds.Left, bounds.Bottom, bounds.Right, bounds.Bottom, strokeBackPaint);
-				break;
-			case ButtonShape.LeftRight:
-				bounds.Top = 0;
-				bounds.Bottom = Height;
-				canvas.DrawRect(bounds, fillBackPaint);
-				canvas.DrawLine(bounds.Left, bounds.Top, bounds.Left, bounds.Bottom, strokeBackPaint);
-				canvas.DrawLine(bounds.Right, bounds.Top, bounds.Right, bounds.Bottom, strokeBackPaint);
-				break;
-			case ButtonShape.Rectangle:
-				canvas.DrawRect(bounds, strokeBackPaint);
-				canvas.DrawRect(bounds, fillBackPaint);
-				break;
-			default:
-				canvas.DrawRoundRect(bounds, _radiusOut, _radiusOut, strokeBackPaint);
-				canvas.DrawRoundRect(bounds, _radiusIn, _radiusIn, fillBackPaint);
-				break;
-			}
 		}
 	}
 }
