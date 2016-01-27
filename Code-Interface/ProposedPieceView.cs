@@ -30,7 +30,7 @@ namespace Tetrim
 		}
 
 		//--------------------------------------------------------------
-		// PUBLIC METHODES
+		// PUBLIC METHODS
 		//--------------------------------------------------------------
 		public void RemoveBitmaps()
 		{
@@ -75,7 +75,7 @@ namespace Tetrim
 		}
 
 		//--------------------------------------------------------------
-		// PRIVATE METHODES
+		// PRIVATE METHODS
 		//--------------------------------------------------------------
 		private void selectPiece(int piece)
 		{
@@ -90,7 +90,7 @@ namespace Tetrim
 		}
 
 		//--------------------------------------------------------------
-		// EVENT METHODES
+		// EVENT METHODS
 		//--------------------------------------------------------------
 		// Draw every proposed piece in the accorded space
 		// each piece have the space for 5 blocks to draw itself on the width

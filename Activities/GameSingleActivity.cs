@@ -12,7 +12,7 @@ namespace Tetrim
 	public class GameSingleActivity : GameActivity
 	{
 		//--------------------------------------------------------------
-		// EVENT CATCHING METHODES
+		// EVENT CATCHING METHODS
 		//--------------------------------------------------------------
 		protected override void OnCreate(Bundle bundle)
 		{
@@ -51,7 +51,7 @@ namespace Tetrim
 			FindViewById(Resource.Id.PlayerGridView).PostInvalidate();
 		}
 		//--------------------------------------------------------------
-		// PUBLIC METHODES
+		// PUBLIC METHODS
 		//--------------------------------------------------------------
 		// Resume the game by restarting the timer
 		public override void ResumeGame()
@@ -68,7 +68,7 @@ namespace Tetrim
 		}
 
 		//--------------------------------------------------------------
-		// PROTECTED METHODES
+		// PROTECTED METHODS
 		//--------------------------------------------------------------
 		// Pause the game and display a pop-up
 		protected override int pauseGame(bool requestFromUser)

@@ -68,22 +68,28 @@ namespace Tetrim
 		/// <param name="text">Text</param>
 		/// <param name="textWidth">Width of the TextView</param>
 		/// <param name="font">Font of the TextView</param>
-		protected virtual void RefitText(string text, int textWidth, Typeface font)
+		protected virtual void RefitText(string text, Typeface font)
 		{
-			if (textWidth <= 0 || string.IsNullOrWhiteSpace(text))
+			if (Width <= 0 || Height <= 0 || string.IsNullOrWhiteSpace(text))
 				return;
 
-			int targetWidth = textWidth - PaddingLeft - PaddingRight;
-			_textPaint.Set(this.Paint);
+			int targetWidth = Width - PaddingLeft - PaddingRight;
+			int targetHeight = Height - PaddingTop - PaddingBottom;
+			_textPaint.Set(Paint);
 
 			while ((_preferredTextSize - MinTextSize) > Threshold)
 			{
 				float size = (_preferredTextSize + MinTextSize) / 2f;
 				_textPaint.TextSize = size;
 
-				float measuredSize = _textPaint.MeasureText(text);
+				//float measuredSize = _textPaint.MeasureText(text);
+				Rect bounds = new Rect();
+				_textPaint.GetTextBounds(text, 0, text.Length, bounds);
+				int measuredWidth = bounds.Width();
+				int offset = - bounds.Top - bounds.Bottom;
+				int measuredHeight = bounds.Height() + offset;
 
-				if (measuredSize >= targetWidth)
+				if (measuredWidth >= targetWidth || measuredHeight >= targetHeight)
 				{
 					_preferredTextSize = size; // Too big
 				}
@@ -100,7 +106,7 @@ namespace Tetrim
 		{
 			base.OnTextChanged(text, start, before, after);
 
-			RefitText(text.ToString(), Width, Typeface);
+			RefitText(text.ToString(), Typeface);
 		}
 
 		protected override void OnSizeChanged(int w, int h, int oldw, int oldh)
@@ -108,13 +114,13 @@ namespace Tetrim
 			base.OnSizeChanged(w, h, oldw, oldh);
 
 			if (w != oldw)
-				RefitText(Text, Width, Typeface);
+				RefitText(Text, Typeface);
 		}
 
 		public override void SetTypeface (Typeface tf, TypefaceStyle style)
 		{
 			base.SetTypeface (tf, style);
-			RefitText(Text, Width, tf);
+			RefitText(Text, tf);
 			SetWillNotDraw(false);
 			PostInvalidate();
 		}

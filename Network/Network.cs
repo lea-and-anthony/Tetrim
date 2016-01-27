@@ -145,7 +145,7 @@ namespace Tetrim
 		}
 
 		//--------------------------------------------------------------
-		// METHODES
+		// METHODS
 		//--------------------------------------------------------------
 		/* Activate the bluetooth to allow connection with an other device*/
 		public ResultEnabling TryEnablingBluetooth(Activity activity)

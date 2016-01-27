@@ -24,7 +24,7 @@ namespace Tetrim
 		}
 
 		//--------------------------------------------------------------
-		// METHODES
+		// METHODS
 		//--------------------------------------------------------------
 		// All the parameters must be different from null
 		public void SetViews(TextView playerName, TextView playerScore, TextView playerLevel, TextView playerRows)

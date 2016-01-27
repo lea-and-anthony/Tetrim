@@ -21,7 +21,35 @@ namespace Tetrim
 			RequestUserName = 5,
 		};
 
+		public enum ColorShade
+		{
+			ReallyLight,
+			Light,
+			Normal,
+			Dark,
+			ReallyDark
+		};
+
 		public const string OpponentNameExtra = "OpponentName";
+
+		public static Color getAndroidColor(TetrisColor color, ColorShade shade)
+		{
+			switch(shade)
+			{
+			case ColorShade.ReallyLight:
+				return getAndroidReallyLightColor(color);
+			case ColorShade.Light:
+				return getAndroidLightColor(color);
+			case ColorShade.Normal:
+				return getAndroidColor(color);
+			case ColorShade.Dark:
+				return getAndroidDarkColor(color);
+			case ColorShade.ReallyDark:
+				return getAndroidReallyDarkColor(color);
+			default:
+				return Color.Black;
+			};
+		}
 			
 		// Turn a color name into an Android Color
 		public static Color getAndroidColor(TetrisColor color)

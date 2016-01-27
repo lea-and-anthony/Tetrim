@@ -27,6 +27,10 @@ namespace Tetrim
 
 		public delegate void StandardDelegate();
 
+		protected const float MinWidthRatio = 3 / 4f;
+		protected const float MinHeightRatio = 1 / 10f;
+		protected const int TextSize = 20;
+
 		//--------------------------------------------------------------
 		// ATTRIBUTES
 		//--------------------------------------------------------------
@@ -40,7 +44,7 @@ namespace Tetrim
 		public static StandardDelegate CloseAllDialog = null;
 
 		//--------------------------------------------------------------
-		// EVENT CATCHING METHODES
+		// EVENT CATCHING METHODS
 		//--------------------------------------------------------------
 		protected override void OnCreate (Bundle savedInstanceState)
 		{
@@ -52,8 +56,8 @@ namespace Tetrim
 
 			_root = FindViewById<LinearLayout>(Resource.Id.alertContainer);
 			_root.SetPadding(Builder.StrokeBorderWidth, Builder.StrokeBorderWidth, Builder.StrokeBorderWidth, Builder.StrokeBorderWidth);
-			_root.SetMinimumWidth(WindowManager.DefaultDisplay.Width * 3 / 4);
-			_root.SetMinimumHeight(WindowManager.DefaultDisplay.Height * 1 / 10);
+			_root.SetMinimumWidth ((int)(WindowManager.DefaultDisplay.Width * MinWidthRatio));
+			_root.SetMinimumHeight((int)(WindowManager.DefaultDisplay.Height * MinHeightRatio));
 
 			if(_root.ViewTreeObserver.IsAlive)
 			{
@@ -80,24 +84,25 @@ namespace Tetrim
 				{
 					_message = new TextView(this);
 					_message.Text = Builder.Message;
-					_message.SetTextSize(Android.Util.ComplexUnitType.Dip, 20);
+					// TODO : getpixelfromdp in the constant
+					_message.SetTextSize(Android.Util.ComplexUnitType.Dip, TextSize);
 					_message.SetTextColor(Builder.TextColor);
 					_message.Gravity = GravityFlags.CenterHorizontal;
-					_content.AddView(_message, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MatchParent, LinearLayout.LayoutParams.WrapContent));
+					_content.AddView(_message, ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.WrapContent);
 				}
 				break;
 			case DialogBuilder.DialogContentType.EditText:
 				_field = new EditText(this);
 				_field.Hint = Builder.Message;
-				_field.SetTextSize(Android.Util.ComplexUnitType.Dip, 20);
+				_field.SetTextSize(Android.Util.ComplexUnitType.Dip, TextSize);
 				// Limit the length
 				_field.SetFilters( new IInputFilter[] { new InputFilterLengthFilter(Constants.MaxLengthName) } );
-				_content.AddView(_field, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MatchParent, LinearLayout.LayoutParams.WrapContent));
+				_content.AddView(_field, ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.WrapContent);
 				break;
 			case DialogBuilder.DialogContentType.None:
 				foreach(View view in Builder.Content)
 				{
-					_content.AddView(view, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MatchParent, LinearLayout.LayoutParams.WrapContent));
+					_content.AddView(view, ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.WrapContent);
 				}
 				break;
 			default:
@@ -161,25 +166,25 @@ namespace Tetrim
 
 		public void OnGlobalLayout()
 		{
-			// The view is completely loaded now, so getMeasuredWidth() won't return 0
-			InitializeUI();
-
-			// Destroy the onGlobalLayout afterwards, otherwise it keeps changing
-			// the sizes non-stop, even though it's already done
-			_root.ViewTreeObserver.RemoveGlobalOnLayoutListener(this);
+			if(InitializeUI())
+			{
+				// Destroy the onGlobalLayout afterwards, otherwise it keeps changing
+				// the sizes non-stop, even though it's already done
+				_root.ViewTreeObserver.RemoveGlobalOnLayoutListener(this);
+			}
    		}
 
 		//--------------------------------------------------------------
-		// PROTECTED METHODES
+		// PROTECTED METHODS
 		//--------------------------------------------------------------
-		protected void InitializeUI()
+		protected bool InitializeUI()
 		{
 			_buttonLayout.SetMinimumHeight(Math.Max(_positiveButton.Height, _negativeButton.Height));
 
 			// Initialize background
 			// TODO : sometimes bug because "width and height must be > 0"
 			if(_root.Width <= 0 || _root.Height <= 0)
-				return;
+				return false;
 
 			Bitmap backgroundImage = Bitmap.CreateBitmap(_root.Width, _root.Height, Bitmap.Config.Argb8888);
 			Canvas canvas = new Canvas(backgroundImage);
@@ -208,6 +213,8 @@ namespace Tetrim
 			canvas.DrawRoundRect(bounds, Builder.RadiusIn, Builder.RadiusIn, fillBackPaint);
 
 			_root.SetBackgroundDrawable(new BitmapDrawable(backgroundImage));
+
+			return true;
 		}
 
 		protected static Intent InitializeDialog(Activity activity, DialogBuilder builder, string posText, string negText, EventHandler posAction, EventHandler negAction)
@@ -238,7 +245,7 @@ namespace Tetrim
 		}
 
 		//--------------------------------------------------------------
-		// PUBLIC METHODES
+		// PUBLIC METHODS
 		//--------------------------------------------------------------
 		public static void CloseAll()
 		{

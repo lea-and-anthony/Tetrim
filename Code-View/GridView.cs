@@ -64,7 +64,7 @@ namespace Tetrim
 		}
 
 		//--------------------------------------------------------------
-		// STATIC METHODES
+		// STATIC METHODS
 		//--------------------------------------------------------------
 		public static int CalculateBlockSize(Rect rect)
 		{
@@ -79,7 +79,7 @@ namespace Tetrim
 		}
 
 		//--------------------------------------------------------------
-		// OVERRIDE METHODES
+		// OVERRIDE METHODS
 		//--------------------------------------------------------------
 		public override void Draw (Canvas canvas)
 		{
@@ -130,7 +130,7 @@ namespace Tetrim
 		}
 
 		//--------------------------------------------------------------
-		// PUBLIC METHODES
+		// PUBLIC METHODS
 		//--------------------------------------------------------------
 		public void Update()
 		{
@@ -180,7 +180,7 @@ namespace Tetrim
 		}
 
 		//--------------------------------------------------------------
-		// PRIVATE METHODES
+		// PRIVATE METHODS
 		//--------------------------------------------------------------
 		private void DrawBitmap()
 		{

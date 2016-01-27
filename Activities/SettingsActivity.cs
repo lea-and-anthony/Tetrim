@@ -20,7 +20,7 @@ namespace Tetrim
 		//--------------------------------------------------------------
 
 		//--------------------------------------------------------------
-		// EVENT CATCHING METHODES
+		// EVENT CATCHING METHODS
 		//--------------------------------------------------------------
 		protected override void OnCreate (Bundle savedInstanceState)
 		{

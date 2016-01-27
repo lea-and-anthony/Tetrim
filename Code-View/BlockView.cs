@@ -41,7 +41,7 @@ namespace Tetrim
 		}
 
 		//--------------------------------------------------------------
-		// STATIC METHODES
+		// STATIC METHODS
 		//--------------------------------------------------------------
 		public static Bitmap CreateImage(int blockSize, TetrisColor color)
 		{
@@ -178,7 +178,7 @@ namespace Tetrim
 		}
 
 		//--------------------------------------------------------------
-		// PUBLIC METHODES
+		// PUBLIC METHODS
 		//--------------------------------------------------------------
 		public void Draw (Canvas canvas, float blockSize, Dictionary<TetrisColor, Bitmap> blockImages, float xOffset, float yOffset)
 		{

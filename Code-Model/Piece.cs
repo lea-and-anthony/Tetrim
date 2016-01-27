@@ -60,7 +60,7 @@ namespace Tetrim
 		}
 
 		//--------------------------------------------------------------
-		// STATICS METHODES
+		// STATICS METHODS
 		//--------------------------------------------------------------
 		private static Shape pickShape (Dictionary<int, Stack<Shape>> randomGenerator, int generatorKey)
 		{
@@ -114,7 +114,7 @@ namespace Tetrim
 		}
 
 		//--------------------------------------------------------------
-		// PUBLICS METHODES
+		// PUBLICS METHODS
 		//--------------------------------------------------------------
 		public bool TurnLeft(Grid grid)
 		{
@@ -345,7 +345,7 @@ namespace Tetrim
 		}
 
 		//--------------------------------------------------------------
-		// PRIVATE METHODES
+		// PRIVATE METHODS
 		//--------------------------------------------------------------
 		private void placeBlockAccordingToShape(int x, int y)
 		{

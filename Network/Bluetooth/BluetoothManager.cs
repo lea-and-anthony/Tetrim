@@ -114,7 +114,7 @@ namespace Tetrim
 		}
 
 		//--------------------------------------------------------------
-		// THREAD METHODES
+		// THREAD METHODS
 		//--------------------------------------------------------------
 		// Start the service of receiving. Specifically start AcceptThread to begin a
 		// session in listening(server) mode. Called by the Activity onResume()
@@ -219,7 +219,7 @@ namespace Tetrim
 		}
 
 		//--------------------------------------------------------------
-		// PUBLIC METHODES
+		// PUBLIC METHODS
 		//--------------------------------------------------------------
 		/// Write to the ConnectedThread in an unsynchronized manner
 		public void Write (byte[] @out)
@@ -264,7 +264,7 @@ namespace Tetrim
 		}
 
 		//--------------------------------------------------------------
-		// PRIVATE METHODES
+		// PRIVATE METHODS
 		//--------------------------------------------------------------
 		/// Set the current state of the chat connection.
 		private void setState(StateEnum state)

@@ -11,7 +11,7 @@ namespace Tetrim
 		public MyHandler() {}
 
 		//--------------------------------------------------------------
-		// PUBLIC METHODES
+		// PUBLIC METHODS
 		//--------------------------------------------------------------
 		public override void HandleMessage (Message message)
 		{

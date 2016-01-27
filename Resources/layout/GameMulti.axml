@@ -38,14 +38,19 @@
                 android:layout_height="0dp"
                 android:id="@+id/player1nameLayout"
                 android:layout_weight="19">
-                <TextView
+                <Tetrim.AutoResizeTextView
                     android:text="Player 1"
                     android:textAppearance="?android:attr/textAppearanceLarge"
                     android:id="@+id/player1name"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center"
-                    android:textColor="#ff4db6ac" />
+                    android:textColor="#ff4db6ac"
+                    android:textSize="100dp"
+                    android:paddingTop="2dp"
+                    android:paddingRight="2dp"
+                    android:paddingBottom="2dp"
+                    android:paddingLeft="2dp" />
             </LinearLayout>
             <LinearLayout
                 android:orientation="vertical"
@@ -54,7 +59,7 @@
                 android:id="@+id/player1scoreLayout"
                 android:layout_weight="23">
                 <TextView
-                    android:text="Score"
+                    android:text="@string/score"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:id="@+id/score1"
                     android:gravity="center"
@@ -68,7 +73,7 @@
                     android:paddingRight="2dp"
                     android:paddingLeft="2dp" />
                 <TextView
-                    android:text="Score"
+                    android:text="0"
                     android:textAppearance="?android:attr/textAppearanceLarge"
                     android:id="@+id/player1score"
                     android:gravity="center"
@@ -96,7 +101,7 @@
                     android:id="@+id/player1rowsLayout"
                     android:layout_weight="50">
                     <TextView
-                        android:text="Rows"
+                        android:text="@string/rows"
                         android:textAppearance="?android:attr/textAppearanceSmall"
                         android:id="@+id/rows1"
                         android:gravity="left"
@@ -110,7 +115,7 @@
                         android:paddingRight="2dp"
                         android:paddingLeft="2dp" />
                     <TextView
-                        android:text="Rows"
+                        android:text="0"
                         android:textAppearance="?android:attr/textAppearanceLarge"
                         android:id="@+id/player1rows"
                         android:gravity="center"
@@ -131,7 +136,7 @@
                     android:id="@+id/player1levelLayout"
                     android:layout_weight="50">
                     <TextView
-                        android:text="Level"
+                        android:text="@string/level"
                         android:textAppearance="?android:attr/textAppearanceSmall"
                         android:id="@+id/level1"
                         android:gravity="left"
@@ -145,7 +150,7 @@
                         android:paddingRight="2dp"
                         android:paddingLeft="2dp" />
                     <TextView
-                        android:text="Level"
+                        android:text="1"
                         android:textAppearance="?android:attr/textAppearanceLarge"
                         android:id="@+id/player1level"
                         android:gravity="center"
@@ -167,7 +172,7 @@
                 android:layout_height="0dp"
                 android:layout_weight="35">
                 <TextView
-                    android:text="Next piece"
+                    android:text="@string/nextPiece"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:id="@+id/piece1"
                     android:gravity="center"
@@ -218,14 +223,19 @@
                     android:layout_height="0dp"
                     android:id="@+id/player2nameLayout"
                     android:layout_weight="19">
-                    <TextView
+                    <Tetrim.AutoResizeTextView
                         android:text="Player 2"
                         android:textAppearance="?android:attr/textAppearanceLarge"
                         android:id="@+id/player2name"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:gravity="center"
-                        android:textColor="#ffff6e40" />
+                        android:textColor="#ffff6e40"
+                        android:textSize="100dp"
+                        android:paddingTop="2dp"
+                        android:paddingRight="2dp"
+                        android:paddingBottom="2dp"
+                        android:paddingLeft="2dp" />
                 </LinearLayout>
                 <LinearLayout
                     android:orientation="vertical"
@@ -260,7 +270,7 @@
                     android:id="@+id/player2scoreLayout"
                     android:layout_weight="23">
                     <TextView
-                        android:text="Score"
+                        android:text="@string/score"
                         android:textAppearance="?android:attr/textAppearanceSmall"
                         android:id="@+id/score2"
                         android:gravity="left"
@@ -274,7 +284,7 @@
                         android:paddingRight="2dp"
                         android:paddingLeft="2dp" />
                     <TextView
-                        android:text="Score"
+                        android:text="0"
                         android:textAppearance="?android:attr/textAppearanceLarge"
                         android:id="@+id/player2score"
                         android:gravity="center"
@@ -304,7 +314,7 @@
                         android:id="@+id/player2rowsLayout"
                         android:layout_weight="50">
                         <TextView
-                            android:text="Rows"
+                            android:text="@string/rows"
                             android:textAppearance="?android:attr/textAppearanceSmall"
                             android:id="@+id/rows2"
                             android:gravity="left"
@@ -318,7 +328,7 @@
                             android:paddingRight="2dp"
                             android:paddingLeft="2dp" />
                         <TextView
-                            android:text="Rows"
+                            android:text="0"
                             android:textAppearance="?android:attr/textAppearanceLarge"
                             android:id="@+id/player2rows"
                             android:gravity="center"
@@ -339,7 +349,7 @@
                         android:id="@+id/player2levelLayout"
                         android:layout_weight="50">
                         <TextView
-                            android:text="Level"
+                            android:text="@string/level"
                             android:textAppearance="?android:attr/textAppearanceSmall"
                             android:id="@+id/level2"
                             android:gravity="left"
@@ -353,7 +363,7 @@
                             android:paddingRight="2dp"
                             android:paddingLeft="2dp" />
                         <TextView
-                            android:text="Level"
+                            android:text="1"
                             android:textAppearance="?android:attr/textAppearanceLarge"
                             android:id="@+id/player2level"
                             android:gravity="center"
@@ -375,7 +385,7 @@
                     android:layout_height="0dp"
                     android:layout_weight="54">
                     <TextView
-                        android:text="Next piece"
+                        android:text="@string/nextPiece"
                         android:textAppearance="?android:attr/textAppearanceSmall"
                         android:id="@+id/piece2"
                         android:gravity="center"
@@ -400,131 +410,15 @@
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
-    <LinearLayout
-        android:orientation="horizontal"
+    <include
+        layout="@layout/game"
+        android:id="@+id/gridButtonLayout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:id="@+id/gridButtonLayout"
         android:layout_weight="63"
         android:weightSum="100"
-        android:paddingTop="3dp">
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:id="@+id/layoutButtonsLeft"
-            android:layout_gravity="top"
-            android:layout_weight="15"
-            android:layout_marginRight="5dp">
-            <Tetrim.ButtonStroked
-                android:text="&lt;~"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/buttonTurnLeft"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
-                android:layout_marginLeft="2dp"
-                android:layout_marginRight="2dp"
-                android:textColor="#fffafafa"
-                android:shadowColor="#ff212121"
-                android:shadowDx="-2"
-                android:shadowDy="2"
-                android:shadowRadius="0.01"
-                android:background="#ff00b0ff"
-                android:tag="@string/turn_left_arrow" />
-            <Tetrim.ButtonStroked
-                android:text="&lt;-"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/buttonMoveLeft"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
-                android:layout_marginLeft="2dp"
-                android:layout_marginRight="2dp"
-                android:textColor="#fffafafa"
-                android:shadowColor="#ff212121"
-                android:shadowDx="-2"
-                android:shadowDy="2"
-                android:shadowRadius="0.01"
-                android:background="#ff00c853"
-                android:tag="@string/left_arrow" />
-            <Tetrim.ButtonStroked
-                android:text="v"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/buttonMoveDown"
-                android:layout_marginLeft="2dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginRight="2dp"
-                android:layout_marginBottom="10dp"
-                android:textColor="#fffafafa"
-                android:shadowColor="#ff212121"
-                android:shadowDx="0"
-                android:shadowDy="3"
-                android:shadowRadius="0.01"
-                android:background="#ffc62828"
-                android:tag="@string/down_arrow" />
-        </LinearLayout>
-        <Tetrim.GridView
-            android:id="@+id/PlayerGridView"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="70" />
-        <LinearLayout
-            android:orientation="vertical"
-            android:id="@+id/layoutButtonsRight"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="15"
-            android:layout_marginLeft="5dp">
-            <Tetrim.ButtonStroked
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/buttonTurnRight"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
-                android:text="~&gt;"
-                android:textColor="#fffafafa"
-                android:layout_marginLeft="2dp"
-                android:layout_marginRight="2dp"
-                android:shadowColor="#ff212121"
-                android:shadowDx="2"
-                android:shadowDy="2"
-                android:shadowRadius="0.01"
-                android:background="#ff00b0ff"
-                android:tag="@string/turn_right_arrow" />
-            <Tetrim.ButtonStroked
-                android:text="-&gt;"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/buttonMoveRight"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
-                android:layout_marginLeft="2dp"
-                android:layout_marginRight="2dp"
-                android:textColor="#fffafafa"
-                android:shadowColor="#ff212121"
-                android:shadowDx="2"
-                android:shadowDy="2"
-                android:shadowRadius="0.01"
-                android:background="#ff00c853"
-                android:tag="@string/right_arrow" />
-            <Tetrim.ButtonStroked
-                android:text="v v"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/buttonMoveFoot"
-                android:layout_marginLeft="2dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginRight="2dp"
-                android:layout_marginBottom="10dp"
-                android:textColor="#fffafafa"
-                android:shadowColor="#ff212121"
-                android:shadowRadius="0.01"
-                android:shadowDx="0"
-                android:shadowDy="3"
-                android:background="#ffc62828"
-                android:tag="@string/bottom_arrow" />
-        </LinearLayout>
-    </LinearLayout>
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:minWidth="25px"
+        android:minHeight="25px" />
 </LinearLayout>

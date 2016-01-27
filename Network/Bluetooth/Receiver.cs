@@ -19,7 +19,7 @@ namespace Tetrim
 		}
 
 		//--------------------------------------------------------------
-		// METHODES OVERRIDE
+		// METHODS OVERRIDE
 		//--------------------------------------------------------------
 		public override void OnReceive(Context context, Intent intent)
 		{ 

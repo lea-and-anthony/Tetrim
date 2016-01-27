@@ -44,7 +44,7 @@ namespace Tetrim
 		}
 
 		//--------------------------------------------------------------
-		// PUBLIC METHODES
+		// PUBLIC METHODS
 		//--------------------------------------------------------------
 		public void RemoveBitmaps()
 		{
@@ -65,7 +65,7 @@ namespace Tetrim
 		}
 
 		//--------------------------------------------------------------
-		// EVENT METHODES
+		// EVENT METHODS
 		//--------------------------------------------------------------
 		protected override void OnDraw(Canvas canvas)
 		{

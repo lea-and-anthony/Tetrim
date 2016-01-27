@@ -26,7 +26,7 @@ namespace Tetrim
 		public PlayerView _player1View { get; protected set; } // View of the player 1
 
 		//--------------------------------------------------------------
-		// EVENT CATCHING METHODES
+		// EVENT CATCHING METHODS
 		//--------------------------------------------------------------
 		public void OnGlobalLayout()
 		{
@@ -71,17 +71,11 @@ namespace Tetrim
 
 		public override void OnBackPressed()
 		{
-			if(_gameTimer != null)
-			{
-				if(_gameTimer.Enabled)
-					pauseGame(true);
-				else
-					ResumeGame();
-			}
+			handlePauseRequest();
 		}
 
 		//--------------------------------------------------------------
-		// ABSTRATCS METHODES
+		// ABSTRATCS METHODS
 		//--------------------------------------------------------------
 		protected abstract void OnTimerElapsed(object source, ElapsedEventArgs e);
 		protected abstract int pauseGame(bool requestFromUser);
@@ -95,7 +89,7 @@ namespace Tetrim
 		protected abstract void moveFootButtonPressed(object sender, EventArgs e);
 
 		//--------------------------------------------------------------
-		// PROTECTED METHODES
+		// PROTECTED METHODS
 		//--------------------------------------------------------------
 		// Init the model and the view for a one player game
 		protected void initGame()
@@ -160,6 +154,10 @@ namespace Tetrim
 			nextPieceView.SetPlayer(_player1);
 			nextPieceView.SetBackgroundColor(Utils.getAndroidColor(TetrisColor.Cyan));
 
+			ButtonStroked pauseButton = FindViewById<ButtonStroked>(Resource.Id.pauseButton);
+			UtilsUI.SetIconButton(pauseButton, TetrisColor.Yellow, difference);
+			pauseButton.Click += delegate { handlePauseRequest(); };
+
 			// Set the buttons
 			UtilsUI.SetArrowButton(FindViewById<ButtonStroked>(Resource.Id.buttonMoveLeft), TetrisColor.Green, difference);
 			UtilsUI.SetArrowButton(FindViewById<ButtonStroked>(Resource.Id.buttonMoveRight), TetrisColor.Green, difference);
@@ -172,11 +170,23 @@ namespace Tetrim
 			// now we have set the size it is useless and it will allow the layout to actualize
 			LinearLayout gameLayout = FindViewById<LinearLayout>(Resource.Id.gridButtonLayout);
 			gameLayout.WeightSum = 0;
+
 		}
 
 		protected void endGame()
 		{
 			Finish();
+		}
+
+		protected void handlePauseRequest()
+		{
+			if(_gameTimer != null)
+			{
+				if(_gameTimer.Enabled)
+					pauseGame(true);
+				else
+					ResumeGame();
+			}
 		}
 
 		protected void associateButtonsEvent()

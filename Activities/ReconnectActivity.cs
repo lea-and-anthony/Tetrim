@@ -26,7 +26,7 @@ namespace Tetrim
 		private readonly object _locker = new object (); // locker on _state because this variable can be modified in several threads
 
 		//--------------------------------------------------------------
-		// EVENT CATCHING METHODES
+		// EVENT CATCHING METHODS
 		//--------------------------------------------------------------
 		protected override void OnCreate (Bundle bundle)
 		{
@@ -95,7 +95,7 @@ namespace Tetrim
 		}
 
 		//--------------------------------------------------------------
-		// PRIVATES METHODES
+		// PRIVATES METHODS
 		//--------------------------------------------------------------
 		private int OnConnecting()
 		{

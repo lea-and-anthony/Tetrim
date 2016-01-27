@@ -22,7 +22,7 @@ namespace Tetrim
 		private TextView _userNameText;
 
 		//--------------------------------------------------------------
-		// EVENT CATCHING METHODES
+		// EVENT CATCHING METHODS
 		//--------------------------------------------------------------
 		protected override void OnCreate(Bundle bundle)
 		{
@@ -119,7 +119,7 @@ namespace Tetrim
 		}
 			
 		//--------------------------------------------------------------
-		// PUBLIC METHODES
+		// PUBLIC METHODS
 		//--------------------------------------------------------------
 		/*public static void startGame(Activity activity, Utils.RequestCode code)
 		{
@@ -156,7 +156,7 @@ namespace Tetrim
 		}
 
 		//--------------------------------------------------------------
-		// PUBLIC METHODES
+		// PUBLIC METHODS
 		//--------------------------------------------------------------
 		private void UpdateUserNameInUI()
 		{

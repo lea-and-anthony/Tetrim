@@ -30,7 +30,7 @@ namespace Tetrim
 		// Return Intent extra
 		public const string ExtraDeviceAddress = "device_address";
 
-		private const int NbDevices = 6;
+		private const int NbDevicesDisplayed = 6;
 		private const TetrisColor FriendsDeviceColor = TetrisColor.Magenta;
 		private const TetrisColor PairedDeviceColor = TetrisColor.Green;
 		private const TetrisColor NewDeviceColor = TetrisColor.Blue;
@@ -73,9 +73,6 @@ namespace Tetrim
 			// Set result CANCELED incase the user backs out
 			SetResult(Result.Canceled);
 
-			Typeface niceFont = Typeface.CreateFromAsset(Assets,"Foo.ttf");
-			TextView selectDeviceText = FindViewById<TextView>(Resource.Id.selectDeviceText);
-
 			// Initialize the buttons
 			UtilsUI.SetDeviceMenuButton(this, ref _friendsDevicesButton, Resource.Id.friendsDevices, FriendsDeviceColor);
 			_friendsDevicesButton.Click += (sender, e) => SwitchMenu (Menu.FRIENDS);
@@ -89,9 +86,9 @@ namespace Tetrim
 
 			// Create the layouts
 			_devicesLayout = FindViewById<ScrollView>(Resource.Id.devicesLayout);
-			UtilsUI.SetDeviceMenuLayout(this, ref _friendsDevicesLayout, NbDevices);
-			UtilsUI.SetDeviceMenuLayout(this, ref _pairedDevicesLayout, NbDevices);
-			UtilsUI.SetDeviceMenuLayout(this, ref _newDevicesLayout, NbDevices);
+			UtilsUI.SetDeviceMenuLayout(this, ref _friendsDevicesLayout, NbDevicesDisplayed);
+			UtilsUI.SetDeviceMenuLayout(this, ref _pairedDevicesLayout, NbDevicesDisplayed);
+			UtilsUI.SetDeviceMenuLayout(this, ref _newDevicesLayout, NbDevicesDisplayed);
 			SwitchMenu(Menu.FRIENDS);
 
 			// Test if the view is created so we can resize the buttons
@@ -191,7 +188,7 @@ namespace Tetrim
 			{
 				_newDevices.Add(device);
 			}
-			ButtonStroked newDeviceButton = UtilsUI.CreateDeviceButton(this, device, NewDeviceColor, (int)(_devicesLayout.Height*1f/NbDevices), Resource.String.none_found);
+			ButtonStroked newDeviceButton = UtilsUI.CreateDeviceButton(this, device, NewDeviceColor, (int)(_devicesLayout.Height*1f/NbDevicesDisplayed), Resource.String.none_found);
 			LinearLayout.LayoutParams lp = UtilsUI.CreateDeviceLayoutParams(this, 5);
 			_newDevicesLayout.AddView(newDeviceButton, _newDevicesLayout.ChildCount - 1, lp);
 		}
@@ -202,7 +199,7 @@ namespace Tetrim
 			{
 				_friendsDevices.Add(device);
 			}
-			ButtonStroked friendsDeviceButton = UtilsUI.CreateDeviceButton(this, device, FriendsDeviceColor, (int)(_devicesLayout.Height*1f/NbDevices), name);
+			ButtonStroked friendsDeviceButton = UtilsUI.CreateDeviceButton(this, device, FriendsDeviceColor, (int)(_devicesLayout.Height*1f/NbDevicesDisplayed), name);
 			LinearLayout.LayoutParams lp = UtilsUI.CreateDeviceLayoutParams(this, 5);
 			_friendsDevicesLayout.AddView(friendsDeviceButton, lp);
 		}
@@ -213,7 +210,7 @@ namespace Tetrim
 			{
 				_pairedDevices.Add(device);
 			}
-			ButtonStroked pairedDeviceButton = UtilsUI.CreateDeviceButton(this, device, PairedDeviceColor, (int)(_devicesLayout.Height*1f/NbDevices), Resource.String.none_paired);
+			ButtonStroked pairedDeviceButton = UtilsUI.CreateDeviceButton(this, device, PairedDeviceColor, (int)(_devicesLayout.Height*1f/NbDevicesDisplayed), Resource.String.none_paired);
 			LinearLayout.LayoutParams lp = UtilsUI.CreateDeviceLayoutParams(this, 5);
 			_pairedDevicesLayout.AddView(pairedDeviceButton, lp);
    		}
@@ -231,20 +228,17 @@ namespace Tetrim
 				DisableMenuCategory(_newDevicesLayout, _newDevicesButton);
 				_newDevicesLayout.RemoveAllViews();
 				EnableMenuCategory(_friendsDevicesLayout, _friendsDevicesButton);
-				//_devicesLayout.SetBackgroundColor(Utils.getAndroidDarkColor(FriendsDeviceColor));
 				break;
 			case Menu.PAIRED:
 				DisableMenuCategory(_friendsDevicesLayout, _friendsDevicesButton);
 				DisableMenuCategory(_newDevicesLayout, _newDevicesButton);
 				_newDevicesLayout.RemoveAllViews();
 				EnableMenuCategory(_pairedDevicesLayout, _pairedDevicesButton);
-				//_devicesLayout.SetBackgroundColor(Utils.getAndroidDarkColor(PairedDeviceColor));
 				break;
 			case Menu.NEW:
 				DisableMenuCategory(_friendsDevicesLayout, _friendsDevicesButton);
 				DisableMenuCategory(_pairedDevicesLayout, _pairedDevicesButton);
 				EnableMenuCategory(_newDevicesLayout, _newDevicesButton);
-				//_devicesLayout.SetBackgroundColor(Utils.getAndroidDarkColor(NewDeviceColor));
 				break;
 			}
 		}
@@ -264,7 +258,7 @@ namespace Tetrim
         }
 
 		//--------------------------------------------------------------
-		// NETWORK METHODES
+		// NETWORK METHODS
 		//--------------------------------------------------------------
 		public int WriteMessageEventReceived(byte[] writeBuf)
 		{
@@ -480,7 +474,7 @@ namespace Tetrim
 		}
 
 		//--------------------------------------------------------------
-		// PRIVATE METHODES
+		// PRIVATE METHODS
 		//--------------------------------------------------------------
 		private void actualizeView()
 		{
@@ -536,7 +530,7 @@ namespace Tetrim
 			int padding = Utils.GetPixelsFromDP(this, 15);
 			_progressBar.SetPadding(padding, padding, padding, padding);
 			_newDevicesLayout.SetGravity(GravityFlags.CenterHorizontal);
-			_newDevicesLayout.AddView(_progressBar, (int)(_devicesLayout.Height*1f/NbDevices), (int)(_devicesLayout.Height*1f/NbDevices));
+			_newDevicesLayout.AddView(_progressBar, (int)(_devicesLayout.Height*1f/NbDevicesDisplayed), (int)(_devicesLayout.Height*1f/NbDevicesDisplayed));
 
 			// If we're already discovering, stop it
 			if(_bluetoothAdapter.IsDiscovering)

@@ -11,6 +11,8 @@
     <string name="bottom_arrow">e</string>
     <string name="turn_right_arrow">f</string>
     <string name="turn_left_arrow">g</string>
+    <string name="closeIcon">X</string>
+    <string name="pauseIcon">11</string>
 
     <!-- Menu -->
     <string name="welcome">Welcome !</string>
@@ -24,6 +26,12 @@
     <string name="deleteFriends">delete friends</string>
     <string name="deleteHighScores">delete high scores</string>
     <string name="changeName">change user name</string>
+
+    <!-- Game -->
+    <string name="score">SCORE</string>
+    <string name="nextPiece">NEXT</string>
+    <string name="level">LEVEL</string>
+    <string name="rows">LINES</string>
 
     <!-- Prompt Dialog -->
     <string name="ok">OK</string>
@@ -67,6 +75,10 @@
     <string name="retry_connection">Reconnection failed. Try again ?</string>
 
     <!--  BluetoothConnectionActivity -->
+    <string name="selectDevice">select a device</string>
+    <string name="friendsDevices">friends</string>
+    <string name="pairedDevices">paired</string>
+    <string name="newDevices">new</string>
     <string name="scanning">Scanning...</string>
     <string name="none_friend">No friend device</string>
     <string name="none_paired">No paired device</string>

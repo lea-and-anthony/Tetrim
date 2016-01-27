@@ -37,7 +37,7 @@ namespace Tetrim
 		}
 
 		//--------------------------------------------------------------
-		// PUBLICS METHODES
+		// PUBLICS METHODS
 		//--------------------------------------------------------------
 		public void UpdatePlayerRemoveRow (int nbRemovedRows)
 		{
@@ -206,7 +206,7 @@ namespace Tetrim
 		}
 
 		//--------------------------------------------------------------
-		// PRIVATES METHODES
+		// PRIVATES METHODS
 		//--------------------------------------------------------------
 		private void updateLevel()
 		{

@@ -12,88 +12,168 @@ namespace Tetrim
 {
 	public static class UtilsUI
 	{
-		//public static Color Player1Background = Color.ParseColor("#ff00171a");
-		//public static Color Player2Background = Color.ParseColor("#ff250000");
-		public static Color Player1Background = Color.ParseColor("#ff000000");
-		public static Color Player2Background = Color.ParseColor("#ff000000");
+		//--------------------------------------------------------------
+		// CONSTANTS
+		//--------------------------------------------------------------
+		public static Color Player1Background = Color.Black;
+		public static Color Player2Background = Color.Black;
+		public static int MenuButtonHeight;
 
+		//--------------------------------------------------------------
+		// FONTS
+		//--------------------------------------------------------------
 		public static Typeface TextFont;
 		public static Typeface TitleFont;
 		public static Typeface ArrowFont;
-		public static int MenuButtonHeight;
 
-		public static void SetTitleTextView(TextView titleTextView, TetrisColor color)
+		public static ButtonUI MenuButtonUI;
+		public static ButtonUI IconButtonUI;
+		public static ButtonUI ArrowButtonUI;
+		public static ButtonUI DialogButtonUI;
+		public static ButtonUI DeviceButtonUI;
+		public static ButtonUI DeviceMenuButtonUI;
+
+		//--------------------------------------------------------------
+		// BUTTON CONFIGURATION
+		//--------------------------------------------------------------
+		public static ButtonUI CreateMenuButtonSettings()
 		{
-			titleTextView.SetTypeface(UtilsUI.TitleFont, TypefaceStyle.Normal);
-			titleTextView.SetTextColor(Utils.getAndroidColor(color));
+			ButtonUI menuButtonUI = new ButtonUI();
+			menuButtonUI.StrokeBorderWidth = 15;
+			menuButtonUI.StrokeTextWidth = 7;
+			menuButtonUI.RadiusIn = 10;
+			menuButtonUI.RadiusOut = 7;
+			menuButtonUI.StrokeShade = Utils.ColorShade.Dark;
+			menuButtonUI.FillShade = Utils.ColorShade.Normal;
+			return menuButtonUI;
 		}
 
+		public static ButtonUI CreateIconButtonSettings(Typeface font)
+		{
+			ButtonUI iconButtonUI = new ButtonUI();
+			iconButtonUI.IsSquared = true;
+			iconButtonUI.StrokeBorderWidth = 7;
+			iconButtonUI.StrokeTextWidth = 5;
+			iconButtonUI.RadiusIn = 7;
+			iconButtonUI.RadiusOut = 5;
+			iconButtonUI.StrokeShade = Utils.ColorShade.Dark;
+			iconButtonUI.FillShade = Utils.ColorShade.Normal;
+			iconButtonUI.IsTextStroked = false;
+			iconButtonUI.Typeface = font;
+			return iconButtonUI;
+		}
+
+		public static ButtonUI CreateIconButtonSettings()
+		{
+			return CreateIconButtonSettings(TextFont);
+		}
+
+		public static ButtonUI CreateArrowButtonSettings()
+		{
+			return CreateIconButtonSettings(ArrowFont);
+		}
+
+		public static ButtonUI CreateDialogButtonSettings()
+		{
+			ButtonUI dialogButtonUI = new ButtonUI();
+			dialogButtonUI.StrokeShade = Utils.ColorShade.Dark;
+			dialogButtonUI.FillShade = Utils.ColorShade.Normal;
+			dialogButtonUI.SetTextSize(ComplexUnitType.Dip, 20);
+			return dialogButtonUI;
+		}
+
+		public static ButtonUI CreateDeviceButtonSettings()
+		{
+			ButtonUI deviceButtonUI = new ButtonUI();
+			deviceButtonUI.StrokeShade = Utils.ColorShade.Normal;
+			deviceButtonUI.FillShade = Utils.ColorShade.Dark;
+			deviceButtonUI.Gravity = GravityFlags.Left;
+			deviceButtonUI.StrokeBorderWidth = 7;
+			deviceButtonUI.StrokeTextWidth = 5;
+			deviceButtonUI.RadiusIn = 7;
+			deviceButtonUI.RadiusOut = 5;
+			deviceButtonUI.IsTextStroked = false;
+			deviceButtonUI.Shape = ButtonUI.ButtonShape.BottomTop;
+			deviceButtonUI.Padding = 20;
+			return deviceButtonUI;
+		}
+			
+		public static ButtonUI CreateDeviceMenuButtonSettings()
+		{
+			ButtonUI deviceMenuButtonUI = new ButtonUI();
+			deviceMenuButtonUI.StrokeShade = Utils.ColorShade.Dark;
+			deviceMenuButtonUI.FillShade = Utils.ColorShade.Normal;
+			return deviceMenuButtonUI;
+		}
+
+		//--------------------------------------------------------------
+		// BUTTONS INITIALIZATION
+		//--------------------------------------------------------------
 		public static void SetMenuButton(ButtonStroked button, TetrisColor color)
 		{
-			button.StrokeBorderWidth = 15;
-			button.StrokeTextWidth = 7;
-			button.RadiusIn = 10;
-			button.RadiusOut = 7;
-			button.StrokeColor = Utils.getAndroidDarkColor(color);
-			button.FillColor = Utils.getAndroidColor(color);
+			button.Settings = MenuButtonUI.Clone();
+			button.Settings.StrokeColor = Utils.getAndroidColor(color, button.Settings.StrokeShade);
+			button.Settings.FillColor = Utils.getAndroidColor(color, button.Settings.FillShade);
 		}
 
 		public static void SetMenuButtonWithHeight(ButtonStroked button, TetrisColor color)
 		{
 			SetMenuButton(button, color);
-			button.LayoutParameters.Width = LinearLayout.LayoutParams.MatchParent;
+			button.LayoutParameters.Width = ViewGroup.LayoutParams.MatchParent;
 			button.LayoutParameters.Height = MenuButtonHeight;
 		}
 
-		private static void SetIconButton(ButtonStroked button, TetrisColor color, Typeface font, int height)
+		private static void SetBaseIconButton(ButtonStroked button, TetrisColor color, int height)
 		{
-			button.IsSquared = true;
-			button.SetTypeface(font, TypefaceStyle.Normal);
+			SetBaseIconButton(button, color, height, height);
+		}
+
+		private static void SetBaseIconButton(ButtonStroked button, TetrisColor color, int height, int textsize)
+		{
 			button.Text = button.Tag.ToString();
 			button.SetMaxHeight(height);
 			button.SetMinimumHeight(height);
-			button.SetTextSize(ComplexUnitType.Px, height);
-			button.StrokeBorderWidth = 7;
-			button.StrokeTextWidth = 5;
-			button.RadiusIn = 7;
-			button.RadiusOut = 5;
-			button.StrokeColor = Utils.getAndroidDarkColor(color);
-			button.FillColor = Utils.getAndroidColor(color);
-			button.IsTextStroked = false;
+			button.Settings.SetTextSize(ComplexUnitType.Px, textsize);
+			button.Settings.StrokeColor = Utils.getAndroidColor(color, button.Settings.StrokeShade);
+			button.Settings.FillColor = Utils.getAndroidColor(color, button.Settings.FillShade);
 		}
 
 		public static void SetArrowButton(ButtonStroked button, TetrisColor color, int difference)
 		{
-			SetIconButton(button, color, UtilsUI.ArrowFont, button.MeasuredWidth + difference);
+			button.Settings = ArrowButtonUI.Clone();
+			SetBaseIconButton(button, color, button.MeasuredWidth + difference);
 		}
 
 		public static void SetArrowButtonWithHeight(ButtonStroked button, TetrisColor color)
 		{
+			button.Settings = ArrowButtonUI.Clone();
 			button.LayoutParameters.Width = MenuButtonHeight*2/3;
 			button.LayoutParameters.Height = MenuButtonHeight*2/3;
-			SetIconButton(button, color, UtilsUI.ArrowFont, button.LayoutParameters.Height);
+			SetBaseIconButton(button, color, button.LayoutParameters.Height);
 		}
 
-		public static void SetIconButton(ButtonStroked button, TetrisColor color)
+		public static void SetIconButton(ButtonStroked button, TetrisColor color, int difference)
 		{
-			SetIconButton(button, color, UtilsUI.TextFont, button.MeasuredWidth);
+			button.Settings = IconButtonUI.Clone();
+			SetBaseIconButton(button, color, button.MeasuredWidth + difference, (button.MeasuredWidth + difference)/2);
 		}
 
 		public static void SetIconButtonWithHeight(ButtonStroked button, TetrisColor color)
 		{
+			button.Settings = IconButtonUI.Clone();
 			button.LayoutParameters.Width = MenuButtonHeight*2/3;
 			button.LayoutParameters.Height = MenuButtonHeight*2/3;
-			SetIconButton(button, color, UtilsUI.TextFont, button.LayoutParameters.Height);
+			SetBaseIconButton(button, color, button.LayoutParameters.Height, button.LayoutParameters.Height/2);
 		}
 
 		public static void SetDialogButton(DialogActivity activity, ButtonStroked button, EditText field, TetrisColor color, string text, EventHandler action, bool answer)
 		{
 			if(!String.IsNullOrEmpty(text))
 			{
-				button.StrokeColor = Utils.getAndroidDarkColor(color);
-				button.FillColor = Utils.getAndroidColor(color);
+				button.Settings = DialogButtonUI.Clone();
+				button.Settings.StrokeColor = Utils.getAndroidColor(color, button.Settings.StrokeShade);
+				button.Settings.FillColor = Utils.getAndroidColor(color, button.Settings.FillShade);
 				button.Text = text;
-				button.SetTextSize(ComplexUnitType.Dip, 20);
 				button.Click += delegate {
 					DialogBuilder.ReturnText = (DialogActivity.Builder.RequestCode == DialogBuilder.DialogRequestCode.Text ) ? field.Text : null;
 				};
@@ -143,18 +223,12 @@ namespace Tetrim
 		public static ButtonStroked CreateDeviceButton(BluetoothConnectionActivity activity, BluetoothDevice device, TetrisColor color, int minHeight, string text)
 		{
 			ButtonStroked button = new ButtonStroked(activity);
+			button.Settings = DeviceButtonUI.Clone();
+			button.Settings.StrokeColor = Utils.getAndroidColor(color, button.Settings.StrokeShade);
+			button.Settings.FillColor = Utils.getAndroidColor(color, button.Settings.FillShade);
 			button.SetMinimumHeight(minHeight);
-			button.StrokeColor = Utils.getAndroidColor(color);
-			button.FillColor = Utils.getAndroidDarkColor(color);
-			button.Gravity = GravityFlags.Left;
-			int padding = Utils.GetPixelsFromDP(activity, 20);
+			int padding = Utils.GetPixelsFromDP(activity, button.Settings.Padding);
 			button.SetPadding(padding, padding, padding, padding);
-			button.StrokeBorderWidth = 7;
-			button.StrokeTextWidth = 5;
-			button.RadiusIn = 7;
-			button.RadiusOut = 5;
-			button.IsTextStroked = false;
-			button.Shape = ButtonStroked.ButtonShape.BottomTop;
 			button.Text = text;
 			if(device != null)
 			{
@@ -173,8 +247,18 @@ namespace Tetrim
 		public static void SetDeviceMenuButton(Activity activity, ref ButtonStroked button, int id, TetrisColor color)
 		{
 			button = activity.FindViewById<ButtonStroked>(id);
-			button.StrokeColor = Utils.getAndroidDarkColor(color);
-			button.FillColor = Utils.getAndroidColor(color);
+			button.Settings = DeviceMenuButtonUI.Clone();
+			button.Settings.StrokeColor = Utils.getAndroidColor(color, button.Settings.StrokeShade);
+			button.Settings.FillColor = Utils.getAndroidColor(color, button.Settings.FillShade);
+		}
+
+		//--------------------------------------------------------------
+		// LAYOUT INITIALIZATION
+		//--------------------------------------------------------------
+		public static LinearLayout.LayoutParams CreateDeviceLayoutParams(Activity activity, int marginPixel)
+		{
+			LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MatchParent, 0, 1);
+			return lp;
 		}
 
 		public static void SetDeviceMenuLayout(Activity activity, ref LinearLayout layout, int nbDevices)
@@ -184,14 +268,14 @@ namespace Tetrim
 			layout.Orientation = Orientation.Vertical;
 		}
 
-		public static LinearLayout.LayoutParams CreateDeviceLayoutParams(Activity activity, int marginPixel)
+		//--------------------------------------------------------------
+		// TEXT INITIALIZATION
+		//--------------------------------------------------------------
+		public static void SetTitleTextView(TextView titleTextView, TetrisColor color)
 		{
-			LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MatchParent, 0, 1);
-			int margin = Utils.GetPixelsFromDP(activity, marginPixel);
-			//lp.SetMargins(margin, margin, margin, margin);
-			return lp;
+			titleTextView.SetTypeface(UtilsUI.TitleFont, TypefaceStyle.Normal);
+			titleTextView.SetTextColor(Utils.getAndroidColor(color));
 		}
-
 
 		public static void SetGamePlayerStatText(Activity activity, int id, bool me, bool isTitle)
 		{
