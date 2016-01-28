@@ -471,14 +471,10 @@ namespace Tetrim
 		{
 			if(_player1.MoveDown() && _gameTimer.Enabled)
 			{
-				_gameTimer.Stop();
-
+				// the timer is stop and restart in the touch event
 				// Display of the current model
 				FindViewById(Resource.Id.PlayerGridView).PostInvalidate();
-				_player1View.Draw();
 				actualizeViewOtherPlayer(true, null, false);
-
-				_gameTimer.Start();
 			}
 		}
 

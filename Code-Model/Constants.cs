@@ -63,6 +63,9 @@ namespace Tetrim
 		public const int NbProposedPiece = 4;
 		public const int NbLinePropPiece = 2;
 		public const int RadiusHighlight = 10;
+
+		// Keys
+		public const int RepeatTimeKey = 200; // ms
 	}
 
 	public enum Shape

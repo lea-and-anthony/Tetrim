@@ -134,7 +134,6 @@ namespace Tetrim
 				if(_proposedPieces[i] != null)
 				{
 					// Show the selected piece
-					// TODO : change the way we highlight a piece
 					if(i == _selectedPiece)
 					{
 						int left = ((i % _nbPieceByLine) == 0) ? 0 : _offset.X;

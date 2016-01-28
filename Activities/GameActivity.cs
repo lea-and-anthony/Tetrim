@@ -20,6 +20,9 @@ namespace Tetrim
 		// ATTRIBUTES
 		//--------------------------------------------------------------
 		protected Timer _gameTimer = null;
+		protected Timer _repeatLeftTimer = new Timer(Constants.RepeatTimeKey);
+		protected Timer _repeatRightTimer = new Timer(Constants.RepeatTimeKey);
+		protected Timer _repeatDownTimer = new Timer(Constants.RepeatTimeKey);
 		protected int _previousLevel = Constants.MinLevel;
 
 		public Player _player1 { get; protected set; }
@@ -191,12 +194,20 @@ namespace Tetrim
 
 		protected void associateButtonsEvent()
 		{
-			FindViewById<ButtonStroked>(Resource.Id.buttonMoveLeft).Click += moveLeftButtonPressed;
-			FindViewById<ButtonStroked>(Resource.Id.buttonMoveRight).Click += moveRightButtonPressed;
-			FindViewById<ButtonStroked>(Resource.Id.buttonTurnLeft).Click += turnLeftButtonPressed;
-			FindViewById<ButtonStroked>(Resource.Id.buttonTurnRight).Click += turnRightButtonPressed;
-			FindViewById<ButtonStroked>(Resource.Id.buttonMoveDown).Click += moveDownButtonPressed;
-			FindViewById<ButtonStroked>(Resource.Id.buttonMoveFoot).Click += moveFootButtonPressed;
+			ButtonStroked buttonMoveLeft = FindViewById<ButtonStroked>(Resource.Id.buttonMoveLeft);
+			ButtonStroked buttonMoveRight = FindViewById<ButtonStroked>(Resource.Id.buttonMoveRight);
+			ButtonStroked buttonTurnLeft = FindViewById<ButtonStroked>(Resource.Id.buttonTurnLeft);
+			ButtonStroked buttonTurnRight = FindViewById<ButtonStroked>(Resource.Id.buttonTurnRight);
+			ButtonStroked buttonMoveDown = FindViewById<ButtonStroked>(Resource.Id.buttonMoveDown);
+			ButtonStroked buttonMoveFoot = FindViewById<ButtonStroked>(Resource.Id.buttonMoveFoot);
+
+			addTouchEventToButton(buttonMoveLeft, _repeatLeftTimer, moveLeftButtonPressed, false);
+			addTouchEventToButton(buttonMoveRight, _repeatRightTimer, moveRightButtonPressed, false);
+			addTouchEventToButton(buttonMoveDown, _repeatDownTimer, moveDownButtonPressed, true);
+
+			buttonTurnLeft.Click += turnLeftButtonPressed;
+			buttonTurnRight.Click += turnRightButtonPressed;
+			buttonMoveFoot.Click += moveFootButtonPressed;
 		}
 
 		protected void actualizeView()
@@ -232,6 +243,56 @@ namespace Tetrim
 		{
 			// Formula to get 1 second at level 1 and 0.5 at level 10
 			return 4000 / (_player1._level + 3);
+		}
+
+		private void addTouchEventToButton(ButtonStroked button, Timer repeatTimer, ElapsedEventHandler action, bool changeGameTimer)
+		{
+			repeatTimer.Elapsed += action;
+			repeatTimer.AutoReset = true;
+			button.Touch += 
+				delegate(object sender, View.TouchEventArgs e)
+			{
+				e.Handled = false; // so the button can change it's state
+				switch (e.Event.Action)
+				{
+				case MotionEventActions.Up:
+					// The user release the button so we stop the timer
+					repeatTimer.Stop();
+					if(changeGameTimer)
+					{
+						_gameTimer.Start();
+						_player1View.Draw(); //update score
+					}
+					break;
+				case  MotionEventActions.Down:
+					if( !repeatTimer.Enabled)
+					{  
+						repeatTimer.Start();
+						if(changeGameTimer)
+						{
+							_gameTimer.Stop();
+						}
+					}
+					action.Invoke(null, null);
+					break;
+				case MotionEventActions.Move:
+					int x = (int) e.Event.GetX();
+					int y = (int) e.Event.GetY();
+
+					// Be lenient about moving outside of buttons
+					int slop = ViewConfiguration.Get(button.Context).ScaledTouchSlop;
+					if ((x < 0 - slop) || (x >= button.Width + slop) || (y < 0 - slop) || (y >= button.Height + slop))
+					{
+						repeatTimer.Stop();
+						if(changeGameTimer)
+						{
+							_gameTimer.Start();
+							_player1View.Draw(); //update score
+						}
+					}
+					break;
+				}
+			};
 		}
 	}
 }

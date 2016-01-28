@@ -43,7 +43,7 @@
     <string name="askSure">Are you sure ?</string>
     <string name="askSureDeleteFriends">Delete friends ?</string>
     <string name="askSureDeleteHighScore">Delete highscore ?</string>
-    <string name="yesDialog">Yes!</string>
+    <string name="yesDialog">Yes !</string>
     <string name="noDialog">No...</string>
 
     <!-- Prompt Game Over Dialog -->
