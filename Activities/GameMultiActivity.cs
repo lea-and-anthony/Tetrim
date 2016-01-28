@@ -270,7 +270,6 @@ namespace Tetrim
 			}
 			else
 			{
-				// TODO display a message according to the situation
 				/*
 				switch(_gameState)
 				{
@@ -379,7 +378,6 @@ namespace Tetrim
 			Canvas backCanvas = new Canvas(_player2background);
 
 			// Background stroke paint
-			// TODO : same width as buttons and set layout margins
 			float strokeBorderWidth = (FindViewById<ButtonStroked>(Resource.Id.buttonMoveLeft)).Settings.StrokeBorderWidth;
 			int padding = (int)strokeBorderWidth/2 + Utils.GetPixelsFromDP(this, 5);
 			player2layout.SetPadding(padding, 0, 0, padding);

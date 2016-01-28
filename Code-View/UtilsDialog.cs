@@ -94,21 +94,10 @@ namespace Tetrim
 
 		private static Intent CreateGameOverDialog(GameActivity activity, string message, TetrisColor messageColor)
 		{
-			// Create the title
-			TextView titleText = new TextView(activity);
-			titleText.SetTextSize(ComplexUnitType.Dip, 30);
-			titleText.Text = activity.Resources.GetString(Resource.String.gameOver);
-			titleText.Gravity = GravityFlags.CenterHorizontal;
-			titleText.SetTextColor(Utils.getAndroidDarkColor(TetrisColor.Cyan));
-
-			// Create the message
-			TextView text = new TextView(activity);
-			text.SetTextSize(ComplexUnitType.Dip, 30);
-			text.Gravity = GravityFlags.CenterHorizontal;
-			text.Text = message;
-			text.SetTextColor(Utils.getAndroidDarkColor(messageColor));
-
-			return DialogActivity.CreateCustomDialog(activity, new[]{titleText, text}, Resource.String.playAgain, Resource.String.menu,
+			string title = activity.Resources.GetString(Resource.String.gameOver);
+			string posText = activity.Resources.GetString(Resource.String.playAgain);
+			string negText = activity.Resources.GetString(Resource.String.menu);
+			return DialogActivity.CreateYesNoDialog(activity, title, message, posText, negText,
 				delegate {activity.NewGame();}, delegate {activity.Finish();});
 		}
 	}
