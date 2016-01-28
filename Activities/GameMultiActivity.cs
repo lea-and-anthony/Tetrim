@@ -387,7 +387,13 @@ namespace Tetrim
 
 			// Background stroke paint
 			// TODO : same width as buttons and set layout margins
-			int strokeBorderWidth = Utils.GetPixelsFromDP(this, 10);
+			//int strokeBorderWidth = Utils.GetPixelsFromDP(this, 10);
+			int strokeBorderWidth = UtilsUI.ArrowButtonUI.StrokeBorderWidth;
+			LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams)player2layout.LayoutParameters;
+			lp.BottomMargin = strokeBorderWidth + Utils.GetPixelsFromDP(this, 2);
+			lp.LeftMargin = strokeBorderWidth + Utils.GetPixelsFromDP(this, 2);
+			player2layout.LayoutParameters = lp;
+
 			Paint strokeBackPaint = new Paint();
 			strokeBackPaint.Color = Utils.getAndroidColor(TetrisColor.Red);
 			strokeBackPaint.SetStyle(Paint.Style.Stroke);

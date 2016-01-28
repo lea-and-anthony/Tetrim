@@ -40,10 +40,6 @@ namespace Tetrim
 			else
 			{
 				nameText = name;
-				/*posText = activity.Resources.GetString(Resource.String.menu);
-				posAction = delegate {activity.Finish();};
-				negText = string.Empty;
-				negAction = null;*/
 				posText = string.Empty;
 				posAction = null;
 				negText = activity.Resources.GetString(Resource.String.menu);
@@ -68,63 +64,53 @@ namespace Tetrim
 
 		public static Intent CreateGameOverDialogSingle(GameActivity activity, int score)
 		{
-			// TODO: change colors of game over pop-up
-
-			// Title saying GAME OVER
-			TextView titleText = new TextView(activity);
-			titleText.SetTextSize(ComplexUnitType.Dip, 30);
-			titleText.Text = activity.Resources.GetString(Resource.String.gameOver);
-			titleText.Gravity = GravityFlags.CenterHorizontal;
-			titleText.SetTextColor(Utils.getAndroidColor(TetrisColor.Red));
-
-			// Score display
-			TextView scoreText = new TextView(activity);
-			scoreText.SetTextSize(ComplexUnitType.Dip, 20);
-
-			// Highscore display
-			TextView highScoreText = new TextView(activity);
-			highScoreText.SetTextSize(ComplexUnitType.Dip, 20);
-
+			string message = string.Empty;
+			TetrisColor messageColor = TetrisColor.Cyan;
 			if(score > User.Instance.HighScore)
 			{
-				// New Highscore ! in green
-				scoreText.SetTextColor(Utils.getAndroidColor(TetrisColor.Green));
-				scoreText.Text = activity.Resources.GetString(Resource.String.newHighScore);
-				// #highscore# in yellow
-				highScoreText.SetTextColor(Utils.getAndroidColor(TetrisColor.Green));
-				highScoreText.Text = activity.Resources.GetString(Resource.String.playerScore, score.ToString());
+				// New Highscore !
+				// #highscore#
+				message = activity.Resources.GetString(Resource.String.newHighScore) + "\n";
+				message += activity.Resources.GetString(Resource.String.playerScore, score.ToString());
+				messageColor = TetrisColor.Green;
 			}
 			else
 			{
-				// Your score : #score# in red
-				scoreText.SetTextColor(Utils.getAndroidColor(TetrisColor.Yellow));
-				scoreText.Text = activity.Resources.GetString(Resource.String.playerScore, score.ToString());
-				// You highscore : #highscore# in blue
-				highScoreText.SetTextColor(Utils.getAndroidColor(TetrisColor.Yellow));
-				highScoreText.Text = activity.Resources.GetString(Resource.String.playerHighScore, User.Instance.HighScore.ToString());
+				// Your score : #score#
+				// You highscore : #highscore#
+				message = activity.Resources.GetString(Resource.String.playerScore, score.ToString()) + "\n";
+				message += activity.Resources.GetString(Resource.String.playerHighScore, User.Instance.HighScore.ToString());
+				messageColor = TetrisColor.Red;
 			}
-
-			return DialogActivity.CreateCustomDialog(activity, new[]{titleText, scoreText, highScoreText}, Resource.String.playAgain, Resource.String.menu,
-				delegate {activity.NewGame();}, delegate {activity.Finish();});
+			return CreateGameOverDialog(activity, message, messageColor);
 		}
 
 		public static Intent CreateGameOverDialogMulti(GameActivity activity, bool hasWon)
 		{
-			// Create the content
+			string message = activity.Resources.GetString(hasWon ? Resource.String.playerWin : Resource.String.playerLoose);
+			TetrisColor messageColor = hasWon ? TetrisColor.Green : TetrisColor.Red;
+			return CreateGameOverDialog(activity, message, messageColor);
+   		}
+
+		private static Intent CreateGameOverDialog(GameActivity activity, string message, TetrisColor messageColor)
+		{
+			// Create the title
 			TextView titleText = new TextView(activity);
 			titleText.SetTextSize(ComplexUnitType.Dip, 30);
 			titleText.Text = activity.Resources.GetString(Resource.String.gameOver);
 			titleText.Gravity = GravityFlags.CenterHorizontal;
-			titleText.SetTextColor(Utils.getAndroidColor(TetrisColor.Yellow));
+			titleText.SetTextColor(Utils.getAndroidDarkColor(TetrisColor.Cyan));
+
+			// Create the message
 			TextView text = new TextView(activity);
 			text.SetTextSize(ComplexUnitType.Dip, 30);
-			text.Text = activity.Resources.GetString(hasWon ? Resource.String.playerWin : Resource.String.playerLoose);
 			text.Gravity = GravityFlags.CenterHorizontal;
-			text.SetTextColor(Utils.getAndroidColor(hasWon ? TetrisColor.Green : TetrisColor.Red));
+			text.Text = message;
+			text.SetTextColor(Utils.getAndroidDarkColor(messageColor));
 
 			return DialogActivity.CreateCustomDialog(activity, new[]{titleText, text}, Resource.String.playAgain, Resource.String.menu,
 				delegate {activity.NewGame();}, delegate {activity.Finish();});
-   		}
+		}
 	}
 }
 

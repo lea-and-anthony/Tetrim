@@ -131,7 +131,7 @@ namespace Tetrim
 												(_blockSize * 5) * (1 + i / _nbPieceByLine));
 						
 						Paint paint = new Paint {AntiAlias = true, Color = Color.AntiqueWhite};
-						canvas.DrawRoundRect(rect, Constants.RadiusHighlight, Constants.RadiusHighlight, paint);
+						canvas.DrawRect(rect, paint);
 					}
 					float xSize = 0;
 					float ySize = 0;

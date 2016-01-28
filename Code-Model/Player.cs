@@ -43,7 +43,6 @@ namespace Tetrim
 		{
 			_removedRows += nbRemovedRows;
 			updateLevel();
-			// TODO : choose between original scoring and recent
 			switch (nbRemovedRows)
 			{
 			case 1 :

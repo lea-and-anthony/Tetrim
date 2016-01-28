@@ -204,8 +204,9 @@
             android:layout_height="match_parent"
             android:layout_weight="67"
             android:weightSum="67"
-            android:paddingLeft="8dp"
-            android:paddingBottom="8dp">
+            android:layout_marginBottom="5dp"
+            android:paddingBottom="8dp"
+            android:paddingLeft="8dp">
             <LinearLayout
                 android:orientation="vertical"
                 android:minWidth="25px"
@@ -244,7 +245,8 @@
                     android:id="@+id/enemyGrid"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:layout_weight="81">
+                    android:layout_weight="81"
+                    android:layout_gravity="center_horizontal">
                     <Tetrim.GridView
                         android:id="@+id/OpponentGridView"
                         android:layout_width="match_parent"

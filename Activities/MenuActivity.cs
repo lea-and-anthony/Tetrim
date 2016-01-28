@@ -121,20 +121,6 @@ namespace Tetrim
 		//--------------------------------------------------------------
 		// PUBLIC METHODS
 		//--------------------------------------------------------------
-		/*public static void startGame(Activity activity, Utils.RequestCode code)
-		{
-			Intent intent = null;
-			if(Network.Instance.Connected)
-			{
-				intent = new Intent(activity, typeof(GameMultiActivity));
-			}
-			else
-			{
-				intent = new Intent(activity, typeof(GameSingleActivity));
-			}
-			activity.StartActivityForResult(intent, (int) code);
-		}*/
-
 		public static void startOnePlayerGame(Activity activity)
 		{
 			Intent intent = new Intent(activity, typeof(GameSingleActivity));
@@ -143,16 +129,9 @@ namespace Tetrim
 
 		public static void startTwoPlayerGame(Activity activity, string opponentName)
 		{
-			if(Network.Instance.Connected)
-			{
-				Intent intent = new Intent(activity, typeof(GameMultiActivity));
-				intent.PutExtra(Utils.OpponentNameExtra, opponentName);
-				activity.StartActivityForResult(intent, (int) Utils.RequestCode.RequestGameTwoPlayer);
-			}
-			else
-			{
-				// TODO : should not happen
-			}
+			Intent intent = new Intent(activity, typeof(GameMultiActivity));
+			intent.PutExtra(Utils.OpponentNameExtra, opponentName);
+			activity.StartActivityForResult(intent, (int) Utils.RequestCode.RequestGameTwoPlayer);
 		}
 
 		//--------------------------------------------------------------
