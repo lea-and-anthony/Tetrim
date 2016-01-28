@@ -33,7 +33,7 @@ namespace Tetrim
 		private const int NbDevicesDisplayed = 6;
 		private const TetrisColor FriendsDeviceColor = TetrisColor.Magenta;
 		private const TetrisColor PairedDeviceColor = TetrisColor.Green;
-		private const TetrisColor NewDeviceColor = TetrisColor.Blue;
+		private const TetrisColor NewDeviceColor = TetrisColor.Cyan;
 
 		private enum Menu
 		{

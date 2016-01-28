@@ -36,8 +36,6 @@ namespace Tetrim
 		public static string ReturnText;
 		public List<View> Content = new List<View>();
 
-		//public Color StrokeColor = Utils.getAndroidDarkColor(TetrisColor.Blue);
-		//public Color FillColor = new Color(0, 0, 50, 255);
 		public Color StrokeColor = Utils.getAndroidDarkColor(TetrisColor.Cyan);
 		public Color FillColor = Utils.getAndroidLightColor(TetrisColor.Cyan);
 		public Color TextColor = Utils.getAndroidReallyDarkColor(TetrisColor.Cyan);

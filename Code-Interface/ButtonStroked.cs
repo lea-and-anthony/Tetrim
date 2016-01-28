@@ -92,7 +92,9 @@ namespace Tetrim
 			Canvas unpressedCanvas = new Canvas(_unpressedImage);
 			Canvas pressedCanvas = new Canvas(_pressedImage);
 
-			Settings.SetTextSize(ComplexUnitType.Px, Settings.TextSize == 0 ? Height / 2 : Settings.TextSize);
+			Settings.SetTextSize(ComplexUnitType.Px, Settings.TextSize == 0f ? Height * Settings.TextSizeRatio : Settings.TextSize);
+			Settings.StrokeBorderWidth = Height * Settings.StrokeBorderWidthRatio;
+			Settings.StrokeTextWidth = Height * Settings.StrokeTextWidthRatio;
 
 			// Background fill paint
 			Paint fillBackPaint = new Paint();
@@ -153,9 +155,9 @@ namespace Tetrim
 			// Text location
 			Rect r = new Rect();
 			strokePaint.GetTextBounds(Text, 0, Text.Length, r);
-			while(r.Width() > Width)
+			while(r.Width() + Settings.StrokeTextWidth >= bounds.Width())
 			{
-				Settings.SetTextSize(ComplexUnitType.Px, (int)(Settings.TextSize/1.5f));
+				Settings.SetTextSize(ComplexUnitType.Px, Settings.TextSize-1);
 				textPaint.TextSize = Settings.TextSize;
 				strokePaint.TextSize = Settings.TextSize;
 				strokePaint.GetTextBounds(Text, 0, Text.Length, r);

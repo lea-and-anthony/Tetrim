@@ -114,7 +114,7 @@
                     android:background="#ff4db6ac"
                     android:paddingRight="2dp"
                     android:paddingLeft="2dp" />
-                <TextView
+                <Tetrim.AutoResizeTextView
                     android:text="0"
                     android:textAppearance="?android:attr/textAppearanceLarge"
                     android:id="@+id/player1score"
@@ -155,7 +155,7 @@
                         android:background="#ff4db6ac"
                         android:paddingRight="2dp"
                         android:paddingLeft="2dp" />
-                    <TextView
+                    <Tetrim.AutoResizeTextView
                         android:text="0"
                         android:textAppearance="?android:attr/textAppearanceLarge"
                         android:id="@+id/player1rows"
@@ -188,7 +188,7 @@
                         android:textColor="#ff212121"
                         android:paddingRight="2dp"
                         android:paddingLeft="2dp" />
-                    <TextView
+                    <Tetrim.AutoResizeTextView
                         android:textAppearance="?android:attr/textAppearanceLarge"
                         android:id="@+id/player1level"
                         android:gravity="center"

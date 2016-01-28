@@ -270,7 +270,6 @@ namespace Tetrim
 			}
 			else
 			{
-				// TODO display a message according to the situation
 				/*
 				switch(_gameState)
 				{
@@ -356,14 +355,6 @@ namespace Tetrim
 			ProposedPieceView proposedPiecesView = FindViewById<ProposedPieceView>(Resource.Id.player2piece);
 			proposedPiecesView.SetBackgroundColor(Utils.getAndroidColor(TetrisColor.Red));
 
-			// Change the buttons location
-			LinearLayout layoutButtonsLeft = FindViewById<LinearLayout>(Resource.Id.layoutButtonsLeft);
-			RelativeLayout.LayoutParams lpLeft = (RelativeLayout.LayoutParams)layoutButtonsLeft.LayoutParameters;
-			lpLeft.AddRule(LayoutRules.AlignParentTop);
-			LinearLayout layoutButtonsRight = FindViewById<LinearLayout>(Resource.Id.layoutButtonsRight);
-			RelativeLayout.LayoutParams lpRight = (RelativeLayout.LayoutParams)layoutButtonsRight.LayoutParameters;
-			lpRight.AddRule(LayoutRules.AlignParentTop);
-
 			// Center the opponent grid
 			Point size = GridView.CalculateUseSize(_player2View._gridView.MeasuredWidth, _player2View._gridView.MeasuredHeight);
 			LinearLayout.LayoutParams newLayoutParams = new LinearLayout.LayoutParams(size.X, size.Y);
@@ -387,12 +378,14 @@ namespace Tetrim
 			Canvas backCanvas = new Canvas(_player2background);
 
 			// Background stroke paint
-			// TODO : same width as buttons and set layout margins
-			int strokeBorderWidth = Utils.GetPixelsFromDP(this, 10);
+			float strokeBorderWidth = (FindViewById<ButtonStroked>(Resource.Id.buttonMoveLeft)).Settings.StrokeBorderWidth;
+			int padding = (int)strokeBorderWidth/2 + Utils.GetPixelsFromDP(this, 5);
+			player2layout.SetPadding(padding, 0, 0, padding);
+
 			Paint strokeBackPaint = new Paint();
 			strokeBackPaint.Color = Utils.getAndroidColor(TetrisColor.Red);
 			strokeBackPaint.SetStyle(Paint.Style.Stroke);
-			strokeBackPaint.StrokeWidth = strokeBorderWidth;
+			strokeBackPaint.StrokeWidth = strokeBorderWidth/2;
 			strokeBackPaint.AntiAlias = true;
 
 			// Get rectangle
@@ -405,8 +398,8 @@ namespace Tetrim
 			bounds.Right += strokeBorderWidth;
 
 			// Actually draw background
-			int radiusIn = Utils.GetPixelsFromDP(this, 7);
-			int radiusOut = Utils.GetPixelsFromDP(this, 5);
+			int radiusIn = (FindViewById<ButtonStroked>(Resource.Id.buttonMoveLeft)).Settings.RadiusIn;
+			int radiusOut = (FindViewById<ButtonStroked>(Resource.Id.buttonMoveLeft)).Settings.RadiusOut;
 			backCanvas.DrawRoundRect(bounds, radiusOut, radiusOut, strokeBackPaint);
 
 			// Use it as background

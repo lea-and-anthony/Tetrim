@@ -85,7 +85,6 @@ namespace Tetrim
 				{
 					_message = new TextView(this);
 					_message.Text = Builder.Message;
-					// TODO : getpixelfromdp in the constant
 					_message.SetTextSize(Android.Util.ComplexUnitType.Dip, TextSize);
 					_message.SetTextColor(Builder.TextColor);
 					_message.Gravity = GravityFlags.CenterHorizontal;
@@ -190,7 +189,6 @@ namespace Tetrim
 			_buttonLayout.SetMinimumHeight(Math.Max(_positiveButton.Height, _negativeButton.Height));
 
 			// Initialize background
-			// TODO : sometimes bug because "width and height must be > 0"
 			if(_root.Width <= 0 || _root.Height <= 0)
 				return false;
 
