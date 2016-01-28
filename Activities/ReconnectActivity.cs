@@ -35,8 +35,8 @@ namespace Tetrim
 			Builder.PositiveAction = null;
 			Builder.NegativeText = null;
 			Builder.NegativeAction = null;
-			Builder.Message = Resources.GetString(Resource.String.reconnect_activity);
-			Builder.Title = null;
+			Builder.Message = null;
+			Builder.Title = Resources.GetString(Resource.String.reconnect_activity);
 
 			base.OnCreate (bundle);
 
