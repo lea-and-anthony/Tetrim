@@ -27,6 +27,7 @@
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
     <AndroidLinkMode>None</AndroidLinkMode>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>full</DebugType>
@@ -41,6 +42,7 @@
     <AndroidKeyStore>True</AndroidKeyStore>
     <AndroidSigningKeyStore>D:\Documents\INSA\Tetrim\leanthonygames.keystore</AndroidSigningKeyStore>
     <AndroidSigningKeyAlias>leanthonygames</AndroidSigningKeyAlias>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
