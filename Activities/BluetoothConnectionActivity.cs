@@ -10,7 +10,6 @@ using Android.App;
 using Android.Bluetooth;
 using Android.Content;
 using Android.Content.PM;
-using Android.Graphics;
 using Android.OS;
 using Android.Util;
 using Android.Views;
@@ -46,9 +45,9 @@ namespace Tetrim
 		// ATTRIBUTES
 		//--------------------------------------------------------------
 		private BluetoothAdapter _bluetoothAdapter = null;
-		private static List<BluetoothDevice> _friendsDevices = new List<BluetoothDevice>();
-		private static List<BluetoothDevice> _pairedDevices = new List<BluetoothDevice>();
-		private static List<BluetoothDevice> _newDevices = new List<BluetoothDevice>();
+		private List<BluetoothDevice> _friendsDevices = new List<BluetoothDevice>();
+		private List<BluetoothDevice> _pairedDevices = new List<BluetoothDevice>();
+		private List<BluetoothDevice> _newDevices = new List<BluetoothDevice>();
 		private Receiver _receiver;
 		private Network.StartState _state = Network.StartState.NONE;
 		private bool _isConnectionInitiator = false;
@@ -335,6 +334,9 @@ namespace Tetrim
 			// To avoid infinite loop because this function can throw a StateNoneEvent
 			Network.Instance.StateNoneEvent -= StateNoneEventReceived;
 
+			_isConnectionInitiator = false;
+			_state = Network.StartState.NONE;
+
 			// if the connection fail we remove the pop-up and restart the bluetooth
 			DialogActivity.CloseAll();
 
@@ -345,9 +347,6 @@ namespace Tetrim
 				// if the bluetooth is still disabled, we need to stop
 				Finish();
 			}
-
-			_state = Network.StartState.NONE;
-			_isConnectionInitiator = false;
 
 			Network.Instance.StateNoneEvent += StateNoneEventReceived;
 
@@ -443,9 +442,11 @@ namespace Tetrim
 			Log.Debug(Tag, "CancelConnection()");
 			#endif
 
+			_state = Network.StartState.NONE;
+			_isConnectionInitiator = false;
+
 			DialogActivity.CloseAll();
 
-			_state = Network.StartState.NONE;
 			Network.Instance.CommunicationWay.Start();
 		}
 

@@ -1,4 +1,5 @@
-﻿using Android.App;
+﻿using System.Timers;
+using Android.App;
 using Android.Bluetooth;
 using Android.Content;
 using Android.Content.PM;
@@ -19,6 +20,7 @@ namespace Tetrim
 		// ATTRIBUTES
 		//--------------------------------------------------------------
 		public static byte[] _messageFail { get; set; }
+		private Timer _endTimer = null; 
 		private string _deviceAddress = string.Empty;
 		private bool _connectingOccured = false;
 		private bool isDialogDisplayed = false;
@@ -216,6 +218,17 @@ namespace Tetrim
 					// Attempt to connect to the previous device (only one device should try this)
 					BluetoothDevice device = BluetoothAdapter.DefaultAdapter.GetRemoteDevice(_deviceAddress);
 					Network.Instance.CommunicationWay.Connect(device);
+				}
+				else
+				{
+					if(_endTimer == null)
+					{
+						_endTimer = new Timer(Constants.TimeReconnection);
+						_endTimer.AutoReset = false;
+						_endTimer.Elapsed += delegate{OnFail();};
+					}
+					_connectingOccured = true;
+					_endTimer.Start();
 				}
 			}
 			else

@@ -46,3 +46,4 @@ namespace Tetrim
 // send malus when one player make a good move
 // add french and possibility to change language
 // add wifi direct
+// add explanations
