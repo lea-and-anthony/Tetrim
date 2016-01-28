@@ -227,6 +227,8 @@ namespace Tetrim
 			_root.SetBackgroundDrawable(new BitmapDrawable(_backgroundImage));
 
 			canvas.Dispose();
+			strokeBackPaint.Dispose();
+			fillBackPaint.Dispose();
 
 			return true;
 		}

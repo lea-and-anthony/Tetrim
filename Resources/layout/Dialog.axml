@@ -30,7 +30,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <Tetrim.ButtonStroked
-            android:text="Favorite"
             android:id="@+id/negativeButton"
             android:autoText="true"
             android:tag="@string/cancel"
@@ -38,7 +37,6 @@
             android:layout_height="match_parent"
             android:layout_weight="1" />
         <Tetrim.ButtonStroked
-            android:text="Favorite"
             android:id="@+id/positiveButton"
             android:autoText="true"
             android:tag="@string/ok"

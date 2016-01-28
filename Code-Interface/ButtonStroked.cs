@@ -215,6 +215,10 @@ namespace Tetrim
 			states.AddState(new int[] { }, new BitmapDrawable(_unpressedImage));
 			SetBackgroundDrawable(states);
 
+			strokePaint.Dispose();
+			textPaint.Dispose();
+			strokeBackPaint.Dispose();
+			fillBackPaint.Dispose();
 			unpressedCanvas.Dispose();
 			pressedCanvas.Dispose();
 		}

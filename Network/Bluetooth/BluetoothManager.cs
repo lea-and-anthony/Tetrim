@@ -48,9 +48,6 @@ namespace Tetrim
 			ConnectionLost = 4
     	};
 
-		// Key name for identification message
-		public const string DeviceName = "device_name";
-
 		// Name for the SDP record when creating server socket
 		private const string Name = "BluetoothTetrim";
 

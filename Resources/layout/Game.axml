@@ -21,7 +21,6 @@
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true">
             <Tetrim.ButtonStroked
-                android:text="&lt;~"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/buttonTurnLeft"
@@ -35,7 +34,6 @@
                 android:background="#ff00b0ff"
                 android:tag="@string/turn_left_arrow" />
             <Tetrim.ButtonStroked
-                android:text="&lt;-"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/buttonMoveLeft"
@@ -49,7 +47,6 @@
                 android:background="#ff00c853"
                 android:tag="@string/left_arrow" />
             <Tetrim.ButtonStroked
-                android:text="v"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/buttonMoveDown"
@@ -91,7 +88,6 @@
                 android:id="@+id/buttonTurnRight"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"
-                android:text="~&gt;"
                 android:textColor="#fffafafa"
                 android:shadowColor="#ff212121"
                 android:shadowDx="2"
@@ -100,7 +96,6 @@
                 android:background="#ff00b0ff"
                 android:tag="@string/turn_right_arrow" />
             <Tetrim.ButtonStroked
-                android:text="-&gt;"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/buttonMoveRight"
@@ -114,7 +109,6 @@
                 android:background="#ff00c853"
                 android:tag="@string/right_arrow" />
             <Tetrim.ButtonStroked
-                android:text="v v"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/buttonMoveFoot"
@@ -130,7 +124,6 @@
         </LinearLayout>
         <Tetrim.ButtonStroked
             android:id="@+id/pauseButton"
-            android:text="~&gt;"
             android:textColor="#fffafafa"
             android:shadowColor="#ff212121"
             android:shadowDx="2"

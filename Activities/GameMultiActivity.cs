@@ -270,8 +270,8 @@ namespace Tetrim
 			}
 			else
 			{
-				Intent intent = null;
-
+				// TODO display a message according to the situation
+				/*
 				switch(_gameState)
 				{
 				case GameState.GameOverWin:
@@ -284,8 +284,9 @@ namespace Tetrim
 				case GameState.WaitingForRestart: // display of the same pop-up in these case
 					intent = DialogActivity.CreateYesDialog(this, Resource.String.ConnectionLost, Resource.String.lostFriend, Resource.String.ok, delegate {Finish();});
 					break;
-				}
+				}*/
 
+				Intent intent = DialogActivity.CreateYesDialog(this, Resource.String.ConnectionLost, Resource.String.lostFriend, Resource.String.ok, delegate {Finish();});
 				SetResult(Result.Ok);
 				StartActivity(intent);
 			}
@@ -407,6 +408,7 @@ namespace Tetrim
 			player2layout.SetBackgroundDrawable(new BitmapDrawable(_player2background));
 
 			backCanvas.Dispose();
+			strokeBackPaint.Dispose();
 		}
 		
 		// Pause the game, display a pop-up and send a message to the remote device if asked

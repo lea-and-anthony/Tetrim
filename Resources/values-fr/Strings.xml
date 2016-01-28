@@ -1,0 +1,78 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Menu -->
+    <string name="welcome">Salut !</string>
+    <string name="welcomeUser">Salut %1$s !</string>
+    <string name="onePlayer">1 joueur</string>
+    <string name="twoPlayers">2 joueurs</string>
+    <string name="settings">paramètres</string>
+    <string name="exit">Quitter</string>
+
+    <!-- Settings -->
+    <string name="deleteFriends">supprimer les amis</string>
+    <string name="deleteHighScores">oublier le highscore</string>
+    <string name="changeName">changer de nom</string>
+
+    <!-- Game -->
+    <string name="score">SCORE</string>
+    <string name="nextPiece">NEXT</string>
+    <string name="level">LEVEL</string>
+    <string name="rows">LINES</string>
+	
+    <!-- Prompt Dialog -->
+    <string name="ok">OK</string>
+    <string name="cancel">Annuler</string>
+
+    <!-- Prompt Make Sure Dialog -->
+    <string name="askSure">Êtes-vous sûr ?</string>
+    <string name="askSureDeleteFriends">Supprimer la liste d\'amis ?</string>
+    <string name="askSureDeleteHighScore">Supprimer le meilleur score ?</string>
+    <string name="yesDialog">Oui !</string>
+    <string name="noDialog">Non...</string>
+
+    <!-- Prompt Game Over Dialog -->
+    <string name="playAgain">Revanche !</string>
+    <string name="menu">Menu</string>
+    <string name="playerScore">Ton score : %1$s</string>
+    <string name="playerHighScore">Ton highscore : %1$s</string>
+    <string name="newHighScore">Nouveau highscore !</string>
+    <string name="playerWin">Tu as gagné !</string>
+    <string name="playerLoose">Tu as perdu !</string>
+    <string name="gameOver">GAME OVER</string>
+
+    <!-- Prompt Dialog -->
+    <string name="askName">Quel est ton nom ?</string>
+    <string name="lostFriend">Il semblerait que ton ami est parti :-(.</string>
+
+    <!-- Pause Dialog -->
+	<string name="pause">PAUSE</string>
+	<string name="pauseBy">Jeu mis en pause par %1$s.</string>
+	<string name="you">toi</string>
+    <string name="resume">Jouer</string>
+
+    <!-- Bluetooth -->
+	<string name="BTNotAvailable">Bluetooth non disponible</string>
+	<string name="BTNotEnabled">le bluetooth n\'est pas activé</string>
+	<string name="ConnectionLost">Connexion perdu</string>
+	<string name="ConnectionImpossible">Connexion échouée</string>
+	<string name="connection_back">Connexion rétablie. Reprendre la partie ?</string>
+    <string name="retry_connection">Reconnexion échouée. Réessayer ?</string>
+
+    <!--  BluetoothConnectionActivity -->
+    <string name="selectDevice">Selectionne ton ami</string>
+    <string name="friendsDevices">amis</string>
+    <string name="pairedDevices">appairé</string>
+    <string name="newDevices">inconnu</string>
+    <string name="none_friend">Aucun ami</string>
+    <string name="none_paired">Aucun appareil appairé</string>
+    <string name="none_found">Aucun appareil trouvé</string>
+    <string name="game_request_title">Nouvelle partie</string>
+    <string name="game_request">Veux-tu jouer avec {0} ?</string>
+    <string name="wrong_version_title">Mauvaise version</string>
+    <string name="wrong_version">Toi et ton adversaire n\'avez pas la même version du jeu.</string>
+	<string name="waiting_for_opponent">Attente de l\'adversaire...</string>
+	<string name="connection_in_progress">Connexion en cours...</string>
+
+    <string name="reconnect_activity">Reconnection</string>
+</resources>
