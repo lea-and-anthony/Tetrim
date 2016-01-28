@@ -469,7 +469,7 @@ namespace Tetrim
 
 		protected override void moveDownButtonPressed(object sender, EventArgs e)
 		{
-			if(_player1.MoveDown() && _gameTimer.Enabled)
+			if(_player1.MoveDown())
 			{
 				// the timer is stop and restart in the touch event
 				// Display of the current model
@@ -480,7 +480,7 @@ namespace Tetrim
 
 		protected override void moveFootButtonPressed(object sender, EventArgs e)
 		{
-			if(_player1.MoveBottom() && _gameTimer.Enabled)
+			if(_player1.MoveBottom())
 			{
 				_gameTimer.Stop();
 

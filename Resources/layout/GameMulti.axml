@@ -9,7 +9,8 @@
     android:paddingTop="1dp"
     android:paddingRight="1dp"
     android:paddingBottom="1dp"
-    android:paddingLeft="1dp">
+    android:paddingLeft="1dp"
+    android:background="#ff000000">
     <LinearLayout
         android:orientation="horizontal"
         android:minWidth="25px"

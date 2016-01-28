@@ -36,6 +36,11 @@
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
     <AndroidUseSharedRuntime>false</AndroidUseSharedRuntime>
+    <AndroidLinkMode>Full</AndroidLinkMode>
+    <EnableProguard>true</EnableProguard>
+    <AndroidKeyStore>True</AndroidKeyStore>
+    <AndroidSigningKeyStore>D:\Documents\INSA\Tetrim\leanthonygames.keystore</AndroidSigningKeyStore>
+    <AndroidSigningKeyAlias>leanthonygames</AndroidSigningKeyAlias>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />

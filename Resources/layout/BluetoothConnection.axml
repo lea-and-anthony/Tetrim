@@ -4,7 +4,8 @@
     p1:layout_width="match_parent"
     p1:layout_height="match_parent"
     p1:id="@+id/rootBluetoothConnection"
-    p1:weightSum="100">
+    p1:weightSum="100"
+    p1:background="#ff000000">
     <TextView
         p1:text="@string/selectDevice"
         p1:textAppearance="?android:attr/textAppearanceLarge"

@@ -4,7 +4,8 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:weightSum="100"
-    android:id="@+id/menuContainer">
+    android:id="@+id/menuContainer"
+    android:background="#ff000000">
     <LinearLayout
         android:orientation="vertical"
         android:minWidth="25px"
