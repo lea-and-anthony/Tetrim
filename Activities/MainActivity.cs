@@ -40,3 +40,9 @@ namespace Tetrim
 	}
 }
 
+// TODO list :
+// add sound and music
+// suggest game with two players with a highscore limit or with a timeout
+// send malus when one player make a good move
+// add french and possibility to change language
+// add wifi direct
