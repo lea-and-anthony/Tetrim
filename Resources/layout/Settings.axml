@@ -10,7 +10,6 @@
         android:id="@+id/relativeLayout1"
         android:layout_marginBottom="10dp">
         <Tetrim.ButtonStroked
-            android:text="1 player"
             android:id="@+id/backButton"
             android:textSize="30dp"
             android:background="#ffffff"
@@ -37,7 +36,6 @@
         android:layout_height="match_parent"
         android:id="@+id/linearLayout1">
         <Tetrim.ButtonStroked
-            android:text="1 player"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/deleteFriendsButton"
@@ -49,7 +47,6 @@
             android:layout_marginLeft="5dp"
             android:tag="@string/deleteFriends" />
         <Tetrim.ButtonStroked
-            android:text="1 player"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/changeNameButton"
@@ -61,7 +58,6 @@
             android:layout_marginLeft="5dp"
             android:tag="@string/changeName" />
         <Tetrim.ButtonStroked
-            android:text="1 player"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/deleteHighScoresButton"
