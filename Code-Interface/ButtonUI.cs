@@ -23,19 +23,35 @@ namespace Tetrim
 		//--------------------------------------------------------------
 		private static Context _context;
 
+		// Shades
 		public Utils.ColorShade StrokeShade = Utils.ColorShade.Dark;
 		public Utils.ColorShade FillShade = Utils.ColorShade.Normal;
+
+		// Colors
 		public Color StrokeColor = new Color(100, 100, 100, 255);
 		public Color FillColor = new Color(255, 255, 255, 255);
+
+		// Booleans
 		public bool IsTextStroked = true;
 		public bool IsSquared = false;
-		public Typeface Typeface = UtilsUI.TextFont;
+
+		// General apprearance
 		public GravityFlags Gravity = GravityFlags.Center;
 		public ButtonShape Shape = ButtonShape.RoundedRectangle;
 		public int Padding = 0;
-		public int _textSize = 30;
-		private int _strokeBorderWidth = 15;
-		private int _strokeTextWidth = 7;
+
+		// Font
+		public Typeface Typeface = UtilsUI.TextFont;
+		public float TextSizeRatio = 0.5f;
+		private float _textSize = 0;
+
+		// Stroke
+		public float StrokeBorderWidthRatio = 0.2f;
+		public float StrokeTextWidthRatio = 0.1f;
+		public float StrokeBorderWidth = 15f;
+		public float StrokeTextWidth = 7f;
+
+		// Corner
 		private int _radiusIn = 10;
 		private int _radiusOut = 7;
 
@@ -50,8 +66,8 @@ namespace Tetrim
 		public ButtonUI()
 		{
 			SetTextSize(ComplexUnitType.Dip, TextSize);
-			StrokeBorderWidth = StrokeBorderWidth;
-			StrokeTextWidth = StrokeTextWidth;
+			StrokeBorderWidth = Utils.GetPixelsFromDP(_context, StrokeBorderWidth);
+			StrokeTextWidth = Utils.GetPixelsFromDP(_context, StrokeTextWidth);
 			RadiusIn = RadiusIn;
 			RadiusOut = RadiusOut;
 		}
@@ -68,9 +84,12 @@ namespace Tetrim
 			Gravity = buttonUI.Gravity;
 			Shape = buttonUI.Shape;
 			Padding = buttonUI.Padding;
+			TextSizeRatio = buttonUI.TextSizeRatio;
+			StrokeBorderWidthRatio = buttonUI.StrokeBorderWidthRatio;
+			StrokeTextWidthRatio = buttonUI.StrokeTextWidthRatio;
+			StrokeBorderWidth = buttonUI.StrokeBorderWidth;
+			StrokeTextWidth = buttonUI.StrokeTextWidth;
 			_textSize = buttonUI._textSize;
-			_strokeBorderWidth = buttonUI._strokeBorderWidth;
-			_strokeTextWidth = buttonUI._strokeTextWidth;
 			_radiusIn = buttonUI._radiusIn;
 			_radiusOut = buttonUI._radiusOut;
 		}
@@ -80,43 +99,24 @@ namespace Tetrim
 			return new ButtonUI(this);
 		}
 
-		public void SetTextSize(ComplexUnitType unit, int size)
+		public void SetTextSize(ComplexUnitType unit, float size)
 		{
 			_textSize = Utils.ConvertTextSize(_context, unit, size);
+		}
+
+		public void SetTextSize(ComplexUnitType unit, int size)
+		{
+			SetTextSize(unit, (float)size);
 		}
 
 		//--------------------------------------------------------------
 		// PROPERTIES
 		//--------------------------------------------------------------
-		public int TextSize
+		public float TextSize
 		{
 			get
 			{
 				return _textSize;
-			}
-		}
-
-		public int StrokeBorderWidth
-		{
-			get
-			{
-				return _strokeBorderWidth;
-			}
-			set
-			{
-				_strokeBorderWidth = Utils.GetPixelsFromDP(_context, value);
-			}
-		}
-
-		public int StrokeTextWidth
-		{
-			get
-			{
-				return _strokeTextWidth;
-			}
-			set
-			{
-				_strokeTextWidth = Utils.GetPixelsFromDP(_context, value);
 			}
 		}
 

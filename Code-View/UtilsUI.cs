@@ -39,38 +39,42 @@ namespace Tetrim
 		public static ButtonUI CreateMenuButtonSettings()
 		{
 			ButtonUI menuButtonUI = new ButtonUI();
-			menuButtonUI.StrokeBorderWidth = 15;
-			menuButtonUI.StrokeTextWidth = 7;
-			menuButtonUI.RadiusIn = 10;
-			menuButtonUI.RadiusOut = 7;
 			menuButtonUI.StrokeShade = Utils.ColorShade.Dark;
 			menuButtonUI.FillShade = Utils.ColorShade.Normal;
+			menuButtonUI.RadiusIn = 10;
+			menuButtonUI.RadiusOut = 7;
+			menuButtonUI.StrokeBorderWidthRatio = 0.2f;
+			menuButtonUI.StrokeTextWidthRatio = 0.1f;
+			menuButtonUI.TextSizeRatio = 0.5f;
 			return menuButtonUI;
 		}
 
 		public static ButtonUI CreateIconButtonSettings(Typeface font)
 		{
-			ButtonUI iconButtonUI = new ButtonUI();
-			iconButtonUI.IsSquared = true;
-			iconButtonUI.StrokeBorderWidth = 7;
-			iconButtonUI.StrokeTextWidth = 5;
-			iconButtonUI.RadiusIn = 7;
-			iconButtonUI.RadiusOut = 5;
-			iconButtonUI.StrokeShade = Utils.ColorShade.Dark;
-			iconButtonUI.FillShade = Utils.ColorShade.Normal;
-			iconButtonUI.IsTextStroked = false;
-			iconButtonUI.Typeface = font;
-			return iconButtonUI;
+			ButtonUI baseIconButtonUI = new ButtonUI();
+			baseIconButtonUI.IsSquared = true;
+			baseIconButtonUI.IsTextStroked = false;
+			baseIconButtonUI.StrokeShade = Utils.ColorShade.Dark;
+			baseIconButtonUI.FillShade = Utils.ColorShade.Normal;
+			baseIconButtonUI.Typeface = font;
+			baseIconButtonUI.StrokeBorderWidthRatio = 0.15f;
+			baseIconButtonUI.RadiusIn = 7;
+			baseIconButtonUI.RadiusOut = 5;
+			return baseIconButtonUI;
 		}
 
 		public static ButtonUI CreateIconButtonSettings()
 		{
-			return CreateIconButtonSettings(TextFont);
+			ButtonUI iconButtonUI = CreateIconButtonSettings(TextFont);
+			iconButtonUI.TextSizeRatio = 0.5f;
+			return iconButtonUI;
 		}
 
 		public static ButtonUI CreateArrowButtonSettings()
 		{
-			return CreateIconButtonSettings(ArrowFont);
+			ButtonUI iconButtonUI = CreateIconButtonSettings(ArrowFont);
+			iconButtonUI.TextSizeRatio = 1f;
+			return iconButtonUI;
 		}
 
 		public static ButtonUI CreateDialogButtonSettings()
@@ -78,22 +82,21 @@ namespace Tetrim
 			ButtonUI dialogButtonUI = new ButtonUI();
 			dialogButtonUI.StrokeShade = Utils.ColorShade.Dark;
 			dialogButtonUI.FillShade = Utils.ColorShade.Normal;
-			dialogButtonUI.SetTextSize(ComplexUnitType.Dip, 20);
+			dialogButtonUI.StrokeTextWidthRatio = 0.125f;
 			return dialogButtonUI;
 		}
 
 		public static ButtonUI CreateDeviceButtonSettings()
 		{
 			ButtonUI deviceButtonUI = new ButtonUI();
+			deviceButtonUI.IsTextStroked = false;
 			deviceButtonUI.StrokeShade = Utils.ColorShade.Normal;
 			deviceButtonUI.FillShade = Utils.ColorShade.Dark;
+			deviceButtonUI.Shape = ButtonUI.ButtonShape.BottomTop;
 			deviceButtonUI.Gravity = GravityFlags.Left;
-			deviceButtonUI.StrokeBorderWidth = 7;
-			deviceButtonUI.StrokeTextWidth = 5;
+			deviceButtonUI.StrokeBorderWidthRatio = 0.1f;
 			deviceButtonUI.RadiusIn = 7;
 			deviceButtonUI.RadiusOut = 5;
-			deviceButtonUI.IsTextStroked = false;
-			deviceButtonUI.Shape = ButtonUI.ButtonShape.BottomTop;
 			deviceButtonUI.Padding = 20;
 			return deviceButtonUI;
 		}
@@ -133,7 +136,6 @@ namespace Tetrim
 			button.Text = button.Tag.ToString();
 			button.SetMaxHeight(height);
 			button.SetMinimumHeight(height);
-			button.Settings.SetTextSize(ComplexUnitType.Px, textsize);
 			button.Settings.StrokeColor = Utils.getAndroidColor(color, button.Settings.StrokeShade);
 			button.Settings.FillColor = Utils.getAndroidColor(color, button.Settings.FillShade);
 		}

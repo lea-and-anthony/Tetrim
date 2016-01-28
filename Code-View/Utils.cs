@@ -173,23 +173,33 @@ namespace Tetrim
 			return paint;
    		}
 
-		public static int GetPixelsFromDP(Context context, int dp)
+		public static float GetPixelsFromDP(Context context, float dp)
 		{
 			DisplayMetrics metrics = new DisplayMetrics();
 			IWindowManager windowManager = context.GetSystemService(Context.WindowService).JavaCast<IWindowManager>();
 			windowManager.DefaultDisplay.GetMetrics(metrics);
-			return (int)Math.Round(dp*metrics.Density);
+			return dp*metrics.Density;
+		}
+
+		public static int GetPixelsFromDP(Context context, int dp)
+		{
+			return (int)Math.Round(GetPixelsFromDP(context, (float)dp));
+		}
+
+		public static float GetDPFromPixels(Context context, float pixels)
+		{
+			DisplayMetrics metrics = new DisplayMetrics();
+			IWindowManager windowManager = context.GetSystemService(Context.WindowService).JavaCast<IWindowManager>();
+			windowManager.DefaultDisplay.GetMetrics(metrics);
+			return pixels/metrics.Density;
 		}
 
 		public static int GetDPFromPixels(Context context, int pixels)
 		{
-			DisplayMetrics metrics = new DisplayMetrics();
-			IWindowManager windowManager = context.GetSystemService(Context.WindowService).JavaCast<IWindowManager>();
-			windowManager.DefaultDisplay.GetMetrics(metrics);
-			return (int)Math.Round(pixels/metrics.Density);
+			return (int)Math.Round(GetDPFromPixels(context, (float)pixels));
 		}
 
-		public static int ConvertTextSize(Context context, ComplexUnitType unit, int size)
+		public static float ConvertTextSize(Context context, ComplexUnitType unit, float size)
 		{
 			switch(unit)
 			{
@@ -198,6 +208,11 @@ namespace Tetrim
 			default:
 				return Utils.GetPixelsFromDP(context, size);
 			}
+		}
+
+		public static int ConvertTextSize(Context context, ComplexUnitType unit, int size)
+		{
+			return (int)ConvertTextSize(context, unit, (float)size);
 		}
 
 		public static void SetDefaultFont()
