@@ -15,8 +15,8 @@ namespace Tetrim
 		//--------------------------------------------------------------
 		private const int StrokeWidthBorder = 4;
 		private static Paint GridPaint = Utils.createPaintWithStyle(
-			new Paint {AntiAlias = true, Color = Color.Gray, StrokeWidth = StrokeWidthBorder},
-			Paint.Style.Stroke);
+			new Paint {AntiAlias = true, Color = Utils.getAndroidDarkColor(TetrisColor.Red)},
+			Paint.Style.Fill);
 		
 		//--------------------------------------------------------------
 		// ATTRIBUTES
@@ -111,7 +111,8 @@ namespace Tetrim
 			if(_blockSize == 0)
 			{
 				// Calculate the size of the block, Space for each piece set to 5 blocks (except for the last one)
-				_blockSize = Math.Min(Width/(_nbPieceByLine*5), Height/(Constants.NbLinePropPiece*5));
+				_blockSize = Math.Min((Width - (_nbPieceByLine - 1) * StrokeWidthBorder)/(_nbPieceByLine*5), 
+										(Height - (Constants.NbLinePropPiece - 1) * StrokeWidthBorder)/(Constants.NbLinePropPiece*5));
 
 				// Create the blocks images with the right size
 				foreach(TetrisColor color in Enum.GetValues(typeof(TetrisColor)))
@@ -123,7 +124,8 @@ namespace Tetrim
 					}
 				}
 
-				_offset = new Point((Width - _nbPieceByLine*5*_blockSize) / 2, (Height - Constants.NbLinePropPiece*5*_blockSize));
+				_offset = new Point((Width - _nbPieceByLine*5*_blockSize - (_nbPieceByLine - 1) * StrokeWidthBorder) / 2,
+									(Height - Constants.NbLinePropPiece*5*_blockSize - (Constants.NbLinePropPiece - 1) * StrokeWidthBorder) / 2);
 			}
 
 			// Draw the pieces and highlight the selected one
@@ -135,14 +137,19 @@ namespace Tetrim
 					// TODO : change the way we highlight a piece
 					if(i == _selectedPiece)
 					{
-						RectF rect = new RectF((i % _nbPieceByLine) * _blockSize * 5, 
-												(_blockSize * 5) * (i / _nbPieceByLine), 
-												((i % _nbPieceByLine) + 1) * _blockSize * 5, 
-												(_blockSize * 5) * (1 + i / _nbPieceByLine));
-						rect.Offset(_offset.X, _offset.Y);
+						int left = ((i % _nbPieceByLine) == 0) ? 0 : _offset.X;
+						int right = (((i + 1) % _nbPieceByLine) == 0) ? Width : _offset.X;
+						int top = ((i / _nbPieceByLine) == 0) ? 0 : _offset.Y;
+						int bottom = (i >= (_nbPieceByLine * (Constants.NbLinePropPiece - 1))) ? Height : _offset.Y;
 
-						Paint paint = new Paint {AntiAlias = true, Color = Color.AntiqueWhite};
-						canvas.DrawRoundRect(rect, Constants.RadiusHighlight, Constants.RadiusHighlight, paint);
+						RectF rect = new RectF((i % _nbPieceByLine) * _blockSize * 5 + (i % _nbPieceByLine) * StrokeWidthBorder + left, 
+												(_blockSize * 5) * (i / _nbPieceByLine) + (i / _nbPieceByLine) * StrokeWidthBorder + top, 
+												((i % _nbPieceByLine) + 1) * _blockSize * 5 + (i % _nbPieceByLine) * StrokeWidthBorder + right,
+												(_blockSize * 5) * (1 + i / _nbPieceByLine) + (i / _nbPieceByLine) * StrokeWidthBorder + bottom);
+
+						Paint paint = new Paint {AntiAlias = true, Color = Utils.getAndroidReallyLightColor(TetrisColor.Red)};
+						//canvas.DrawRoundRect(rect, Constants.RadiusHighlight, Constants.RadiusHighlight, paint);
+						canvas.DrawRect(rect, paint);
 						paint.Dispose();
 					}
 					float xSize = 0;
@@ -151,22 +158,24 @@ namespace Tetrim
 
 					// Draw each piece
 					_proposedPieces[i].Draw(canvas, _blockSize, _blockImages, 
-											(i % _nbPieceByLine) * _blockSize * 5 + (_blockSize * 5 - xSize) / 2 + _offset.X, 
-											Height - ((i / _nbPieceByLine + 1) * _blockSize * 5 - (_blockSize * 5 - ySize) / 2 + _offset.Y), 
-											Height);
+						(i % _nbPieceByLine) * _blockSize * 5 + (_blockSize * 5 - xSize) / 2 + _offset.X + (i % _nbPieceByLine) * StrokeWidthBorder, 
+						Height - ((i / _nbPieceByLine + 1) * _blockSize * 5 - (_blockSize * 5 - ySize) / 2 + _offset.Y) + (i / _nbPieceByLine) * StrokeWidthBorder, 
+						Height);
 				}
 			}
 
 			// Grid
 			for(int i = 1; i < _nbPieceByLine; i++)
 			{
-				int x = _offset.X + i*5*_blockSize - StrokeWidthBorder / 2;
-				canvas.DrawLine(x, _offset.Y, x, _offset.Y + Constants.NbLinePropPiece*5*_blockSize, GridPaint);
+				// Vertical
+				int x = _offset.X + i*5*_blockSize + (i - 1) * StrokeWidthBorder;
+				canvas.DrawRect(x, 0, x + StrokeWidthBorder, Height, GridPaint);
 			}
 			for(int i = 1; i < Constants.NbLinePropPiece; i++)
 			{
-				int y = _offset.Y + i*5*_blockSize - StrokeWidthBorder / 2;
-				canvas.DrawLine(_offset.X, y, _offset.X + _nbPieceByLine*5*_blockSize, y, GridPaint);
+				// Horizontal
+				int y = _offset.Y + i*5*_blockSize + (i - 1) * StrokeWidthBorder;
+				canvas.DrawRect(0, y, Width, y + StrokeWidthBorder, GridPaint);
 			}
 		}
 
@@ -175,8 +184,8 @@ namespace Tetrim
 			bool returnValue = base.OnTouchEvent(e);
 
 			// Get the touch position
-			int x = ((int) e.GetX())/(_blockSize * 5);
-			int y = ((int) e.GetY())/(_blockSize * 5);
+			int x = ((int) e.GetX())/(_blockSize * 5 + StrokeWidthBorder);
+			int y = ((int) e.GetY())/(_blockSize * 5 + StrokeWidthBorder);
 
 			// Lower the value if it is too high
 			if(x >= Constants.NbProposedPiece/Constants.NbLinePropPiece)
