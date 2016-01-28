@@ -40,7 +40,7 @@ namespace Tetrim
 			};
 
 			ButtonStroked deleteFriendsButton = FindViewById<ButtonStroked>(Resource.Id.deleteFriendsButton);
-			UtilsUI.SetMenuButtonWithHeight(deleteFriendsButton, TetrisColor.Red);
+			UtilsUI.SetMenuButtonWithHeight(deleteFriendsButton, TetrisColor.Yellow);
 			deleteFriendsButton.Click += delegate {
 				Intent intent = DialogActivity.CreateYesNoDialog(this, Resource.String.askSureDeleteFriends, -1	,
 					delegate {User.Instance.ClearFriends();}, null);
@@ -55,10 +55,17 @@ namespace Tetrim
 			};
 
 			ButtonStroked deleteHighScoresButton = FindViewById<ButtonStroked>(Resource.Id.deleteHighScoresButton);
-			UtilsUI.SetMenuButtonWithHeight(deleteHighScoresButton, TetrisColor.Yellow);
+			UtilsUI.SetMenuButtonWithHeight(deleteHighScoresButton, TetrisColor.Orange);
 			deleteHighScoresButton.Click += delegate {
 				Intent intent = DialogActivity.CreateYesNoDialog(this, Resource.String.askSureDeleteHighScore, -1,
 					delegate {User.Instance.ClearHighScore();}, null);
+				StartActivity(intent);
+			};
+
+			ButtonStroked aboutButton = FindViewById<ButtonStroked>(Resource.Id.aboutButton);
+			UtilsUI.SetMenuButtonWithHeight(aboutButton, TetrisColor.Green);
+			aboutButton.Click += delegate {
+				Intent intent = DialogActivity.CreateYesDialog(this, Resource.String.about, Resource.String.legalMessage, Resource.String.ok, null);
 				StartActivity(intent);
 			};
 		}

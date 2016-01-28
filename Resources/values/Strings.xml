@@ -26,6 +26,8 @@
     <string name="deleteFriends">delete friends</string>
     <string name="deleteHighScores">delete highscore</string>
     <string name="changeName">change user name</string>
+    <string name="about">credits</string>
+    <string name="legalMessage">The present game (Tetrim) is widely inspired by the popular game Tetris.\nTetris was created by Alekseï Pajitnov and is a trademark of the Tetris Company.\nWe are in no way affiliated with the rights holder.\nThe present game does not represent them.</string>
 
     <!-- Game -->
     <string name="score">SCORE</string>
