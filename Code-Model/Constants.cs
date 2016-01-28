@@ -56,6 +56,7 @@ namespace Tetrim
 											1 + MaxLengthName*sizeof(char),
 											1};
 		public const uint SizeMaxBluetoothMessage = 512;
+		public const int TimeReconnection = 10000;
 
 		public const byte NumVersion = 2;
 

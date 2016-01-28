@@ -352,16 +352,16 @@ namespace Tetrim
 			UtilsUI.SetGamePlayerStatText(this, Resource.Id.level2, false, true);
 			UtilsUI.SetGamePlayerStatText(this, Resource.Id.piece2, false, true);
 
+			setBackground();
+
 			ProposedPieceView proposedPiecesView = FindViewById<ProposedPieceView>(Resource.Id.player2piece);
 			proposedPiecesView.SetBackgroundColor(Utils.getAndroidColor(TetrisColor.Red));
 
 			// Center the opponent grid
 			Point size = GridView.CalculateUseSize(_player2View._gridView.MeasuredWidth, _player2View._gridView.MeasuredHeight);
-			LinearLayout.LayoutParams newLayoutParams = new LinearLayout.LayoutParams(size.X, size.Y);
-			newLayoutParams.Gravity = GravityFlags.CenterHorizontal;
+			LinearLayout.LayoutParams newLayoutParams = (LinearLayout.LayoutParams) _player2View._gridView.LayoutParameters;
+			newLayoutParams.Width = size.X; // We don't set the y because it is not yet the right one
 			_player2View._gridView.LayoutParameters = newLayoutParams;
-
-			setBackground();
 		}
 
 		private void setBackground()
@@ -527,7 +527,7 @@ namespace Tetrim
 			_player2View.Update();
 
 			// Display of the model of the opponent
-			FindViewById(Resource.Id.OpponentGridView).PostInvalidate();
+			_player2View._gridView.PostInvalidate();
 			_player2View.Draw();
 
 			return 0;
